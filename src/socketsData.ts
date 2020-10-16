@@ -1,45 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { IPlayer } from "./types"
+export const joinWaitingPlayers = (playersInLobby: any) => {
+  const gameId = uuidv4()
 
-interface playerType {
-  playerId: string;
-  nickname: string;
-  board?: number[];
-  score?: number;
+  playersInLobby[0].leave('lobby');
+  playersInLobby[1].leave('lobby');
+  playersInLobby[0].join(gameId);
+  playersInLobby[1].join(gameId);
+
+  return gameId
 }
-interface IgameRoom {
-  players: playerType[]
-}
-const gameRooms: { [key: string]: IgameRoom; } = {
-  'lobby': {
-    players: []
-  }
-}
-
-const findOpponent = () => {
-  // get first player in lobby
-  const opponent = gameRooms.lobby.players.shift()
-  return opponent
-}
-
-export const addPlayer = (player: any) => {
-  if(gameRooms.lobby.players.length === 0) {
-    gameRooms['lobby'].players.push(player)
-    return undefined
-  }
-
-  const opponent = findOpponent()
-  return opponent ? opponent : undefined
-}
-
-export const movePlayerToNewRoom = (players: any) => {
-  const newRoomId = uuidv4()
-  gameRooms[newRoomId] = {players: []}
-  players.map((player: IPlayer) => player.roomId = newRoomId)
-  gameRooms[newRoomId].players = players
-  console.log('movePlayerToNewRoom', players)
-
-  return newRoomId
-}
-
