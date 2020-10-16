@@ -5,7 +5,7 @@ import socketio from 'socket.io'
 const cors = require('cors')
 const dotenv = require('dotenv')
 
-import {addPlayer} from './socketsData'
+import {addPlayer, movePlayerToNewRoom} from './socketsData'
 
 dotenv.config({ path: './config.env' })
 const PORT = process.env.PORT || 4000
@@ -17,9 +17,23 @@ const server = http.createServer(app)
 const io = socketio(server)
 
 io.on('connection', (socket: any) => {
-  socket.on('join', ({nickname, playerId, roomId}: IPlayer) => {
-    addPlayer({nickname, playerId, roomId})
-    console.log('new player', {nickname, playerId, roomId})
+  socket.on('join', ({nickname, playerId}: IPlayer) => {
+    const roomId = 'lobby'
+    const socketId = socket.id
+    const opponent = addPlayer({nickname, playerId, socketId, roomId})
+    
+    if(opponent) {
+      const players = [{nickname, playerId}, opponent]
+      console.log('on connection', players)
+      const newRoomId = movePlayerToNewRoom(players)
+      socket.to(newRoomId).emit('game-start', {roomId: newRoomId})
+    }
+  })
+
+  socket.on('move', (data: any) => {
+    const {roomId, board, score} = data
+
+    socket.to(roomId).emit('drawing', {board, score})
   })
 
   socket.on('disconnect', function () {
