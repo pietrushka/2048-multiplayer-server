@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const joinWaitingPlayers = (playersInLobby: any) => {
-  const gameId = uuidv4()
+  const gameId = `game ${uuidv4()}`
 
   playersInLobby[0].leave('lobby');
   playersInLobby[1].leave('lobby');

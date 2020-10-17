@@ -1,4 +1,3 @@
-import { IPlayer } from "./types"
 import express from 'express'
 import http from 'http'
 import socketio from 'socket.io'
@@ -26,7 +25,7 @@ const getPlayersInLobby = () => {
 }
 
 io.on('connection', (socket: any) => {
-  let userData = {socket, nickname: ''}
+  let userData = {socket, nickname: '', gameId: 'sample'}
   socket.on('join', ({nickname}: {nickname: string}) => {
     userData.nickname = nickname
     socket.join('lobby');
@@ -34,6 +33,8 @@ io.on('connection', (socket: any) => {
     if(playersInLobby.length >= 2) {
       const gameId = joinWaitingPlayers(playersInLobby)
       if(gameId) {
+        userData.gameId = gameId
+        console.log(gameId)
         io.to(gameId).emit('start-game', {gameId});
       }
     }
@@ -43,9 +44,9 @@ io.on('connection', (socket: any) => {
 
 
   socket.on('move', (data: any) => {
-    const {roomId, board, score} = data
-
-    socket.to(roomId).emit('move', {board, score})
+    const {board, score} = data
+    const gameSocketId = Object.keys(socket.rooms)[1]
+    socket.to(gameSocketId).emit('move', {board, score})
   })
 
   socket.on('disconnect', function () {
