@@ -4,7 +4,7 @@ import socketio from 'socket.io'
 const cors = require('cors')
 const dotenv = require('dotenv')
 
-import {joinWaitingPlayers} from './socketsData'
+import {joinWaitingPlayers, trowPlayersOut} from './socketsData'
 
 dotenv.config({ path: './config.env' })
 const PORT = process.env.PORT || 4000
@@ -16,9 +16,9 @@ const server = http.createServer(app)
 const io = socketio(server)
 
 
-const getPlayersInLobby = () => {
+const getPlayersInRoom = (room: string) => {
   var players: any = [];
-  const socketsIdsInLobby = Object.keys(io.sockets.adapter.rooms['lobby'].sockets)
+  const socketsIdsInLobby = Object.keys(io.sockets.adapter.rooms[room].sockets)
   socketsIdsInLobby.map(socketId => players.push(io.sockets.adapter.nsp.connected[socketId]))
   
   return players;
@@ -30,14 +30,14 @@ io.on('connection', (socket: any) => {
     console.log('player joined')
     userData.nickname = nickname
     socket.join('lobby');
-    const playersInLobby = getPlayersInLobby()
+    const playersInLobby = getPlayersInRoom('lobby')
     if(playersInLobby.length >= 2) {
       const gameId = joinWaitingPlayers(playersInLobby)
       if(gameId) {
         io.to(gameId).emit('start-game', {gameId, gameTime: 10000});
         setTimeout(() => {
           io.to(gameId).emit('end-game', {result: 'chicken'});
-        }, 10000)
+          }, 10000)
       }
     }
   })
@@ -52,6 +52,12 @@ io.on('connection', (socket: any) => {
   })
 
   socket.on('disconnect', function () {
+    const gameId = Object.keys(socket.adapter.rooms).find(room => room.includes('game'))
+    if(gameId) {
+      io.to(gameId).emit('end-game', {result: 'chicken'});
+      const playersInRoom = getPlayersInRoom(gameId)
+      trowPlayersOut(playersInRoom, gameId)
+    }
   })
 })
 

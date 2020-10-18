@@ -7,15 +7,25 @@ const games: any = {
 export const joinWaitingPlayers = (playersInLobby: any) => {
   const gameId = `game ${uuidv4()}`
 
+  // create game room
   games[gameId] = {
-    players: [playersInLobby[0].id, playersInLobby[1].id],
+    players: [],
   }
 
-  playersInLobby[0].leave('lobby');
-  playersInLobby[1].leave('lobby');
-  playersInLobby[0].join(gameId);
-  playersInLobby[1].join(gameId);
+  playersInLobby.map((player: any) => {
+    player.leave('lobby');
+    player.join(gameId);
+    games[gameId].players.push(player.id)
+  })
 
   return gameId
 }
+
+export const trowPlayersOut  = (playersInRoom: any, gameId: string) => {
+  delete games[gameId]
+  playersInRoom.map((player: any) => {
+    player.leave(gameId)
+  })
+}
+
 
