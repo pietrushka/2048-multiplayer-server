@@ -25,17 +25,19 @@ const getPlayersInLobby = () => {
 }
 
 io.on('connection', (socket: any) => {
-  let userData = {socket, nickname: '', gameId: 'sample'}
-  socket.on('join', ({nickname}: {nickname: string}) => {
+  let userData = {socket, nickname: ''}
+  socket.on('join', async ({nickname}: {nickname: string}) => {
+    console.log('player joined')
     userData.nickname = nickname
     socket.join('lobby');
     const playersInLobby = getPlayersInLobby()
     if(playersInLobby.length >= 2) {
       const gameId = joinWaitingPlayers(playersInLobby)
       if(gameId) {
-        userData.gameId = gameId
-        console.log(gameId)
-        io.to(gameId).emit('start-game', {gameId});
+        io.to(gameId).emit('start-game', {gameId, gameTime: 10000});
+        setTimeout(() => {
+          io.to(gameId).emit('end-game', {result: 'chicken'});
+        }, 10000)
       }
     }
   })
