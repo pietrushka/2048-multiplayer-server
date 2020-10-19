@@ -32,23 +32,26 @@ io.on('connection', (socket: any) => {
     socket.join('lobby');
     const playersInLobby = getPlayersInRoom('lobby')
     if(playersInLobby.length >= 2) {
-      const gameId = joinWaitingPlayers(playersInLobby)
+      const gameId = await joinWaitingPlayers(playersInLobby)
+      const gameTime = 300000
       if(gameId) {
-        io.to(gameId).emit('start-game', {gameId, gameTime: 10000});
+        io.to(gameId).emit('start-game', {gameId, gameTime});
         setTimeout(() => {
           io.to(gameId).emit('end-game', {result: 'chicken'});
-          }, 10000)
+          }, gameTime)
       }
     }
   })
-
-  
-
 
   socket.on('move', (data: any) => {
     const {board, score} = data
     const gameSocketId = Object.keys(socket.rooms)[1]
     socket.to(gameSocketId).emit('move', {board, score})
+  })
+
+  socket.on('game-event', (eventType: string) => {
+    const gameSocketId = Object.keys(socket.rooms)[1]
+    socket.to(gameSocketId).emit('game-event', eventType)
   })
 
   socket.on('disconnect', function () {
