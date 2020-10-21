@@ -24,6 +24,7 @@ const getPlayersInRoom = (room: string) => {
   return players;
 }
 
+
 io.on('connection', (socket: any) => {
   let userData = {socket, nickname: ''}
   socket.on('join', async ({nickname}: {nickname: string}) => {
@@ -45,13 +46,19 @@ io.on('connection', (socket: any) => {
 
   socket.on('move', (data: any) => {
     const {board, score} = data
-    const gameSocketId = Object.keys(socket.rooms)[1]
+    const gameSocketId = Object.keys(socket.adapter.rooms).find(room => room.includes('game'))
     socket.to(gameSocketId).emit('move', {board, score})
   })
 
   socket.on('game-event', (eventType: string) => {
-    const gameSocketId = Object.keys(socket.rooms)[1]
+    const gameSocketId = Object.keys(socket.adapter.rooms).find(room => room.includes('game'))
     socket.to(gameSocketId).emit('game-event', eventType)
+  })
+
+  socket.on('player-lost', () => {
+    const gameSocketId = Object.keys(socket.adapter.rooms).find(room => room.includes('game'))
+    console.log('opponent lost')
+    socket.to(gameSocketId).emit('opponent-lost')
   })
 
   socket.on('disconnect', function () {
