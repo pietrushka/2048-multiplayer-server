@@ -45,9 +45,9 @@ io.on('connection', (socket: any) => {
   })
 
   socket.on('move', (data: any) => {
-    const {board, score} = data
+    const {board: opponentBoard, score: opponentScore} = data
     const gameSocketId = Object.keys(socket.adapter.rooms).find(room => room.includes('game'))
-    socket.to(gameSocketId).emit('move', {board, score})
+    socket.to(gameSocketId).emit('move', {opponentBoard, opponentScore})
   })
 
   socket.on('game-event', (eventType: string) => {
