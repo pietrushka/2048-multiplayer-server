@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io Test</title>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+        integrity="sha384-fcK/8n4sAUt8pzv6Eep9Z7pDx9cAqS6a2KJZkLZ0cpGd5mCjpi6EjO6L7R4pddKJ"
+        crossorigin="anonymous"></script>
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.7.4/socket.io.esm.min.js"
+
+        const socket = io('http://localhost:4000')
+
+        socket.on('connect', function () {
+            console.log('Connected to the server.')
+
+            // Join with a nickname
+            socket.emit('join', { nickname: 'TestPlayer' })
+        })
+
+        socket.on('start-game', function (data) {
+            console.log('Game started:', data)
+        })
+
+        socket.on('end-game', function (data) {
+            console.log('Game ended:', data)
+        })
+
+        // Listen for other events like 'move', 'game-event', etc.
+        // socket.on('move', function(data) {
+        //     console.log('Move received:', data);
+        // });
+
+        // Add event listeners for user interactions to send events to the server
+        // Example: socket.emit('move', { board: ..., score: ... });
+    </script>
+</head>
+
+<body>
+    <h1>Socket.io Test Client</h1>
+    <p>Open the console to see messages.</p>
+</body>
+
+</html>

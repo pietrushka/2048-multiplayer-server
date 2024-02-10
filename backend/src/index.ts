@@ -4,17 +4,17 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import crypto from 'crypto';
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*', // This allows all origins. For production, replace "*" with your actual origin, e.g., "http://example.com".
-    methods: ['GET', 'POST'], // Specify which HTTP methods are allowed.
-    allowedHeaders: ['my-custom-header'], // Optional: specify headers
-    credentials: true, // Optional: if your client needs to send cookies or credentials with the requests.
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
   },
 });
 
@@ -23,7 +23,6 @@ const games: any = {};
 const joinWaitingPlayers = (socketIds: string[]) => {
   const gameId = `game ${crypto.randomUUID()}`;
 
-  // create game room
   games[gameId] = {
     players: [],
   };
@@ -110,6 +109,11 @@ io.on('connection', (socket: any) => {
       trowPlayersOut(playersInRoom, gameId);
     }
   });
+});
+
+app.get('/', (req, res) => {
+  console.log('hit');
+  res.json({ message: 'ok' });
 });
 
 server.listen(PORT, () => console.log(`server runnin on port ${PORT}`));
