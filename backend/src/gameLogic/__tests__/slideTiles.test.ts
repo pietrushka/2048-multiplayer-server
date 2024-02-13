@@ -14,12 +14,13 @@ describe("slideTiles", () => {
       ],
       "UP"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [2, 2, 2, 2],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ])
+    expect(result.scoreIncrease).toBe(0)
   })
 
   test("plain DOWN", () => {
@@ -32,12 +33,13 @@ describe("slideTiles", () => {
       ],
       "DOWN"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [2, 2, 2, 2],
     ])
+    expect(result.scoreIncrease).toBe(0)
   })
 
   test("plain LEFT", () => {
@@ -51,12 +53,13 @@ describe("slideTiles", () => {
       "LEFT"
     )
 
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [2, 0, 0, 0],
       [2, 0, 0, 0],
       [2, 0, 0, 0],
       [2, 0, 0, 0],
     ])
+    expect(result.scoreIncrease).toBe(0)
   })
 
   test("plain RIGHT", () => {
@@ -70,12 +73,13 @@ describe("slideTiles", () => {
       "RIGHT"
     )
 
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [0, 0, 0, 2],
       [0, 0, 0, 2],
       [0, 0, 0, 2],
       [0, 0, 0, 2],
     ])
+    expect(result.scoreIncrease).toBe(0)
   })
 
   test("merge UP", () => {
@@ -88,12 +92,13 @@ describe("slideTiles", () => {
       ],
       "UP"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [0, 4, 4, 4],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ])
+    expect(result.scoreIncrease).toBe(12)
   })
 
   test("merge DOWN", () => {
@@ -106,12 +111,13 @@ describe("slideTiles", () => {
       ],
       "DOWN"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [0, 4, 4, 4],
     ])
+    expect(result.scoreIncrease).toBe(12)
   })
 
   test("merge LEFT", () => {
@@ -124,12 +130,13 @@ describe("slideTiles", () => {
       ],
       "LEFT"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [0, 0, 0, 0],
       [4, 0, 0, 0],
       [4, 0, 0, 0],
       [4, 0, 0, 0],
     ])
+    expect(result.scoreIncrease).toBe(12)
   })
 
   test("merge RIGHT", () => {
@@ -142,12 +149,13 @@ describe("slideTiles", () => {
       ],
       "RIGHT"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [0, 0, 0, 0],
       [0, 0, 0, 4],
       [0, 0, 0, 4],
       [0, 0, 0, 4],
     ])
+    expect(result.scoreIncrease).toBe(12)
   })
 
   test("blocked merge", () => {
@@ -160,12 +168,13 @@ describe("slideTiles", () => {
       ],
       "LEFT"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [2, 4, 2, 0],
       [2, 4, 2, 0],
       [2, 4, 2, 0],
       [2, 4, 8, 2],
     ])
+    expect(result.scoreIncrease).toBe(0)
   })
 
   test("no double merge", () => {
@@ -178,11 +187,12 @@ describe("slideTiles", () => {
       ],
       "LEFT"
     )
-    expect(result).toEqual([
+    expect(result.tileGrid).toEqual([
       [4, 4, 0, 0],
       [4, 4, 0, 0],
       [4, 4, 0, 0],
       [4, 4, 0, 0],
     ])
+    expect(result.scoreIncrease).toBe(20)
   })
 })

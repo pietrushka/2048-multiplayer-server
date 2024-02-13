@@ -2,8 +2,6 @@ import { DEFAULT_BOARD_SIZE } from "../../../web/src/common/constants"
 import { Move, BoardData } from "../../../web/src/common/types"
 import { initializeBoard, slideTiles, spawnTile, movePossible } from "./boardUtils"
 
-// TODO get rid of "Board" and "board" naming
-
 export default class Board {
   playerId: string
   score: number
@@ -25,8 +23,10 @@ export default class Board {
   }
 
   handleMove(move: Move) {
-    this.tileGrid = slideTiles(this.tileGrid, move)
-    this.tileGrid = spawnTile(this.tileGrid)
+    const { scoreIncrease } = slideTiles(this.tileGrid, move)
+    this.score += scoreIncrease
+    spawnTile(this.tileGrid)
+
     this.nextMovePossible = movePossible(this.tileGrid)
   }
 }

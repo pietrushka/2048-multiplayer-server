@@ -1,31 +1,64 @@
 import Board from "../Board"
+import { spawnTile, initializeBoard } from "../boardUtils"
+
+// mocking predict where new tiles will spawn
+jest.mock("../boardUtils", () => ({
+  ...jest.requireActual("../boardUtils"),
+  initializeBoard: jest.fn(),
+  spawnTile: jest.fn(),
+}))
+const spawnTileMock = spawnTile as jest.Mock
+const initializeBoardMock = initializeBoard as jest.Mock
+
+const mockPlayerId = "mockPlayerId"
 
 describe("Board", () => {
-  test("initialize", () => {
-    const board = new Board("playerId")
+  test("constructor", () => {
+    initializeBoardMock.mockImplementationOnce(() => [
+      [0, 0, 0, 2],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [2, 0, 0, 0],
+    ])
 
-    const flattenedBoard = board.board.flat()
-    const nonZeroNumbers = flattenedBoard.filter((cell) => cell !== 0)
-    expect(nonZeroNumbers.length).toBe(2)
-    nonZeroNumbers.forEach((number) => {
-      expect([2, 4]).toContain(number)
+    const board = new Board(mockPlayerId)
+
+    expect(board.data).toEqual({
+      playerId: mockPlayerId,
+      tileGrid: [
+        [0, 0, 0, 2],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [2, 0, 0, 0],
+      ],
+      score: 0,
     })
+    expect(board.nextMovePossible).toBe(true)
   })
 
   test("handleMove", () => {
-    const board = new Board("playerId")
-    board.board = [
+    initializeBoardMock.mockImplementationOnce(() => [
       [0, 0, 0, 0],
+      [0, 0, 0, 2],
       [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 2, 2],
-    ]
-    board.handleMove("UP")
-    expect(board.board).toEqual([
-      [0, 0, 2, 2],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
+      [0, 0, 0, 2],
     ])
+    const board = new Board(mockPlayerId)
+
+    spawnTileMock.mockImplementationOnce((tileGrid: number[][]) => (tileGrid[3][0] = 2))
+
+    board.handleMove("UP")
+
+    expect(board.data).toEqual({
+      playerId: mockPlayerId,
+      tileGrid: [
+        [0, 0, 0, 4],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [2, 0, 0, 0],
+      ],
+      score: 4,
+    })
+    expect(board.nextMovePossible).toBe(true)
   })
 })
