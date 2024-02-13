@@ -1,5 +1,5 @@
-import { DEFAULT_BOARD_SIZE } from "../../../web/src/common/constants"
-import { Move, BoardData } from "../../../web/src/common/types"
+import { DEFAULT_BOARD_SIZE } from "../constants"
+import { Move, BoardData } from "../types"
 import { initializeBoard, slideTiles, spawnTile, movePossible } from "./boardUtils"
 
 export default class Board {

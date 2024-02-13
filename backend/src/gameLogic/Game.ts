@@ -1,4 +1,4 @@
-import Board from "./Board"
+import Board from "../../../web/src/common/Board"
 import { Move, GameData } from "../../../web/src/common/types"
 import { GAME_TIME } from "../../../web/src/common/constants"
 

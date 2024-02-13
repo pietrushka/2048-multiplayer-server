@@ -2,7 +2,7 @@ import socketio from "socket.io"
 import Game from "../gameLogic/Game"
 import User from "./User"
 import serverEmitter from "./serverEmitter"
-import { chunk } from "../utils"
+import { chunk } from "../../../web/src/common/utils"
 import { MIN_PLAYERS_TO_START, SIGNALS, LOBBY_CHECK_INTERVAL_MS } from "../../../web/src/common/constants"
 import { Move, isStartGamePayload } from "../../../web/src/common/types"
 

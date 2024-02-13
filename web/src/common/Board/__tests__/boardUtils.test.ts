@@ -1,12 +1,5 @@
-import {
-  combineToLeft,
-  containsEmpty,
-  rotateBoardLeft,
-  shiftTilesLeftInPlace,
-  movePossible,
-  calculateScoreIncrease,
-} from "../boardUtils"
-import { deepCopyArray, sum } from "../../utils"
+import { combineToLeft, containsEmpty, rotateBoardLeft, shiftTilesLeftInPlace, movePossible } from "../boardUtils"
+import { deepCopyArray } from "../../utils"
 
 describe("boardUtils", () => {
   test("containsEmpty", () => {

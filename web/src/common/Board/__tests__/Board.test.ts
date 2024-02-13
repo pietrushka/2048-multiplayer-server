@@ -1,4 +1,4 @@
-import Board from "../Board"
+import Board from "../index"
 import { spawnTile, initializeBoard } from "../boardUtils"
 
 // mocking predict where new tiles will spawn

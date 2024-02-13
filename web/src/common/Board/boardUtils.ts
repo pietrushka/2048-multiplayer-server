@@ -1,4 +1,4 @@
-import { Direction } from "../../../web/src/common/types"
+import { Direction } from "../types"
 import { arrayDifferenceLeft, deepCopyArray, sum } from "../utils"
 
 function createZeroMatrix(size: number): number[][] {
