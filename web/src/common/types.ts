@@ -10,15 +10,16 @@ export type GameState = "loading" | "active" | "finished"
 
 export type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT"
 
+// TODO introduce "Bomb" and "Freeze" moves
 export type Move = Direction
 
 type Boards = Record<string, BoardState>
 
 export type GameData = {
-  gameId: string
   state: GameState
   gameEndTimestamp: string
   boards: Boards
+  winner?: string
 }
 
 // CLIENT EVENTS
@@ -32,3 +33,4 @@ export type MovePayload = {
 // SERVER EVENTS
 export type StartGamePayload = GameData
 export type BoardsStateUpdatePayload = GameData
+export type EndGamePayload = GameData

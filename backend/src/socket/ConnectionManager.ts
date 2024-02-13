@@ -9,6 +9,7 @@ import { User } from "../types"
 import Game from "../gameLogic/Game"
 import { Server, Socket } from "socket.io"
 import { Move } from "../../../web/src/common/types"
+import serverEmitter from "./serverEmitter"
 
 const createUserState = (socket: Socket): User => ({
   socket,
@@ -58,7 +59,7 @@ export default class ConnectionManager {
         socket.join("lobby")
         this.lobbyUsers.add(socket.id)
       } else {
-        console.log("no user connected with:", socketId)
+        console.error("no user connected with:", socketId)
       }
     }
   }
@@ -69,7 +70,7 @@ export default class ConnectionManager {
       const gameId = user ? user.gameId : null
 
       if (gameId && this.games.get(gameId)) {
-        this.endGame(this.io, gameId, "chicken")
+        this.endGame(gameId)
         const isOnlyPlayer = this.games.get(gameId).socketIds.length < 2
         if (isOnlyPlayer) {
           this.games.delete(gameId)
@@ -111,14 +112,16 @@ export default class ConnectionManager {
   }
 
   startGame(game: Game) {
-    console.log("startGame")
     game.startGame()
-    this.io.to(game.id).emit(SIGNALS.startGame, game.data)
+    serverEmitter(this.io, {
+      signal: SIGNALS.startGame,
+      gameId: game.id,
+      data: game.data,
+    })
   }
 
   handleMove(socket: socketio.Socket) {
     return (data: { move: Move }) => {
-      console.log("handleMove")
       const socketId = socket.id
       const user = this.users.get(socketId)
       const gameId = user.gameId
@@ -126,13 +129,17 @@ export default class ConnectionManager {
 
       if (!game) {
         // TODO or player not in this game
-        console.log("ERROR no game id !!!")
+        console.error("ERROR no game id !!!")
         return
       }
 
       game.handleMove(data.move, socketId)
 
-      this.io.to(game.id).emit(SIGNALS.boardUpdate, game.data)
+      serverEmitter(this.io, {
+        signal: SIGNALS.boardUpdate,
+        gameId,
+        data: game.data,
+      })
     }
   }
 
@@ -140,7 +147,14 @@ export default class ConnectionManager {
     clearInterval(this.lobbyCheckInterval)
   }
 
-  endGame(io: Server, gameId: string, result: string) {
-    io.to(gameId).emit("end-game", { result })
+  endGame(gameId: string) {
+    const game = this.games.get(gameId)
+    // TODO to do handle player disconnect case
+    game.handleGameEnd({ reason: "timeEnd" })
+    serverEmitter(this.io, {
+      signal: SIGNALS.endGame,
+      gameId,
+      data: game.data,
+    })
   }
 }

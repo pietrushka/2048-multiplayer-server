@@ -64,7 +64,7 @@ export default class Game {
     }
   }
 
-  private handleGameEnd(payload: handleGameEndPayload) {
+  handleGameEnd(payload: handleGameEndPayload) {
     clearTimeout(this.gameEndTimeout)
 
     this.state = "finished"
@@ -102,7 +102,7 @@ export default class Game {
         return this.socketIds.find((x) => x !== payload.playerId)
       default:
         // TODO handle this differentely
-        console.error("this should not happen default")
+        console.error("determineWinner: reason not recognised")
         return "draw"
     }
   }

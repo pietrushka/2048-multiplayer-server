@@ -17,6 +17,7 @@ export const SIGNALS = {
   startGame: "startGame",
   move: "move",
   boardUpdate: "boardUpdate",
+  endGame: "endGame",
 } as const
 
 export const MOVES: Record<Move, Move> = {
