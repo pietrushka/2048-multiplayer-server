@@ -1,21 +1,14 @@
 import socketio from "socket.io"
+import Game from "../gameLogic/Game"
+import User from "./User"
+import serverEmitter from "./serverEmitter"
 import { chunk } from "../utils"
 import {
   MIN_PLAYERS_TO_START,
   SIGNALS,
   LOBBY_CHECK_INTERVAL_MS,
 } from "../../../web/src/common/constants"
-import { User } from "../types"
-import Game from "../gameLogic/Game"
-import { Server, Socket } from "socket.io"
 import { Move } from "../../../web/src/common/types"
-import serverEmitter from "./serverEmitter"
-
-const createUserState = (socket: Socket): User => ({
-  socket,
-  nickname: "",
-  gameId: null,
-})
 
 export default class ConnectionManager {
   users: Map<string, User>
@@ -42,8 +35,8 @@ export default class ConnectionManager {
 
   handleConnection = (socket: socketio.Socket) => {
     console.log(`New connection: ${socket.id}`)
-    const userData = createUserState(socket)
-    this.users.set(socket.id, userData)
+    const user = new User(socket)
+    this.users.set(socket.id, user)
 
     socket.on(SIGNALS.join, this.handleJoin(socket))
     socket.on(SIGNALS.disconnect, this.handleDisconnect(socket))
@@ -59,7 +52,7 @@ export default class ConnectionManager {
         socket.join("lobby")
         this.lobbyUsers.add(socket.id)
       } else {
-        console.error("no user connected with:", socketId)
+        console.error("handleJoin: no user connected with:", socketId)
       }
     }
   }
@@ -67,8 +60,9 @@ export default class ConnectionManager {
     return () => {
       const socketId = socket.id
       const user = this.users.get(socketId)
-      const gameId = user ? user.gameId : null
+      const gameId = user.gameId
 
+      // TODO revisit endGame flow
       if (gameId && this.games.get(gameId)) {
         this.endGame(gameId)
         const isOnlyPlayer = this.games.get(gameId).socketIds.length < 2
