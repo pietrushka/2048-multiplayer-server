@@ -3,12 +3,8 @@ import Game from "../gameLogic/Game"
 import User from "./User"
 import serverEmitter from "./serverEmitter"
 import { chunk } from "../utils"
-import {
-  MIN_PLAYERS_TO_START,
-  SIGNALS,
-  LOBBY_CHECK_INTERVAL_MS,
-} from "../../../web/src/common/constants"
-import { Move } from "../../../web/src/common/types"
+import { MIN_PLAYERS_TO_START, SIGNALS, LOBBY_CHECK_INTERVAL_MS } from "../../../web/src/common/constants"
+import { Move, isStartGamePayload } from "../../../web/src/common/types"
 
 export default class ConnectionManager {
   users: Map<string, User>
@@ -27,10 +23,7 @@ export default class ConnectionManager {
     })
 
     // Start the lobby check timer
-    this.lobbyCheckInterval = setInterval(
-      () => this.checkLobby(),
-      LOBBY_CHECK_INTERVAL_MS
-    )
+    this.lobbyCheckInterval = setInterval(() => this.checkLobby(), LOBBY_CHECK_INTERVAL_MS)
   }
 
   handleConnection = (socket: socketio.Socket) => {
@@ -60,15 +53,11 @@ export default class ConnectionManager {
     return () => {
       const socketId = socket.id
       const user = this.users.get(socketId)
-      const gameId = user.gameId
 
-      // TODO revisit endGame flow
-      if (gameId && this.games.get(gameId)) {
-        this.endGame(gameId)
-        const isOnlyPlayer = this.games.get(gameId).socketIds.length < 2
-        if (isOnlyPlayer) {
-          this.games.delete(gameId)
-        }
+      if (user) {
+        this.userDisconnectHandleGame(user)
+      } else {
+        console.error("handleDisconnect: no user", { socketId })
       }
 
       this.users.delete(socketId)
@@ -77,12 +66,9 @@ export default class ConnectionManager {
   }
 
   checkLobby() {
-    const playerChunks = chunk(
-      Array.from(this.lobbyUsers),
-      MIN_PLAYERS_TO_START
-    )
+    const playerChunks = chunk(Array.from(this.lobbyUsers), MIN_PLAYERS_TO_START)
 
-    for (let players of playerChunks) {
+    for (const players of playerChunks) {
       if (players.length === MIN_PLAYERS_TO_START) {
         this.createGame(players)
       }
@@ -107,23 +93,36 @@ export default class ConnectionManager {
 
   startGame(game: Game) {
     game.startGame()
-    serverEmitter(this.io, {
-      signal: SIGNALS.startGame,
-      gameId: game.id,
-      data: game.data,
-    })
+    const data = game.data
+    if (isStartGamePayload(data)) {
+      serverEmitter(this.io, {
+        signal: SIGNALS.startGame,
+        gameId: game.id,
+        data,
+      })
+      return
+    }
   }
 
   handleMove(socket: socketio.Socket) {
     return (data: { move: Move }) => {
       const socketId = socket.id
-      const user = this.users.get(socketId)
-      const gameId = user.gameId
-      const game = this.games.get(gameId)
 
+      const user = this.users.get(socketId)
+      if (!user) {
+        console.error("handleMove: no user")
+        return
+      }
+
+      const gameId = user.gameId
+      if (!gameId) {
+        console.error("handleMove: no game.id", { user })
+        return
+      }
+
+      const game = this.games.get(gameId)
       if (!game) {
-        // TODO or player not in this game
-        console.error("ERROR no game id !!!")
+        console.error("handleMove: no game", { gameId })
         return
       }
 
@@ -142,7 +141,8 @@ export default class ConnectionManager {
   }
 
   endGame(gameId: string) {
-    const game = this.games.get(gameId)
+    const game = this.games.get(gameId)! // assuming there mus be a game
+
     // TODO to do handle player disconnect case
     game.handleGameEnd({ reason: "timeEnd" })
     serverEmitter(this.io, {
@@ -150,5 +150,25 @@ export default class ConnectionManager {
       gameId,
       data: game.data,
     })
+  }
+
+  userDisconnectHandleGame(user: User) {
+    if (!user.gameId) {
+      return
+    }
+
+    const game = this.games.get(user.gameId)
+
+    if (!game) {
+      console.error("userDisconnectHandleGame: no game", { user })
+      return
+    }
+
+    this.endGame(game.id)
+    const isOnlyPlayer = game.socketIds.length < 2
+
+    if (isOnlyPlayer) {
+      this.games.delete(game.id)
+    }
   }
 }

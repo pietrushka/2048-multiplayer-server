@@ -11,8 +11,7 @@ export function containsEmpty(board: number[][]): boolean {
   return board.some((row) => row.some((cell) => cell === 0))
 }
 
-const getRandomCoordinate = (maxVal: number) =>
-  Math.floor(Math.random() * maxVal)
+const getRandomCoordinate = (maxVal: number) => Math.floor(Math.random() * maxVal)
 
 export function spawnTile(board: number[][]) {
   if (!containsEmpty(board)) {
@@ -43,7 +42,7 @@ export function initializeBoard(boardSize: number) {
 function rotateRight(matrix: number[][]) {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = i + 1; j < matrix[i].length; j++) {
-      let temp = matrix[i][j]
+      const temp = matrix[i][j]
       matrix[i][j] = matrix[j][i]
       matrix[j][i] = temp
     }
@@ -53,11 +52,7 @@ function rotateRight(matrix: number[][]) {
   }
 }
 
-export function rotateBoardLeft(
-  board: number[][],
-  direction: Direction,
-  reverse: boolean = false
-): number[][] {
+export function rotateBoardLeft(board: number[][], direction: Direction, reverse: boolean = false): number[][] {
   if (direction === "LEFT") {
     return board
   }
@@ -92,7 +87,7 @@ export function rotateBoardLeft(
   return board
 }
 
-export function shiftTilesLeftInPlace(array) {
+export function shiftTilesLeftInPlace(array: number[]) {
   let count = 0 // Count non-zero elements
   for (let i = 0; i < array.length; i++) {
     if (array[i] !== 0) {
@@ -105,7 +100,7 @@ export function shiftTilesLeftInPlace(array) {
   return array
 }
 
-export function combineToLeft(array) {
+export function combineToLeft(array: number[]) {
   let writePos = 0 // Track where to write the next non-zero/combined value.
 
   for (let i = 0; i < array.length - 1; i++) {
@@ -120,10 +115,7 @@ export function combineToLeft(array) {
   }
 
   // Handle the last element if it's not been part of a combination.
-  if (
-    array[array.length - 1] !== 0 &&
-    (array.length < 2 || array[array.length - 2] !== array[array.length - 1])
-  ) {
+  if (array[array.length - 1] !== 0 && (array.length < 2 || array[array.length - 2] !== array[array.length - 1])) {
     array[writePos++] = array[array.length - 1]
   }
 
@@ -134,16 +126,13 @@ export function combineToLeft(array) {
   return array
 }
 
-function combineAndShiftRight(array) {
+function combineAndShiftRight(array: number[]) {
   shiftTilesLeftInPlace(array)
   combineToLeft(array)
   shiftTilesLeftInPlace(array)
 }
 
-export function slideTiles(
-  board: number[][],
-  direction: Direction
-): number[][] {
+export function slideTiles(board: number[][], direction: Direction): number[][] {
   // rotate board to "LEFT" to utilize common logic
   board = rotateBoardLeft(board, direction)
 

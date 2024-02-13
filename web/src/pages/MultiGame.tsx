@@ -1,20 +1,14 @@
 import styled from "@emotion/styled"
 
-import PlayerBoard from "../components/PlayerBoard"
+import TileGrid from "../components/TileGrid"
 import MultiDashboard from "../components/MultiDashboard"
 import { Lobby } from "../components/Lobby"
 import { usePlayer } from "../hooks/usePlayer"
-import useMultiplayer from "./useMultiplayer"
+import useMultiplayer from "../hooks/useMultiplayer"
 
 const MultiGame = () => {
   const { nickname } = usePlayer()
-  const {
-    gameState,
-    performMove,
-    playerBoardState,
-    opponentBoardState,
-    endGameTimestamp,
-  } = useMultiplayer({
+  const { gameState, performMove, playerBoardState, opponentBoardState, endGameTimestamp } = useMultiplayer({
     nickname,
   })
 
@@ -25,9 +19,9 @@ const MultiGame = () => {
   // TODO this if is ugly af
   if (
     gameState === "loading" ||
-    !playerBoardState?.board ||
+    !playerBoardState?.tileGrid ||
     typeof playerBoardState?.score !== "number" ||
-    !opponentBoardState?.board ||
+    !opponentBoardState?.tileGrid ||
     typeof opponentBoardState?.score !== "number" ||
     !endGameTimestamp
   ) {
@@ -46,7 +40,7 @@ const MultiGame = () => {
         <MultiDashboard
           score={playerBoardState.score}
           opponentScore={opponentBoardState.score}
-          opponentBoard={opponentBoardState.board}
+          opponentTileGrid={opponentBoardState.tileGrid}
           endTimestamp={endGameTimestamp}
           undoMove={() => {
             /* TODO implement */
@@ -54,10 +48,7 @@ const MultiGame = () => {
           emitBomb={() => {} /*  TODO implement emitGameEvent("bomb", 250) */}
           emitFreeze={() => {} /* TODO implement emitGameEvent("freeze", 750)*/}
         />
-        <PlayerBoard
-          board={playerBoardState?.board}
-          performMove={performMove}
-        />
+        <TileGrid tileGrid={playerBoardState?.tileGrid} performMove={performMove} />
       </MultiGameContainer>
       {/* {gameResult && (
             <GameResult gameResult={gameResult} playAgain={playAgain} />

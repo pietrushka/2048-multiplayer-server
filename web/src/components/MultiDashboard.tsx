@@ -6,7 +6,7 @@ import Timer from "./Timer"
 interface MultiDashboardProps {
   score: number
   opponentScore: number
-  opponentBoard: number[][]
+  opponentTileGrid: number[][]
   endTimestamp: string
   undoMove: () => void
   emitBomb: () => void
@@ -17,7 +17,7 @@ function MultiDashboard({
   score,
   undoMove,
   opponentScore,
-  opponentBoard,
+  opponentTileGrid,
   endTimestamp,
   emitBomb,
   emitFreeze,
@@ -49,12 +49,12 @@ function MultiDashboard({
       </FirstSection>
 
       <SecondSection>
-        {opponentBoard && (
-          <OpponentBoard>
-            {opponentBoard.flat().map((value: number, idx: number) => (
+        {opponentTileGrid && (
+          <OpponentTileGrid>
+            {opponentTileGrid.flat().map((value: number, idx: number) => (
               <Tile key={idx} value={value} size={"small"} />
             ))}
-          </OpponentBoard>
+          </OpponentTileGrid>
         )}
         <ButtonsGroup>
           <ShopBtnsBox>
@@ -111,7 +111,8 @@ const SecondSection = styled.div`
   display: flex;
 `
 
-const OpponentBoard = styled.div`
+// TODO reuse dumb TileGrid
+const OpponentTileGrid = styled.div`
   width: 45%;
   position: relative;
   background: #bbada0;

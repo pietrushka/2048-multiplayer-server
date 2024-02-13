@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import styled from "@emotion/styled"
 
 import GameResult from "../components/GameResult"
-import Board from "../components/PlayerBoard"
+import TileGrid from "../components/TileGrid"
 import Dashboard from "../components/SingleDashboard"
 import { useGame } from "../hooks/useGame"
 
@@ -18,7 +18,7 @@ function SingleGame() {
     <div> not working </div>
     // <SingleGameContainer>
     //   <Dashboard />
-    //   <Board />
+    //   <TileGrid />
     //   {
     //     gameResult && <GameResult gameResult={gameResult} playAgain={resetGame} />
     //   }

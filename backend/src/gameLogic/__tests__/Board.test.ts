@@ -3,7 +3,6 @@ import Board from "../Board"
 describe("Board", () => {
   test("initialize", () => {
     const board = new Board("playerId")
-    board.initialize()
 
     const flattenedBoard = board.board.flat()
     const nonZeroNumbers = flattenedBoard.filter((cell) => cell !== 0)
@@ -15,7 +14,6 @@ describe("Board", () => {
 
   test("handleMove", () => {
     const board = new Board("playerId")
-    board.initialize()
     board.board = [
       [0, 0, 0, 0],
       [0, 0, 0, 0],

@@ -8,10 +8,10 @@ import { Move } from "../common/types"
 
 type PlayerBoardProps = {
   performMove: (move: Move) => void
-  board: number[][]
+  tileGrid: number[][]
 }
 
-function PlayerBoard({ performMove, board }: PlayerBoardProps) {
+export default function TileGrid({ performMove, tileGrid }: PlayerBoardProps) {
   const startPointerLocation = useRef<Point>()
   const currentPointerLocation = useRef<Point>()
 
@@ -83,10 +83,7 @@ function PlayerBoard({ performMove, board }: PlayerBoardProps) {
     (e: React.TouchEvent) => {
       e.preventDefault()
       if (startPointerLocation.current && currentPointerLocation.current) {
-        finishPointer(
-          startPointerLocation.current,
-          currentPointerLocation.current
-        )
+        finishPointer(startPointerLocation.current, currentPointerLocation.current)
       }
 
       startPointerLocation.current = undefined
@@ -96,21 +93,15 @@ function PlayerBoard({ performMove, board }: PlayerBoardProps) {
   )
 
   return (
-    <BoardContainer
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
+    <BoardContainer onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
       <Board>
-        {board.flat().map((value: number, idx: number) => (
+        {tileGrid.flat().map((value: number, idx: number) => (
           <Tile key={idx} value={value} />
         ))}
       </Board>
     </BoardContainer>
   )
 }
-
-export default PlayerBoard
 
 const BoardContainer = styled.div`
   width: 100%;

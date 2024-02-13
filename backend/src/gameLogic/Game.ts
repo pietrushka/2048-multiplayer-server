@@ -1,7 +1,6 @@
 import Board from "./Board"
-import { GameState, Move } from "../../../web/src/common/types"
+import { Move, GameData } from "../../../web/src/common/types"
 import { GAME_TIME } from "../../../web/src/common/constants"
-import { movePossible } from "./boardUtils"
 
 function addTimeToCurrentTimestamp(ms: number): string {
   const now = new Date()
@@ -9,35 +8,32 @@ function addTimeToCurrentTimestamp(ms: number): string {
   return later.toISOString()
 }
 
-type handleGameEndPayload =
-  | { reason: "timeEnd" }
-  | { reason: "playerBlocked"; playerId: string }
+type handleGameEndPayload = { reason: "timeEnd" } | { reason: "playerBlocked"; playerId: string }
 
 export default class Game {
   id: string
-  state: GameState
-  endGameTimestamp: string
+  state: GameData["state"]
+  endGameTimestamp: GameData["endGameTimestamp"]
+  boards: Board[]
+  winner: GameData["winner"]
   socketIds: string[]
-  boards: Record<string, Board>
-  winner: string
-  private gameEndTimeout
+  private endGameTimoutId?: NodeJS.Timeout
 
   constructor(socketIds: string[]) {
     this.id = `game_${Date.now()}`
     this.state = "loading"
-    this.endGameTimestamp = null
     this.socketIds = socketIds
-    this.boards = {
-      [socketIds[0]]: new Board(socketIds[0]),
-      [socketIds[1]]: new Board(socketIds[1]),
-    }
+    this.boards = [new Board(socketIds[0]), new Board(socketIds[1])]
+    this.winner
+    this.endGameTimestamp
+    this.endGameTimoutId
   }
 
-  get data() {
+  get data(): GameData {
     return {
       state: this.state,
       endGameTimestamp: this.endGameTimestamp,
-      boards: this.boards,
+      boards: this.boards.map((board) => board.data),
       winner: this.winner,
     }
   }
@@ -45,19 +41,24 @@ export default class Game {
   startGame() {
     this.endGameTimestamp = addTimeToCurrentTimestamp(GAME_TIME)
     this.state = "active"
-    Object.values(this.boards).map((board) => board.initialize())
 
-    if (this.gameEndTimeout) {
-      console.error("cleared timeout", this.gameEndTimeout)
-      clearTimeout(this.gameEndTimeout)
+    if (this.endGameTimoutId) {
+      console.error("cleared timeout", this.endGameTimoutId)
+      clearTimeout(this.endGameTimoutId)
     }
-    this.gameEndTimeout = setTimeout(() => {
+    this.endGameTimoutId = setTimeout(() => {
       this.handleGameEnd({ reason: "timeEnd" })
     }, GAME_TIME)
   }
 
   handleMove(move: Move, playerId: string) {
-    const board = this.boards[playerId]
+    const board = this.boards?.find((board) => board.playerId === playerId)
+
+    if (!board) {
+      console.error("handleMove: no board", { board, playerId })
+      return
+    }
+
     board.handleMove(move)
     if (!board.nextMovePossible) {
       this.handleGameEnd({ reason: "playerBlocked", playerId })
@@ -65,7 +66,9 @@ export default class Game {
   }
 
   handleGameEnd(payload: handleGameEndPayload) {
-    clearTimeout(this.gameEndTimeout)
+    if (this.endGameTimoutId) {
+      clearTimeout(this.endGameTimoutId)
+    }
 
     this.state = "finished"
     this.winner = this.determineWinner(payload)
@@ -74,36 +77,43 @@ export default class Game {
   private determineWinner(payload: handleGameEndPayload): string {
     switch (payload.reason) {
       case "timeEnd":
-        const boardEntries = Object.entries(this.boards)
-        for (let [playerId, board] of boardEntries) {
-          if (!board.nextMovePossible) {
-            return this.socketIds.find((x) => x !== playerId)
-          }
+        const blockedPlayer = this.findBlockedPlayer()
+        if (blockedPlayer) {
+          return blockedPlayer
         }
-
-        const scores = boardEntries.map(([playerId, board]) => ({
-          playerId,
-          score: board.score,
-        }))
-
-        if (scores[0].score > scores[1].score) {
-          return scores[0].playerId
-        }
-        if (scores[0].score < scores[1].score) {
-          return scores[1].playerId
-        }
-        if (scores[0].score === scores[1].score) {
-          return "draw"
-        }
-
-        console.error("this should not happen force draw")
-        return "draw"
+        return this.findScoreWinner()
       case "playerBlocked":
-        return this.socketIds.find((x) => x !== payload.playerId)
+        return this.socketIds.find((x) => x !== payload.playerId)!
       default:
         // TODO handle this differentely
         console.error("determineWinner: reason not recognised")
         return "draw"
     }
+  }
+  private findBlockedPlayer() {
+    if (!this.boards) {
+      return
+    }
+    for (const board of this.boards) {
+      if (!board.nextMovePossible) {
+        return this.socketIds.find((x) => x !== board.playerId)!
+      }
+    }
+  }
+
+  private findScoreWinner() {
+    if (!this.boards) {
+      console.error("findScoreWinner: no boards")
+      return "draw" // TODO probably not the best handling
+    }
+
+    if (this.boards[0].score > this.boards[1].score) {
+      return this.boards[0].playerId
+    }
+    if (this.boards[0].score < this.boards[1].score) {
+      return this.boards[1].playerId
+    }
+
+    return "draw"
   }
 }

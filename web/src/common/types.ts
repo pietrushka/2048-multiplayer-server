@@ -1,9 +1,10 @@
 // TODO monorepo setup
 // moved into React src directory as a walkaround for reacet complaining about importing from outside
 
-export type BoardState = {
-  score: number | null
-  board: number[][] | null
+export type BoardData = {
+  playerId: string
+  score: number
+  tileGrid: number[][]
 }
 
 export type GameState = "loading" | "active" | "finished"
@@ -13,12 +14,10 @@ export type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT"
 // TODO introduce "Bomb" and "Freeze" moves
 export type Move = Direction
 
-type Boards = Record<string, BoardState>
-
-export type GameData = {
+export interface GameData {
   state: GameState
-  endGameTimestamp: string
-  boards: Boards
+  endGameTimestamp?: string
+  boards: BoardData[]
   winner?: string
 }
 
@@ -31,6 +30,14 @@ export type MovePayload = {
 }
 
 // SERVER EVENTS
-export type StartGamePayload = GameData
+export interface StartGamePayload extends GameData {
+  state: "active"
+  endGameTimestamp: string
+}
 export type BoardsStateUpdatePayload = GameData
 export type EndGamePayload = GameData
+
+// TYPE GUARDS
+export function isStartGamePayload(payload: GameData): payload is StartGamePayload {
+  return typeof payload.endGameTimestamp === "string" && payload.state === "active"
+}
