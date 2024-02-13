@@ -45,9 +45,8 @@ const useMultiplayer = (props: UseMultiplayerProps) => {
   const { nickname } = props
 
   const socketIo = useRef<Socket>()
-  const [gameId, setGameId] = useState<string>()
   const [gameState, setGameState] = useState<GameState>()
-  const [gameEndTimestamp, setGameEndTimestamp] = useState<string>()
+  const [endGameTimestamp, setendGameTimestamp] = useState<string>()
   const [playerBoardState, setPlayerBoardState] = useState<BoardState>()
   const [opponentBoardState, setOpponentBoardState] = useState<BoardState>()
 
@@ -72,9 +71,8 @@ const useMultiplayer = (props: UseMultiplayerProps) => {
 
   const handleGameStart = (data: StartGamePayload) => {
     console.log("handleGameStart", data)
-    setGameId(data.gameId)
     setGameState(data.state)
-    setGameEndTimestamp(data.gameEndTimestamp)
+    setendGameTimestamp(data.endGameTimestamp)
     const boardStates = getPlayersBoardState(data.boards, socketIo.current?.id)
 
     setPlayerBoardState(boardStates.playerBoardState)
@@ -96,7 +94,7 @@ const useMultiplayer = (props: UseMultiplayerProps) => {
 
   return {
     gameState,
-    gameEndTimestamp,
+    endGameTimestamp,
     playerBoardState,
     opponentBoardState,
     performMove,

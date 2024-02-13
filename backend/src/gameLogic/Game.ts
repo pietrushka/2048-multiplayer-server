@@ -16,7 +16,7 @@ type handleGameEndPayload =
 export default class Game {
   id: string
   state: GameState
-  gameEndTimestamp: string
+  endGameTimestamp: string
   socketIds: string[]
   boards: Record<string, Board>
   winner: string
@@ -25,7 +25,7 @@ export default class Game {
   constructor(socketIds: string[]) {
     this.id = `game_${Date.now()}`
     this.state = "loading"
-    this.gameEndTimestamp = null
+    this.endGameTimestamp = null
     this.socketIds = socketIds
     this.boards = {
       [socketIds[0]]: new Board(socketIds[0]),
@@ -36,14 +36,14 @@ export default class Game {
   get data() {
     return {
       state: this.state,
-      gameEndTimestamp: this.gameEndTimestamp,
+      endGameTimestamp: this.endGameTimestamp,
       boards: this.boards,
       winner: this.winner,
     }
   }
 
   startGame() {
-    this.gameEndTimestamp = addTimeToCurrentTimestamp(GAME_TIME)
+    this.endGameTimestamp = addTimeToCurrentTimestamp(GAME_TIME)
     this.state = "active"
     Object.values(this.boards).map((board) => board.initialize())
 

@@ -17,7 +17,7 @@ type Boards = Record<string, BoardState>
 
 export type GameData = {
   state: GameState
-  gameEndTimestamp: string
+  endGameTimestamp: string
   boards: Boards
   winner?: string
 }

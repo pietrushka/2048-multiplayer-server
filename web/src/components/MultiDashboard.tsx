@@ -1,14 +1,13 @@
-import { useState } from "react"
 import styled from "@emotion/styled"
 
 import Tile from "./Tile"
-import calcTime from "../utils/calcTime"
+import Timer from "./Timer"
 
 interface MultiDashboardProps {
   score: number
   opponentScore: number
   opponentBoard: number[][]
-  endTime: string
+  endTimestamp: string
   undoMove: () => void
   emitBomb: () => void
   emitFreeze: () => void
@@ -19,12 +18,10 @@ function MultiDashboard({
   undoMove,
   opponentScore,
   opponentBoard,
-  endTime,
+  endTimestamp,
   emitBomb,
   emitFreeze,
 }: MultiDashboardProps) {
-  const [remainingTime, setRemainingTime] = useState("")
-
   // setTimeout(() => {
   //   if (endTime) {
   //     const formattedTime = calcTime(endTime)
@@ -46,7 +43,7 @@ function MultiDashboard({
           </Score>
           <Score>
             <h3>Time</h3>
-            <p>{remainingTime}</p>
+            <Timer endTimestamp={endTimestamp} />
           </Score>
         </StatsGroup>
       </FirstSection>

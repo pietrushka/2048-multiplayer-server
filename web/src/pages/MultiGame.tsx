@@ -13,7 +13,7 @@ const MultiGame = () => {
     performMove,
     playerBoardState,
     opponentBoardState,
-    gameEndTimestamp,
+    endGameTimestamp,
   } = useMultiplayer({
     nickname,
   })
@@ -29,13 +29,13 @@ const MultiGame = () => {
     typeof playerBoardState?.score !== "number" ||
     !opponentBoardState?.board ||
     typeof opponentBoardState?.score !== "number" ||
-    !gameEndTimestamp
+    !endGameTimestamp
   ) {
     console.log("multigame early return", {
       gameState,
       playerBoardState,
       opponentBoardState,
-      gameEndTimestamp,
+      endGameTimestamp,
     })
     return <div>Loading</div>
   }
@@ -47,7 +47,7 @@ const MultiGame = () => {
           score={playerBoardState.score}
           opponentScore={opponentBoardState.score}
           opponentBoard={opponentBoardState.board}
-          endTime={gameEndTimestamp}
+          endTimestamp={endGameTimestamp}
           undoMove={() => {
             /* TODO implement */
           }}
