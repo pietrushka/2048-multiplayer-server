@@ -1,109 +1,67 @@
-import React, { useEffect, useRef } from "react"
-import io, { Socket } from "socket.io-client"
 import styled from "@emotion/styled"
 
 import PlayerBoard from "../components/PlayerBoard"
 import MultiDashboard from "../components/MultiDashboard"
 import { Lobby } from "../components/Lobby"
-import { useGame } from "../hooks/useGame"
 import { usePlayer } from "../hooks/usePlayer"
-import GameResult from "../components/GameResult"
-import { startMultiplayerI, updateMultiplayerI } from "../types/useGame.types"
+import useMultiplayer from "./useMultiplayer"
 
 const MultiGame = () => {
-  const {
-    board,
-    score,
-    setInitials,
-    startMultiplayer,
-    updateMultiplayer,
-    resultMultiplayer,
-    gameId,
-    gameResult,
-    handleGameEvent,
-    decreasePoints,
-    handleOpponentLost,
-  } = useGame()
   const { nickname } = usePlayer()
-  const socket = useRef<Socket | null>(null)
-
-  console.log(process.env)
-  const SERVER_ENDPOINT =
-    process.env.REACT_APP_SERVER_ENDPOINT || "http://localhost:4000"
-
-  useEffect(() => {
-    // Initialize socket connection
-    socket.current = io(SERVER_ENDPOINT)
-    socket.current.emit("join", { nickname })
-
-    socket.current.on("start-game", (data: startMultiplayerI) => {
-      console.log("start game")
-      startMultiplayer(data)
-    })
-    socket.current.on("move", (data: updateMultiplayerI) =>
-      updateMultiplayer(data)
-    )
-    socket.current.on("game-event", (data: { type: string }) =>
-      handleGameEvent(data.type)
-    )
-    socket.current.on("end-game", () => resultMultiplayer())
-    socket.current.on("opponent-lost", () => handleOpponentLost())
-
-    // Cleanup on component unmount or before re-running the effect
-    return () => {
-      socket.current?.disconnect()
-      socket.current = null
-      setInitials()
-    }
-  }, [
+  const {
+    gameState,
+    performMove,
+    playerBoardState,
+    opponentBoardState,
+    gameEndTimestamp,
+  } = useMultiplayer({
     nickname,
-    startMultiplayer,
-    updateMultiplayer,
-    resultMultiplayer,
-    handleGameEvent,
-    handleOpponentLost,
-    setInitials,
-  ])
+  })
 
-  useEffect(() => {
-    if (gameId && board && score !== null) {
-      socket.current?.emit("move", { board, score })
-    }
-  }, [gameId, board, score])
-
-  if (gameResult) {
-    socket.current?.emit(gameResult === "defeat" ? "player-lost" : "end-game")
-    // Consider handling socket disconnection and game reset logic here
+  if (!gameState) {
+    return <Lobby />
   }
 
-  const emitGameEvent = (type: string, cost: number) => {
-    if (socket.current) {
-      socket.current.emit("game-event", { type })
-    }
-    decreasePoints(cost)
+  // TODO this if is ugly af
+  if (
+    gameState === "loading" ||
+    !playerBoardState?.board ||
+    typeof playerBoardState?.score !== "number" ||
+    !opponentBoardState?.board ||
+    typeof opponentBoardState?.score !== "number" ||
+    !gameEndTimestamp
+  ) {
+    console.log("multigame early return", {
+      gameState,
+      playerBoardState,
+      opponentBoardState,
+      gameEndTimestamp,
+    })
+    return <div>Loading</div>
   }
 
-  const playAgain = () => {
-    window.location.reload()
-  }
   return (
     <>
-      {gameId ? (
-        <>
-          <MultiGameContainer>
-            <MultiDashboard
-              emitBomb={() => emitGameEvent("bomb", 250)}
-              emitFreeze={() => emitGameEvent("freeze", 750)}
-            />
-            <PlayerBoard />
-          </MultiGameContainer>
-          {gameResult && (
+      <MultiGameContainer>
+        <MultiDashboard
+          score={playerBoardState.score}
+          opponentScore={opponentBoardState.score}
+          opponentBoard={opponentBoardState.board}
+          endTime={gameEndTimestamp}
+          undoMove={() => {
+            /* TODO implement */
+          }}
+          emitBomb={() => {} /*  TODO implement emitGameEvent("bomb", 250) */}
+          emitFreeze={() => {} /* TODO implement emitGameEvent("freeze", 750)*/}
+        />
+        <PlayerBoard
+          board={playerBoardState?.board}
+          performMove={performMove}
+        />
+      </MultiGameContainer>
+      {/* {gameResult && (
             <GameResult gameResult={gameResult} playAgain={playAgain} />
-          )}
-        </>
-      ) : (
-        <Lobby />
-      )}
+          )} */}
     </>
   )
 }
