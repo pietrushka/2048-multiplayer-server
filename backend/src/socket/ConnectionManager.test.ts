@@ -1,4 +1,4 @@
-import { createServer } from "node:http"
+import { createServer, Server as HttpServer } from "node:http"
 import { AddressInfo } from "node:net"
 import { io as ioc, Socket as ClientSocket } from "socket.io-client"
 import { Server, Socket as ServerSocket } from "socket.io"
@@ -16,7 +16,7 @@ describe("WHOLE GAME FLOW", () => {
     clientSocket1: ClientSocket,
     clientSocket2: ClientSocket,
     connectionManager: ConnectionManager,
-    httpServer
+    httpServer: HttpServer
 
   beforeAll((done) => {
     httpServer = createServer()
