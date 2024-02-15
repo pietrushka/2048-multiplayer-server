@@ -1,14 +1,14 @@
 export interface StorageBoardModel {
-  score?: number;
-  board?: number[];
+  score?: number
+  tileGrid?: number[][]
 }
 
 export interface StoragePlayerModel {
-  nickname?: string;
-  bestScore?: number;
+  nickname?: string
+  bestScore?: number
 }
 
 export interface Point {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }

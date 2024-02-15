@@ -1,16 +1,11 @@
 import Board from "../../../web/src/common/Board"
+import { addTimeToCurrentTimestamp } from "../../../web/src/common/utils"
 import { Move, GameData } from "../../../web/src/common/types"
 import { GAME_TIME } from "../../../web/src/common/constants"
 
-function addTimeToCurrentTimestamp(ms: number): string {
-  const now = new Date()
-  const later = new Date(now.getTime() + ms)
-  return later.toISOString()
-}
-
 type handleGameEndPayload = { reason: "timeEnd" } | { reason: "playerBlocked"; playerId: string }
 
-export default class Game {
+export default class MultiplayerGame {
   id: string
   state: GameData["state"]
   endGameTimestamp: GameData["endGameTimestamp"]

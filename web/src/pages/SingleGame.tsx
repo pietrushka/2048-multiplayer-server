@@ -1,28 +1,24 @@
-import React, { useEffect } from "react"
 import styled from "@emotion/styled"
-
-import GameResult from "../components/GameResult"
 import TileGrid from "../components/TileGrid"
-import Dashboard from "../components/SingleDashboard"
-import { useGame } from "../hooks/useGame"
+import GameResult from "../components/GameResult"
+import SingleDashboard from "../components/SingleDashboard"
+import useSingleGame from "../hooks/useSingleGame"
+import { usePlayer } from "../hooks/usePlayer"
 
 function SingleGame() {
-  const { setInitials, gameResult, startSingleplayer, resetGame } = useGame()
+  const { bestScore, setBestScore } = usePlayer()
+  const { state, score, tileGrid, performMove, resetGame } = useSingleGame({ bestScore, setBestScore })
+  console.log("singleGame", { score, tileGrid })
 
-  useEffect(() => {
-    startSingleplayer()
-    return () => setInitials()
-  }, [])
-
+  if (typeof tileGrid === "undefined" || typeof score === "undefined") {
+    return <span>loading</span>
+  }
   return (
-    <div> not working </div>
-    // <SingleGameContainer>
-    //   <Dashboard />
-    //   <TileGrid />
-    //   {
-    //     gameResult && <GameResult gameResult={gameResult} playAgain={resetGame} />
-    //   }
-    // </SingleGameContainer>
+    <SingleGameContainer>
+      <SingleDashboard score={score} bestScore={bestScore} />
+      <TileGrid tileGrid={tileGrid} performMove={performMove} />
+      {state === "finished" && <GameResult playAgain={resetGame} />}
+    </SingleGameContainer>
   )
 }
 

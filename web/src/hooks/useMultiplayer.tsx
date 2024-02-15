@@ -16,7 +16,7 @@ const getPlayersBoardState = (boards: BoardData[], playerSocketId: string) => {
   return { playerBoardState, opponentBoardState }
 }
 
-const useMultiplayer = (props: UseMultiplayerProps) => {
+export default function useMultiplayer(props: UseMultiplayerProps) {
   const { nickname } = props
 
   const socketIo = useRef<Socket>()
@@ -82,5 +82,3 @@ const useMultiplayer = (props: UseMultiplayerProps) => {
     performMove,
   }
 }
-
-export default useMultiplayer

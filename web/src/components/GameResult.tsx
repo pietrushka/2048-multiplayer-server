@@ -1,32 +1,29 @@
-import styled from '@emotion/styled';
-import React from 'react'
-import {Link} from "react-router-dom";
+import styled from "@emotion/styled"
+import React from "react"
+import { Link } from "react-router-dom"
 
-import {Menu, MenuOption} from '../pages/Home'
+import { Menu, MenuOption } from "../pages/Home"
 
 interface GameResultProps {
-  gameResult: string;
   playAgain: () => void
 }
 
-export default function GameResult ({gameResult, playAgain}: GameResultProps) {
-  const gameResultMsg = gameResult === 'victory' ? 'You win' : 'You lose'
-    return (
-      <Overlay>
-        <PopUp>
-          <h1>{gameResultMsg}</h1>
-          <Menu>
-            <MenuOption color='green'>
-              <button onClick={playAgain}>Play again</button>
-            </MenuOption>
-            <MenuOption color='red'>
-              <Link to='/'>Exit</Link>
-            </MenuOption>
-
-          </Menu>
-        </PopUp>
-      </Overlay>
-    );
+export default function GameResult({ playAgain }: GameResultProps) {
+  return (
+    <Overlay>
+      <PopUp>
+        <h1>Game End</h1>
+        <Menu>
+          <MenuOption color="green">
+            <button onClick={playAgain}>Play again</button>
+          </MenuOption>
+          <MenuOption color="red">
+            <Link to="/">Exit</Link>
+          </MenuOption>
+        </Menu>
+      </PopUp>
+    </Overlay>
+  )
 }
 
 export const Overlay = styled.div`
@@ -39,7 +36,7 @@ export const Overlay = styled.div`
   top: 0;
   left: 0;
   z-index: 30;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
 `
 export const PopUp = styled.div`
   position: relative;

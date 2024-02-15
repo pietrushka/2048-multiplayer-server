@@ -29,4 +29,10 @@ export default class Board {
 
     this.nextMovePossible = movePossible(this.tileGrid)
   }
+
+  reset() {
+    this.nextMovePossible = true
+    this.tileGrid = initializeBoard(DEFAULT_BOARD_SIZE)
+    this.score = 0
+  }
 }
