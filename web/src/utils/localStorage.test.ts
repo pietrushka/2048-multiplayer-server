@@ -1,38 +1,33 @@
-import { getStoredBoard, storeBoard, getStoredPlayer, storePlayer } from './localStorage';
+import { storePlayer, getStoredPlayer, PLAYER_STORAGE_SPACE } from "./localStorage"
 
-const BOARD_NAME = '2048.vs_board';
-const PLAYER_NAME = '2048.vs_player';
+const playerMock = {
+  nickname: "playerName",
+  bestScore: 22,
+}
 
-describe('board', () => {
-  test('stores board', () => {
-    storeBoard({});
-    expect(localStorage.getItem(BOARD_NAME)).toBe('{}');
-  });
+// board local storage handling shares most of the logic with player handling
+describe("player", () => {
+  afterEach(() => {
+    localStorage.clear()
+  })
 
-  test('reads board', () => {
-    localStorage.setItem(BOARD_NAME, '{}');
-    expect(getStoredBoard()).toMatchObject({});
-  });
+  test("stores player", () => {
+    storePlayer(playerMock)
 
-  test('discards invalid board data', () => {
-    localStorage.setItem(BOARD_NAME, '{"board":"wrong"}');
-    expect(getStoredBoard()).toMatchObject({});
-  });
-});
+    const result = JSON.parse(localStorage.getItem(PLAYER_STORAGE_SPACE)!)
+    expect(result).toEqual(playerMock)
+  })
 
-describe('board', () => {
-  test('stores player', () => {
-    storePlayer({});
-    expect(localStorage.getItem(PLAYER_NAME)).toBe('{}');
-  });
+  test("reads player", () => {
+    localStorage.setItem(PLAYER_STORAGE_SPACE, JSON.stringify(playerMock))
+    expect(getStoredPlayer()).toEqual(playerMock)
+  })
 
-  test('reads player', () => {
-    localStorage.setItem(PLAYER_NAME, '{}');
-    expect(getStoredBoard()).toMatchObject({});
-  });
-
-  test('discards invalid player data', () => {
-    localStorage.setItem(PLAYER_NAME, '{"nickname":"wrong"}');
-    expect(getStoredBoard()).toMatchObject({});
-  });
+  test("discards invalid player data", () => {
+    const notValidDataEntry = JSON.stringify({
+      nickname: "wrong",
+    })
+    localStorage.setItem(PLAYER_STORAGE_SPACE, notValidDataEntry)
+    expect(getStoredPlayer()).toBe(undefined)
+  })
 })

@@ -1,94 +1,54 @@
-import { StorageBoardModel, StoragePlayerModel } from "../types/Models"
+import validateObject, { Schema } from "./validateObject"
 
-const BOARD_NAME = "2048.vs_board"
-const PLAYER_NAME = "2048.vs_player"
+// TODO move to constants
+export const BOARD_STORAGE_SPACE = "2048.vs_board"
+export const PLAYER_STORAGE_SPACE = "2048.vs_player"
 
-export function getStoredBoardData(): StorageBoardModel {
-  if (!localStorage.getItem(BOARD_NAME)) {
-    return {}
+type LocalStoragePlayer = {
+  nickname: string
+  bestScore: number
+}
+
+type LocalStorageBoardState = {
+  score: number
+  tileGrid: number[][]
+}
+
+const writeLocalStorage =
+  <T extends Record<string, unknown>>(storageSpace: string) =>
+  (data: T) => {
+    localStorage.setItem(storageSpace, JSON.stringify(data))
   }
 
-  let storedData: StorageBoardModel = {}
-  try {
-    const rawData = JSON.parse(localStorage.getItem(BOARD_NAME) as string)
+export const storePlayer = writeLocalStorage<LocalStoragePlayer>(PLAYER_STORAGE_SPACE)
+export const storeBoardData = writeLocalStorage<LocalStorageBoardState>(BOARD_STORAGE_SPACE)
 
-    if (rawData.hasOwnProperty("tileGrid") && rawData.hasOwnProperty("score")) {
-      if (Array.isArray(rawData.board) && typeof rawData.score === "number") {
-        for (let value of rawData.board) {
-          if (typeof value !== "number") {
-            throw new Error("Invalid stored data")
-          }
+const readLocalStorage =
+  <T extends Record<string, unknown>>(storageSpace: string, schema: Schema) =>
+  (): T | undefined => {
+    const itemString = localStorage.getItem(storageSpace)
 
-          // Make sure the value is a power of 2.
-          if (value !== 0 && Math.log2(value) % 1 !== 0) {
-            throw new Error("Invalid stored data")
-          }
-        }
-
-        //Asign data to storedData obj
-        storedData.tileGrid = rawData.tileGrid
-        storedData.score = rawData.score
-      } else {
-        throw new Error("Invalid stored data")
-      }
+    if (!itemString) {
+      console.log("no itemString")
+      return
     }
-  } catch (error) {
-    console.error(
-      // @ts-ignore TODO
-      `Error occured: ${error.message}. Stored data will be deleted.`
-    )
-    localStorage.removeItem(BOARD_NAME)
-  }
 
-  return storedData
-}
+    const item: unknown = JSON.parse(itemString)
+    const isValid = validateObject(schema, item)
 
-export function storeBoardData(data: StorageBoardModel) {
-  localStorage.setItem(
-    BOARD_NAME,
-    JSON.stringify({
-      score: data.score,
-      board: data.tileGrid,
-    })
-  )
-}
-
-export function getStoredPlayer(): StoragePlayerModel {
-  if (!localStorage.getItem(PLAYER_NAME)) {
-    return {}
-  }
-
-  let storedData: StoragePlayerModel = {}
-
-  try {
-    const rawData = JSON.parse(localStorage.getItem(PLAYER_NAME) as string)
-
-    if (rawData.hasOwnProperty("nickname") && rawData.hasOwnProperty("bestScore")) {
-      if (typeof rawData.nickname === "string" && typeof rawData.bestScore === "number") {
-        //Asign data to storedData obj
-        storedData.nickname = rawData.nickname
-        storedData.bestScore = rawData.bestScore
-      } else {
-        throw new Error("Invalid stored data")
-      }
+    if (!isValid) {
+      console.log("no valid")
+      return
     }
-  } catch (error) {
-    console.error(
-      // @ts-ignore TODO
-      `Error occured: ${error.message}. Stored data will be deleted.`
-    )
-    localStorage.removeItem(PLAYER_NAME)
+
+    return item as T
   }
 
-  return storedData
-}
-
-export function storePlayer(data: StoragePlayerModel) {
-  localStorage.setItem(
-    PLAYER_NAME,
-    JSON.stringify({
-      nickname: data.nickname,
-      bestScore: data.bestScore,
-    })
-  )
-}
+export const getStoredBoardData = readLocalStorage<LocalStoragePlayer>(BOARD_STORAGE_SPACE, {
+  score: "number",
+  tileGrid: "numberArrayArray",
+})
+export const getStoredPlayer = readLocalStorage<LocalStorageBoardState>(PLAYER_STORAGE_SPACE, {
+  nickname: "string",
+  bestScore: "number",
+})
