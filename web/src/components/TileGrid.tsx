@@ -1,10 +1,14 @@
-import React, { useEffect, useCallback, useRef } from "react"
+// TODO refactor TileGrid
+import { useEffect, useCallback, useRef } from "react"
 import styled from "@emotion/styled"
-
 import { MOVES } from "../common/constants"
 import Tile from "./Tile"
-import { Point } from "../types/Models"
 import { Move } from "../common/types"
+
+type Point = {
+  x: number
+  y: number
+}
 
 type PlayerBoardProps = {
   performMove: (move: Move) => void

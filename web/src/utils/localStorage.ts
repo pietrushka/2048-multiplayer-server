@@ -44,11 +44,11 @@ const readLocalStorage =
     return item as T
   }
 
-export const getStoredBoardData = readLocalStorage<LocalStoragePlayer>(BOARD_STORAGE_SPACE, {
+export const getStoredBoardData = readLocalStorage<LocalStorageBoardState>(BOARD_STORAGE_SPACE, {
   score: "number",
   tileGrid: "numberArrayArray",
 })
-export const getStoredPlayer = readLocalStorage<LocalStorageBoardState>(PLAYER_STORAGE_SPACE, {
+export const getStoredPlayer = readLocalStorage<LocalStoragePlayer>(PLAYER_STORAGE_SPACE, {
   nickname: "string",
   bestScore: "number",
 })

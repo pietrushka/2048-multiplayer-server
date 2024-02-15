@@ -1,53 +1,58 @@
-import React, { useEffect, useContext, createContext } from 'react';
-import { useImmer } from 'use-immer';
-import { getStoredPlayer, storePlayer } from '../utils/localStorage';
+// TODO refactor usePlayer
+import React, { useEffect, useContext, createContext, useCallback } from "react"
+import { useImmer } from "use-immer"
+import { getStoredPlayer, storePlayer } from "../utils/localStorage"
 
 export interface PlayerContextInterface extends PlayerInterface {
-  setNickname: (nickname: string) => void;
-  setBestScore: (bestScore: number) => void;
+  setNickname: (nickname: string) => void
+  setBestScore: (bestScore: number) => void
 }
 
-const PlayerContext = createContext({} as PlayerContextInterface);
+const PlayerContext = createContext({} as PlayerContextInterface)
 
 export interface PlayerInterface {
-  nickname: string;
-  bestScore: number;
+  nickname: string
+  bestScore: number
 }
 
 interface PlayerProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [player, updatePlayer] = useImmer<PlayerInterface>({
-    nickname: '',
+    nickname: "",
     bestScore: 0,
-  });
+  })
 
-  const setNickname = (nickname: string) => {
-    updatePlayer((draft) => {
-      draft.nickname = nickname;
-    });
-  };
-  const setBestScore = (bestScore: number) => {
-    updatePlayer((draft) => {
-      draft.bestScore = bestScore;
-    });
-  };
-
-  useEffect(() => {
-    const { nickname, bestScore } = getStoredPlayer();
-    if (nickname) {
-      setNickname(nickname);
-    }
-    if (bestScore) {
-      setBestScore(bestScore);
-    }
-  }, []);
+  const setNickname = useCallback(
+    (nickname: string) => {
+      updatePlayer((draft) => {
+        draft.nickname = nickname
+      })
+    },
+    [updatePlayer]
+  )
+  const setBestScore = useCallback(
+    (bestScore: number) => {
+      updatePlayer((draft) => {
+        draft.bestScore = bestScore
+      })
+    },
+    [updatePlayer]
+  )
 
   useEffect(() => {
-    storePlayer({ nickname: player.nickname, bestScore: player.bestScore });
-  }, [player.nickname, player.bestScore]);
+    const storedPlayer = getStoredPlayer()
+    if (storedPlayer) {
+      setNickname(storedPlayer.nickname)
+      setBestScore(storedPlayer.bestScore)
+    }
+  }, [setBestScore, setNickname])
+
+  useEffect(() => {
+    storePlayer({ nickname: player.nickname, bestScore: player.bestScore })
+  }, [player.nickname, player.bestScore])
 
   return (
     <PlayerContext.Provider
@@ -60,7 +65,7 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     >
       {children}
     </PlayerContext.Provider>
-  );
-};
+  )
+}
 
-export const usePlayer = () => useContext(PlayerContext);
+export const usePlayer = () => useContext(PlayerContext)

@@ -1,5 +1,4 @@
 import styled from "@emotion/styled"
-import { usePlayer } from "../hooks/usePlayer"
 
 type SinglePlayerDashBoardProps = {
   score: number

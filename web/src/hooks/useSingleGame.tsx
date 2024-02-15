@@ -16,7 +16,7 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
   useEffect(() => {
     boardRef.current = new Board("playerId") // TODO fix "playerId" placeholder
     const storageData = getStoredBoardData()
-    if (storageData.tileGrid && storageData.score) {
+    if (storageData) {
       boardRef.current.score = storageData.score
       boardRef.current.tileGrid = storageData.tileGrid
     }
