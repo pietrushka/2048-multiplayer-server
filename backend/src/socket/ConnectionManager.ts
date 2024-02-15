@@ -1,22 +1,25 @@
 import socketio from "socket.io"
-import Game from "../gameLogic/Game"
+import Game from "../gameLogic/MultiplayerGame"
 import User from "./User"
-import serverEmitter from "./serverEmitter"
 import { chunk } from "../../../web/src/common/utils"
 import { MIN_PLAYERS_TO_START, SIGNALS, LOBBY_CHECK_INTERVAL_MS } from "../../../web/src/common/constants"
 import { Move, isStartGamePayload } from "../../../web/src/common/types"
+import ServerEmitter from "./ServerEmitter"
 
 export default class ConnectionManager {
   users: Map<string, User>
   games: Map<string, Game>
   lobbyUsers: Set<string>
   private lobbyCheckInterval
+  serverEmitter: ServerEmitter
 
   constructor(private io: socketio.Server) {
     this.users = new Map()
     this.games = new Map()
 
     this.lobbyUsers = new Set()
+
+    this.serverEmitter = new ServerEmitter(io)
 
     this.io.on("connection", (socket: socketio.Socket) => {
       this.handleConnection(socket)
@@ -76,7 +79,7 @@ export default class ConnectionManager {
   }
 
   createGame(players: string[]) {
-    const game = new Game(players)
+    const game = new Game(this.io, players)
     this.games.set(game.id, game)
 
     players.forEach((playerId) => {
@@ -95,12 +98,7 @@ export default class ConnectionManager {
     game.startGame()
     const data = game.data
     if (isStartGamePayload(data)) {
-      serverEmitter(this.io, {
-        signal: SIGNALS.startGame,
-        gameId: game.id,
-        data,
-      })
-      return
+      this.serverEmitter.sendStartGame(game.id, data)
     }
   }
 
@@ -128,11 +126,7 @@ export default class ConnectionManager {
 
       game.handleMove(data.move, socketId)
 
-      serverEmitter(this.io, {
-        signal: SIGNALS.boardUpdate,
-        gameId,
-        data: game.data,
-      })
+      this.serverEmitter.sendBoardUpdate(game.id, game.data)
     }
   }
 
@@ -145,11 +139,7 @@ export default class ConnectionManager {
 
     // TODO to do handle player disconnect case
     game.handleGameEnd({ reason: "timeEnd" })
-    serverEmitter(this.io, {
-      signal: SIGNALS.endGame,
-      gameId,
-      data: game.data,
-    })
+    this.serverEmitter.sendEndGame(game.id, game.data)
   }
 
   userDisconnectHandleGame(user: User) {
