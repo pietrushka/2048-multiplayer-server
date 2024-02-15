@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import io, { Socket } from "socket.io-client"
-import { SIGNALS } from "../common/constants"
+import { CLIENT_SIGNALS, SERVER_SIGNALS } from "../common/constants"
 import { BoardData, GameState, StartGamePayload, BoardsStateUpdatePayload, Move } from "../common/types"
 import clientEmitter from "../utils/clientEmitter"
 
@@ -30,12 +30,12 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     socketIo.current = io(SERVER_URL)
 
     clientEmitter(socketIo.current, {
-      signal: SIGNALS.join,
+      signal: CLIENT_SIGNALS.join,
       data: { nickname },
     })
-    socketIo.current.on(SIGNALS.startGame, handleGameStart)
-    socketIo.current.on(SIGNALS.boardUpdate, handleBoardStateUpdate)
-    // socketIo.current.on(SIGNALS.gameEnd)
+    socketIo.current.on(SERVER_SIGNALS.startGame, handleGameStart)
+    socketIo.current.on(SERVER_SIGNALS.boardUpdate, handleBoardStateUpdate)
+    // socketIo.current.on(SERVER_SIGNALS.gameEnd)
 
     return () => {
       if (socketIo.current) {
@@ -71,7 +71,7 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
 
   // TODO useCallback
   const performMove = (move: Move) => {
-    clientEmitter(socketIo.current, { signal: SIGNALS.move, data: { move } })
+    clientEmitter(socketIo.current, { signal: CLIENT_SIGNALS.move, data: { move } })
   }
 
   return {

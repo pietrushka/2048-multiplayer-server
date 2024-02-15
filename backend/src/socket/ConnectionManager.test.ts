@@ -3,7 +3,7 @@ import { AddressInfo } from "node:net"
 import { io as ioc, Socket as ClientSocket } from "socket.io-client"
 import { Server, Socket as ServerSocket } from "socket.io"
 import ConnectionManager from "./ConnectionManager"
-import { SIGNALS } from "../../../web/src/common/constants"
+import { CLIENT_SIGNALS, SERVER_SIGNALS } from "../../../web/src/common/constants"
 
 function waitFor(socket: ServerSocket | ClientSocket, event: string) {
   return new Promise((resolve) => {
@@ -43,11 +43,11 @@ describe("WHOLE GAME FLOW", () => {
   test("join of a 2 players should start game", async () => {
     const nickname1 = "player1"
     const nickname2 = "player2"
-    clientSocket1.emit(SIGNALS.join, { nickname: "player1" })
-    clientSocket2.emit(SIGNALS.join, { nickname: "player2" })
+    clientSocket1.emit(CLIENT_SIGNALS.join, { nickname: "player1" })
+    clientSocket2.emit(CLIENT_SIGNALS.join, { nickname: "player2" })
 
-    await waitFor(clientSocket1, SIGNALS.startGame)
-    await waitFor(clientSocket2, SIGNALS.startGame)
+    await waitFor(clientSocket1, SERVER_SIGNALS.startGame)
+    await waitFor(clientSocket2, SERVER_SIGNALS.startGame)
 
     const { games, users, lobbyUsers } = connectionManager
 

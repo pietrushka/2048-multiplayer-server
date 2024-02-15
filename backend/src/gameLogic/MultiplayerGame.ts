@@ -1,3 +1,4 @@
+import socketio from "socket.io"
 import Board from "../../../web/src/common/Board"
 import { addTimeToCurrentTimestamp } from "../../../web/src/common/utils"
 import { Move, GameData } from "../../../web/src/common/types"
@@ -13,8 +14,10 @@ export default class MultiplayerGame {
   winner: GameData["winner"]
   socketIds: string[]
   private endGameTimoutId?: NodeJS.Timeout
+  io: socketio.Server
 
-  constructor(socketIds: string[]) {
+  // TODO probably not the best idea to pass io server to this class
+  constructor(io: socketio.Server, socketIds: string[]) {
     this.id = `game_${Date.now()}`
     this.state = "loading"
     this.socketIds = socketIds
@@ -22,6 +25,7 @@ export default class MultiplayerGame {
     this.winner
     this.endGameTimestamp
     this.endGameTimoutId
+    this.io = io
   }
 
   get data(): GameData {

@@ -11,11 +11,14 @@ export const MIN_PLAYERS_TO_START = 2
 
 export const DEFAULT_BOARD_SIZE = 4
 
-export const SIGNALS = {
+export const CLIENT_SIGNALS = {
   join: "join",
   disconnect: "disconnect",
-  startGame: "startGame",
   move: "move",
+} as const
+
+export const SERVER_SIGNALS = {
+  startGame: "startGame",
   boardUpdate: "boardUpdate",
   endGame: "endGame",
 } as const

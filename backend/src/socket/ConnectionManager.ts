@@ -2,7 +2,7 @@ import socketio from "socket.io"
 import Game from "../gameLogic/MultiplayerGame"
 import User from "./User"
 import { chunk } from "../../../web/src/common/utils"
-import { MIN_PLAYERS_TO_START, SIGNALS, LOBBY_CHECK_INTERVAL_MS } from "../../../web/src/common/constants"
+import { MIN_PLAYERS_TO_START, CLIENT_SIGNALS, LOBBY_CHECK_INTERVAL_MS } from "../../../web/src/common/constants"
 import { Move, isStartGamePayload } from "../../../web/src/common/types"
 import ServerEmitter from "./ServerEmitter"
 
@@ -34,9 +34,9 @@ export default class ConnectionManager {
     const user = new User(socket)
     this.users.set(socket.id, user)
 
-    socket.on(SIGNALS.join, this.handleJoin(socket))
-    socket.on(SIGNALS.disconnect, this.handleDisconnect(socket))
-    socket.on(SIGNALS.move, this.handleMove(socket))
+    socket.on(CLIENT_SIGNALS.join, this.handleJoin(socket))
+    socket.on(CLIENT_SIGNALS.disconnect, this.handleDisconnect(socket))
+    socket.on(CLIENT_SIGNALS.move, this.handleMove(socket))
   }
 
   handleJoin(socket: socketio.Socket) {

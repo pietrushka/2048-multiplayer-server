@@ -1,5 +1,5 @@
 import { Server } from "socket.io"
-import { SIGNALS } from "../../../web/src/common/constants"
+import { SERVER_SIGNALS } from "../../../web/src/common/constants"
 import { StartGamePayload, BoardsStateUpdatePayload, EndGamePayload } from "../../../web/src/common/types"
 
 export default class ServerEmitter {
@@ -10,14 +10,14 @@ export default class ServerEmitter {
   }
 
   sendStartGame(gameId: string, payload: StartGamePayload) {
-    this.io.to(gameId).emit(SIGNALS.startGame, payload)
+    this.io.to(gameId).emit(SERVER_SIGNALS.startGame, payload)
   }
 
   sendBoardUpdate(gameId: string, payload: BoardsStateUpdatePayload) {
-    this.io.to(gameId).emit(SIGNALS.boardUpdate, payload)
+    this.io.to(gameId).emit(SERVER_SIGNALS.boardUpdate, payload)
   }
 
   sendEndGame(gameId: string, payload: EndGamePayload) {
-    this.io.to(gameId).emit(SIGNALS.endGame, payload)
+    this.io.to(gameId).emit(SERVER_SIGNALS.endGame, payload)
   }
 }
