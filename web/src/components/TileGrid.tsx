@@ -1,28 +1,23 @@
-// TODO refactor TileGrid
 import { useEffect, useCallback, useRef } from "react"
 import styled from "@emotion/styled"
+import TileGridDisplay from "./TileGridDisplay"
 import { MOVES } from "../common/constants"
-import Tile from "./Tile"
-import { Move } from "../common/types"
+import { Move, TileGrid as TileGridT } from "../common/types"
 
 type Point = {
   x: number
   y: number
 }
 
-type PlayerBoardProps = {
+type TileGridProps = {
   performMove: (move: Move) => void
-  tileGrid: number[][]
+  tileGrid: TileGridT
 }
 
-export default function TileGrid({ performMove, tileGrid }: PlayerBoardProps) {
-  const startPointerLocation = useRef<Point>()
-  const currentPointerLocation = useRef<Point>()
-
-  useEffect(() => {
-    const keydownListener = (e: KeyboardEvent) => {
+export default function TileGrid({ performMove, tileGrid }: TileGridProps) {
+  const handleKeyboardInput = useCallback(
+    (e: KeyboardEvent) => {
       e.preventDefault()
-
       switch (e.key) {
         case "ArrowDown":
           performMove(MOVES.DOWN)
@@ -37,91 +32,59 @@ export default function TileGrid({ performMove, tileGrid }: PlayerBoardProps) {
           performMove(MOVES.RIGHT)
           break
       }
-    }
+    },
+    [performMove]
+  )
 
-    window.addEventListener("keydown", keydownListener)
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyboardInput)
+    return () => window.removeEventListener("keydown", handleKeyboardInput)
+  }, [handleKeyboardInput])
 
-    return () => {
-      window.removeEventListener("keydown", keydownListener)
-    }
-  }, [performMove])
+  const handleTouchMove = useCallback(
+    (startPoint: Point, endPoint: Point) => {
+      const dx = endPoint.x - startPoint.x
+      const dy = endPoint.y - startPoint.y
+      const absDx = Math.abs(dx)
+      const absDy = Math.abs(dy)
 
-  const finishPointer = useCallback(
-    (a: Point, b: Point) => {
-      const distance = Math.sqrt((b.y - a.y) ** 2 + (b.x - a.x) ** 2)
-      if (distance < 20) {
-        return
-      }
-      // angle in degrees (Math.atan2 returns andgle in radians)
-      const angle = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI
-      if (angle < -135 || angle > 135) {
-        performMove(MOVES.LEFT)
-      } else if (angle < -45) {
-        performMove(MOVES.UP)
-      } else if (angle < 45) {
-        performMove(MOVES.RIGHT)
-      } else if (angle < 135) {
-        performMove(MOVES.DOWN)
+      if (Math.max(absDx, absDy) < 20) return
+
+      if (absDx > absDy) {
+        performMove(dx > 0 ? MOVES.RIGHT : MOVES.LEFT)
+      } else {
+        performMove(dy > 0 ? MOVES.DOWN : MOVES.UP)
       }
     },
     [performMove]
   )
 
+  const startPointerLocation = useRef<Point>()
   const onTouchStart = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
     const touch = e.touches[0]
-    if (touch) {
-      const point: Point = { x: touch.pageX, y: touch.pageY }
-      startPointerLocation.current = point
-    }
+    startPointerLocation.current = { x: touch.pageX, y: touch.pageY }
   }, [])
-  const onTouchMove = useCallback((e: React.TouchEvent) => {
-    e.preventDefault()
-    const touch = e.touches[0]
-    if (touch) {
-      const point: Point = { x: touch.pageX, y: touch.pageY }
-      currentPointerLocation.current = point
-    }
-  }, [])
+
   const onTouchEnd = useCallback(
     (e: React.TouchEvent) => {
-      e.preventDefault()
-      if (startPointerLocation.current && currentPointerLocation.current) {
-        finishPointer(startPointerLocation.current, currentPointerLocation.current)
+      const touch = e.changedTouches[0]
+      const endPointerLocation: Point = { x: touch.pageX, y: touch.pageY }
+      if (startPointerLocation.current) {
+        handleTouchMove(startPointerLocation.current, endPointerLocation)
       }
-
-      startPointerLocation.current = undefined
-      currentPointerLocation.current = undefined
     },
-    [finishPointer]
+    [handleTouchMove]
   )
 
   return (
-    <BoardContainer onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-      <Board>
-        {tileGrid.flat().map((value: number, idx: number) => (
-          <Tile key={idx} value={value} />
-        ))}
-      </Board>
+    <BoardContainer onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <TileGridDisplay tileGrid={tileGrid} size="normal" />
     </BoardContainer>
   )
 }
 
 const BoardContainer = styled.div`
   width: 100%;
-  margin-bottom: 5%;
   margin: 0 auto;
-`
-const Board = styled.div`
-  margin: auto;
-  width: 90%;
-  position: relative;
-  background: #bbada0;
-  border-radius: 6px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 0.5rem;
-  padding: 0.5rem;
-  user-select: none;
-  touch-action: none;
+  margin-bottom: 5%;
 `

@@ -1,18 +1,18 @@
-import { Direction } from "../types"
+import { TileGrid, Direction } from "../types"
 
-function createZeroMatrix(size: number): number[][] {
+function createZeroMatrix(size: number): TileGrid {
   return Array.from({ length: size }, () => Array(size).fill(0))
 }
 
 const getTileValue = () => (Math.random() > 0.1 ? 2 : 4)
 
-export function containsEmpty(board: number[][]): boolean {
+export function containsEmpty(board: TileGrid): boolean {
   return board.some((row) => row.some((cell) => cell === 0))
 }
 
 const getRandomCoordinate = (maxVal: number) => Math.floor(Math.random() * maxVal)
 
-export function spawnTile(board: number[][]) {
+export function spawnTile(board: TileGrid) {
   if (!containsEmpty(board)) {
     return board
   }
@@ -38,7 +38,7 @@ export function initializeBoard(boardSize: number) {
   return board
 }
 
-function rotateRight(matrix: number[][]) {
+function rotateRight(matrix: TileGrid) {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = i + 1; j < matrix[i].length; j++) {
       const temp = matrix[i][j]
@@ -51,7 +51,7 @@ function rotateRight(matrix: number[][]) {
   }
 }
 
-export function rotateBoardLeft(board: number[][], direction: Direction, reverse: boolean = false): number[][] {
+export function rotateBoardLeft(board: TileGrid, direction: Direction, reverse: boolean = false): TileGrid {
   if (direction === "LEFT") {
     return board
   }
@@ -122,7 +122,7 @@ function combineAndShiftLeft(array: number[]) {
 }
 
 // mutates tileGrid for performance reasons
-export function slideTiles(tileGrid: number[][], direction: Direction) {
+export function slideTiles(tileGrid: TileGrid, direction: Direction) {
   let scoreIncrease = 0
   // rotate board to "LEFT" to utilize common logic
   tileGrid = rotateBoardLeft(tileGrid, direction)
@@ -138,7 +138,7 @@ export function slideTiles(tileGrid: number[][], direction: Direction) {
   return { tileGrid, scoreIncrease }
 }
 
-export function movePossible(board: number[][]): boolean {
+export function movePossible(board: TileGrid): boolean {
   const boardSize = board.length
 
   if (containsEmpty(board)) {

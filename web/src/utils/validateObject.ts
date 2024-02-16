@@ -1,10 +1,12 @@
+import { TileGrid } from "../common/types"
+
 type TypeString = "string" | "number" | "numberArrayArray"
 
 export type Schema = Record<string, TypeString>
 
 const isString = (value: unknown): value is string => typeof value === "string"
 const isNumber = (value: unknown): value is number => typeof value === "number"
-const isNumberArrayArray = (value: unknown): value is number[][] => {
+const isNumberArrayArray = (value: unknown): value is TileGrid => {
   if (!Array.isArray(value)) return false
   return value.every((subArray) => Array.isArray(subArray) && subArray.every((element) => typeof element === "number"))
 }

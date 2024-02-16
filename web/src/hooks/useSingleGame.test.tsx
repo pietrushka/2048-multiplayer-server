@@ -3,6 +3,7 @@ import useSingleGame from "./useSingleGame"
 import { getStoredBoardData } from "../utils/localStorage"
 import { initializeBoard, spawnTile } from "../common/Board/boardUtils"
 import Board from "../common/Board"
+import { TileGrid } from "../common/types"
 
 jest.mock("../utils/localStorage", () => ({
   getStoredBoardData: jest.fn(),
@@ -77,7 +78,7 @@ describe("useSingleGame hook", () => {
     ]
     initializeBoardMock.mockReturnValueOnce(mockTileGrid)
 
-    spawnTileMock.mockImplementationOnce((tileGrid: number[][]) => {
+    spawnTileMock.mockImplementationOnce((tileGrid: TileGrid) => {
       tileGrid[0][0] = 2
       return tileGrid
     })

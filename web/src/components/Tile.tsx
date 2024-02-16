@@ -1,46 +1,32 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import { css, SerializedStyles } from '@emotion/react';
+import styled from "@emotion/styled"
+import { SerializedStyles, css } from "@emotion/react"
+import { TileGridSize } from "../types"
+import { TileValue, NonEmptyTileValue } from "../common/types"
 
-interface TileInterface {
-  value: number;
-  size?: string;
+interface TileProps {
+  value: TileValue
+  size?: TileGridSize
 }
 
-function Tile({ value, size }: TileInterface) {
-  const stringValue = value.toString();
-  return (
-    <Cell size={size}>
-      {value !== 0 && <CellInner value={stringValue}>{value}</CellInner>}
-    </Cell>
-  );
+const Tile: React.FC<TileProps> = ({ value, size = "normal" }) => {
+  return <Cell size={size}>{value !== 0 && <CellInner value={value}>{value}</CellInner>}</Cell>
 }
 
-export default Tile;
+export default Tile
 
-interface ICell {
-  size?: string;
+interface CellProps {
+  size: TileGridSize
 }
 
-const styleSmall = css`
-  border-radius: 1px;
-  font-size: 0.6rem;
-`;
-const styleNormal = css`
-  border-radius: 3px;
-  font-size: 1.6rem;
-`;
-
-const Cell = styled.div`
+const Cell = styled.div<CellProps>`
   position: relative;
-
   padding-bottom: 100%;
   background: #cdc1b4;
   line-height: 0;
-  ${({ size }: ICell) => (size === 'small' ? styleSmall : styleNormal)}
-`;
+  ${({ size }) => (size === "small" ? styleSmall : styleNormal)}
+`
 
-const CellInner = styled.div`
+const CellInner = styled.div<{ value: NonEmptyTileValue }>`
   background: #3c3a32;
   color: #f9f6f2;
   position: absolute;
@@ -54,56 +40,60 @@ const CellInner = styled.div`
   align-items: center;
   line-height: 0;
   border-radius: 3px;
-  z-index: 9;
+  z-index: 10;
+  ${({ value }) => tilesColors[value] || defaultTileStyle}
+`
 
-  ${({ value }: { value: string }) => tilesColors[value]}
-`;
+const styleSmall = css`
+  border-radius: 1px;
+  font-size: 0.6rem;
+`
 
-const tilesColors: { [key: string]: SerializedStyles } = {
+const styleNormal = css`
+  border-radius: 3px;
+  font-size: 1.6rem;
+`
+
+const defaultTileStyle = css`
+  font-size: 1.7em; // Default font size for unspecified values
+`
+
+const tilesColors: Record<NonEmptyTileValue, SerializedStyles> = {
   2: css`
     background: #eee4da;
     color: #776e65;
-    font-size: 1.7em;
   `,
   4: css`
     background: #ede0c8;
     color: #776e65;
-    font-size: 1.7em;
   `,
 
   8: css`
     background: #f2b179;
-    font-size: 1.7em;
   `,
 
   16: css`
     background: #f59563;
-    font-size: 1.7em;
   `,
 
   32: css`
     background: #f67c5f;
-    font-size: 1.7em;
   `,
 
   64: css`
     background: #f65e3b;
-    font-size: 1.7em;
   `,
 
   128: css`
     background: #edcf72;
-    font-size: 1.3em;
   `,
 
   256: css`
     background: #edcc61;
-    font-size: 1.3em;
   `,
 
   512: css`
     background: #edc850;
-    font-size: 1.3em;
   `,
 
   1024: css`
@@ -113,4 +103,4 @@ const tilesColors: { [key: string]: SerializedStyles } = {
   2048: css`
     background: #edc22e;
   `,
-};
+}

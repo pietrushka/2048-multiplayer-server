@@ -1,12 +1,12 @@
 import styled from "@emotion/styled"
-
-import Tile from "./Tile"
 import Timer from "./Timer"
+import TileGridDisplay from "./TileGridDisplay"
+import { TileGrid } from "../common/types"
 
 interface MultiDashboardProps {
   score: number
   opponentScore: number
-  opponentTileGrid: number[][]
+  opponentTileGrid: TileGrid
   endTimestamp: string
   undoMove: () => void
   emitBomb: () => void
@@ -22,13 +22,6 @@ function MultiDashboard({
   emitBomb,
   emitFreeze,
 }: MultiDashboardProps) {
-  // setTimeout(() => {
-  //   if (endTime) {
-  //     const formattedTime = calcTime(endTime)
-  //     setRemainingTime(formattedTime)
-  //   }
-  // }, 1000)
-
   return (
     <DashboardContainer>
       <FirstSection>
@@ -49,13 +42,7 @@ function MultiDashboard({
       </FirstSection>
 
       <SecondSection>
-        {opponentTileGrid && (
-          <OpponentTileGrid>
-            {opponentTileGrid.flat().map((value: number, idx: number) => (
-              <Tile key={idx} value={value} size={"small"} />
-            ))}
-          </OpponentTileGrid>
-        )}
+        {opponentTileGrid && <TileGridDisplay size="small" tileGrid={opponentTileGrid} />}
         <ButtonsGroup>
           <ShopBtnsBox>
             <ShopBtn onClick={emitBomb} disabled={score < 250 ? true : false}>
@@ -109,20 +96,6 @@ const Score = styled.div`
 
 const SecondSection = styled.div`
   display: flex;
-`
-
-// TODO reuse dumb TileGrid
-const OpponentTileGrid = styled.div`
-  width: 45%;
-  position: relative;
-  background: #bbada0;
-  border-radius: 2px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 0.15rem;
-  padding: 0.15rem;
-  user-select: none;
-  touch-action: none;
 `
 
 const ButtonsGroup = styled.div`

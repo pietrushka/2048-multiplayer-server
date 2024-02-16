@@ -2,11 +2,12 @@ import { DEFAULT_BOARD_SIZE } from "../constants"
 import { Move, BoardData } from "../types"
 import { initializeBoard, slideTiles, spawnTile, movePossible } from "./boardUtils"
 import { deepCopyArray, areArraysEqual } from "../utils"
+import { TileGrid } from "../types"
 
 export default class Board {
   playerId: string
   score: number
-  tileGrid: number[][]
+  tileGrid: TileGrid
   nextMovePossible: boolean
 
   constructor(playerId: string) {

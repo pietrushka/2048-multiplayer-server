@@ -1,4 +1,5 @@
 import validateObject, { Schema } from "./validateObject"
+import { TileGrid } from "../common/types"
 
 export const BOARD_STORAGE_SPACE = "2048.vs_board"
 export const PLAYER_STORAGE_SPACE = "2048.vs_player"
@@ -10,7 +11,7 @@ type LocalStoragePlayer = {
 
 type LocalStorageBoardState = {
   score: number
-  tileGrid: number[][]
+  tileGrid: TileGrid
 }
 
 const writeLocalStorage =

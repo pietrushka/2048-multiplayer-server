@@ -1,5 +1,6 @@
 import Board from "../index"
 import { spawnTile, initializeBoard } from "../boardUtils"
+import { TileGrid } from "../../types"
 
 // mocking predict where new tiles will spawn
 jest.mock("../boardUtils", () => ({
@@ -45,7 +46,7 @@ describe("Board", () => {
     ])
     const board = new Board(mockPlayerId)
 
-    spawnTileMock.mockImplementationOnce((tileGrid: number[][]) => (tileGrid[3][0] = 2))
+    spawnTileMock.mockImplementationOnce((tileGrid: TileGrid) => (tileGrid[3][0] = 2))
 
     board.handleMove("UP")
 
