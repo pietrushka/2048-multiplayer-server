@@ -19,3 +19,7 @@ export function addTimeToCurrentTimestamp(ms: number): string {
   const later = new Date(now.getTime() + ms)
   return later.toISOString()
 }
+
+export function areArraysEqual(array1: unknown[], array2: unknown[]) {
+  return JSON.stringify(array1) === JSON.stringify(array2)
+}

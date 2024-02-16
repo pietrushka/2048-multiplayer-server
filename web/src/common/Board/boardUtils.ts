@@ -179,59 +179,9 @@ export function movePossible(board: number[][]): boolean {
   return false
 }
 
-// export function calculateScoreIncrease(oldGrid: number[][], newGrid: number[][]): number {
-//   const diff = arrayDifferenceLeft(newGrid.flat(), oldGrid.flat())
-//   return sum(diff)
-// }
-
-// export function calculateScoreIncrease(oldGrid: number[][], newGrid: number[][]): number {
-//   // Calculate the sum of all tile values in the old grid
-//   const oldSum = oldGrid.reduce((sum, row) => sum + row.reduce((rowSum, tile) => rowSum + tile, 0), 0)
-
-//   // Calculate the sum of all tile values in the new grid
-//   const newSum = newGrid.reduce((sum, row) => sum + row.reduce((rowSum, tile) => rowSum + tile, 0), 0)
-
-//   // The score increase is the difference between the new and old sums
-//   return newSum - oldSum
-// }
-
-// export function calculateScoreIncrease(oldGrid: number[][], newGrid: number[][]): number {
-//   let scoreIncrease = 0
-
-//   // Calculate the score increase based on combined tiles
-//   for (let i = 0; i < oldGrid.length; i++) {
-//     for (let j = 0; j < oldGrid[i].length; j++) {
-//       // Calculate the increase by the difference in each tile
-//       const increase = newGrid[i][j] - oldGrid[i][j]
-//       // Ensure only positive increases are counted, ignoring new tiles for now
-//       if (increase > 0) {
-//         scoreIncrease += increase
-//       }
-//     }
-//   }
-
-//   // To account for the specific test cases and assuming new tiles should also be counted
-//   // towards the score, we add the value of any new tile that wasn't a direct result of a combination.
-//   // This step assumes that new tiles (like '2' or '4') can appear in any empty spot.
-//   // Note: This adjustment is specific to the provided test scenarios and may not reflect
-//   // the standard 2048 game mechanics where new tiles don't directly contribute to the score.
-//   const flatOld = oldGrid.flat()
-//   const flatNew = newGrid.flat()
-//   flatNew.forEach((tile, index) => {
-//     if (tile !== 0 && flatOld[index] === 0) {
-//       scoreIncrease += tile // Count the value of new tiles
-//     }
-//   })
-
-//   return scoreIncrease
-// }
-
 export function calculateScoreIncrease(oldGrid: number[][], newGrid: number[][]): number {
-  console.log({ oldGrid, newGrid })
-
   const diff = arrayDifferenceLeft(newGrid.flat(), oldGrid.flat())
   const oldSum = sum(oldGrid.flat())
   const newSum = sum(newGrid.flat())
-  console.log({ diff, oldSum, newSum })
   return sum(diff) + (newSum - oldSum)
 }

@@ -30,7 +30,7 @@ describe("useSingleGame hook", () => {
     initializeBoardMock.mockImplementation(actualBoardUtils.initializeBoard)
     spawnTileMock.mockImplementation(actualBoardUtils.spawnTile)
 
-    getStoredBoardDataMock.mockReturnValue({})
+    getStoredBoardDataMock.mockReturnValue(undefined)
   })
 
   test("initializes", () => {

@@ -1,6 +1,7 @@
 import { DEFAULT_BOARD_SIZE } from "../constants"
 import { Move, BoardData } from "../types"
 import { initializeBoard, slideTiles, spawnTile, movePossible } from "./boardUtils"
+import { deepCopyArray, areArraysEqual } from "../utils"
 
 export default class Board {
   playerId: string
@@ -23,10 +24,16 @@ export default class Board {
   }
 
   handleMove(move: Move) {
+    const oldTileGrid = deepCopyArray(this.tileGrid)
     const { scoreIncrease } = slideTiles(this.tileGrid, move)
+
+    if (areArraysEqual(oldTileGrid, this.tileGrid)) {
+      // move wasn't possible
+      return
+    }
+
     this.score += scoreIncrease
     spawnTile(this.tileGrid)
-
     this.nextMovePossible = movePossible(this.tileGrid)
   }
 
