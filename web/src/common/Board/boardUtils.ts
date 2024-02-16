@@ -22,7 +22,7 @@ export function spawnTile(board: number[][]) {
     const x = getRandomCoordinate(board.length)
     const y = getRandomCoordinate(board.length)
     if (board[x][y] === 0) {
-      board[x][y] = getTileValue() // TODO mutable
+      board[x][y] = getTileValue()
       break
     }
   }
@@ -64,7 +64,6 @@ export function rotateBoardLeft(board: number[][], direction: Direction, reverse
     else if (direction === "DOWN") direction = "UP"
   }
 
-  // TODO probably something not okay here with RIGHT or LEFT and reverse
   switch (direction) {
     case "RIGHT":
       rotateRight(board)
@@ -137,7 +136,7 @@ function combineAndShiftRight(array: number[]) {
   return scoreIncrease
 }
 
-// mutates tileGrid for performance reasons TODO check perf gain
+// mutates tileGrid for performance reasons
 export function slideTiles(tileGrid: number[][], direction: Direction) {
   let scoreIncrease = 0
   // rotate board to "LEFT" to utilize common logic
@@ -162,15 +161,14 @@ export function movePossible(board: number[][]): boolean {
     return true
   }
 
-  // TODO optimize
-  const boardMod = deepCopyArray(board).flat()
+  const boardFlatten = board.flat()
   // Check if a tile can be merged into a neighboring tile.
   for (let i = 0; i < board.length; i++) {
     if (
-      boardMod[i] === boardMod[i + boardSize] ||
-      boardMod[i] === boardMod[i - boardSize] ||
-      (i % boardSize !== 0 && boardMod[i] === boardMod[i - 1]) ||
-      (i % boardSize !== boardSize - 1 && boardMod[i] === boardMod[i + 1])
+      boardFlatten[i] === boardFlatten[i + boardSize] ||
+      boardFlatten[i] === boardFlatten[i - boardSize] ||
+      (i % boardSize !== 0 && boardFlatten[i] === boardFlatten[i - 1]) ||
+      (i % boardSize !== boardSize - 1 && boardFlatten[i] === boardFlatten[i + 1])
     ) {
       return true
     }

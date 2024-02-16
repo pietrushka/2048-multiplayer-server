@@ -6,7 +6,6 @@ type EmitterPayload =
   | { signal: typeof CLIENT_SIGNALS.join; data: JoinPayload }
   | { signal: typeof CLIENT_SIGNALS.move; data: MovePayload }
 
-// TODO this probably could be a class or something
 export default function emitter(socketIo: Socket | undefined, payload: EmitterPayload) {
   if (!socketIo) {
     console.error("tried to emit without scoket io", { socketIo, payload })

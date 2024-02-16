@@ -85,7 +85,6 @@ export default class MultiplayerGame {
       case "playerBlocked":
         return this.socketIds.find((x) => x !== payload.playerId)!
       default:
-        // TODO handle this differentely
         console.error("determineWinner: reason not recognised")
         return DRAW
     }

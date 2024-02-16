@@ -1,6 +1,5 @@
 import validateObject, { Schema } from "./validateObject"
 
-// TODO move to constants
 export const BOARD_STORAGE_SPACE = "2048.vs_board"
 export const PLAYER_STORAGE_SPACE = "2048.vs_player"
 
