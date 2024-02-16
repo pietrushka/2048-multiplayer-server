@@ -7,7 +7,7 @@ export type BoardData = {
   tileGrid: number[][]
 }
 
-export type GameState = "loading" | "active" | "finished"
+export type GameStatus = "loading" | "active" | "finished"
 
 export type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT"
 
@@ -15,7 +15,7 @@ export type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT"
 export type Move = Direction
 
 export interface GameData {
-  state: GameState
+  status: GameStatus
   endGameTimestamp?: string
   boards: BoardData[]
   winner?: string
@@ -29,7 +29,6 @@ export type MovePayload = {
   move: Move
 }
 
-// SERVER EVENTS
 export interface StartGamePayload extends GameData {
   state: "active"
   endGameTimestamp: string
@@ -39,5 +38,5 @@ export type EndGamePayload = GameData
 
 // TYPE GUARDS
 export function isStartGamePayload(payload: GameData): payload is StartGamePayload {
-  return typeof payload.endGameTimestamp === "string" && payload.state === "active"
+  return typeof payload.endGameTimestamp === "string" && payload.status === "active"
 }

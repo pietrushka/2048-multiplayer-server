@@ -5,14 +5,15 @@ import { Link } from "react-router-dom"
 import { Menu, MenuOption } from "../pages/Home"
 
 interface GameResultProps {
+  result?: string
   playAgain: () => void
 }
 
-export default function GameResult({ playAgain }: GameResultProps) {
+export default function GameResult({ result, playAgain }: GameResultProps) {
   return (
     <Overlay>
       <PopUp>
-        <h1>Game End</h1>
+        <h1>{result}</h1>
         <Menu>
           <MenuOption color="green">
             <button onClick={playAgain}>Play again</button>

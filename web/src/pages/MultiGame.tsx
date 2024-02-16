@@ -5,20 +5,21 @@ import MultiDashboard from "../components/MultiDashboard"
 import { Lobby } from "../components/Lobby"
 import { usePlayer } from "../hooks/usePlayer"
 import useMultiplayer from "../hooks/useMultiplayer"
+import GameResult from "../components/GameResult"
 
 const MultiGame = () => {
   const { nickname } = usePlayer()!
-  const { gameState, performMove, playerBoardState, opponentBoardState, endGameTimestamp } = useMultiplayer({
+  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText } = useMultiplayer({
     nickname,
   })
 
-  if (!gameState) {
+  if (!status) {
     return <Lobby />
   }
 
   // TODO this if is ugly af
   if (
-    gameState === "loading" ||
+    status === "loading" ||
     !playerBoardState?.tileGrid ||
     typeof playerBoardState?.score !== "number" ||
     !opponentBoardState?.tileGrid ||
@@ -44,9 +45,7 @@ const MultiGame = () => {
         />
         <TileGrid tileGrid={playerBoardState?.tileGrid} performMove={performMove} />
       </MultiGameContainer>
-      {/* {gameResult && (
-            <GameResult gameResult={gameResult} playAgain={playAgain} />
-          )} */}
+      {resultText && <GameResult result={resultText} playAgain={() => {}} />}
     </>
   )
 }

@@ -55,7 +55,7 @@ describe("WHOLE GAME FLOW", () => {
 
     expect(games.size).toBe(1)
     const [game] = [...games.values()]
-    expect(game.state).toBe("active")
+    expect(game.status).toBe("active")
     expect(game.endGameTimestamp).toEqual(expect.any(String))
 
     const usersArr = [...users.values()]

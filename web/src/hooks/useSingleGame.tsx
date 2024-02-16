@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Direction, GameState } from "../common/types"
+import { Direction, GameStatus } from "../common/types"
 import Board from "../common/Board"
 import { getStoredBoardData } from "../utils/localStorage"
 
@@ -9,7 +9,7 @@ type UseMultiplayerProps = {
 }
 
 export default function useSingleGame({ bestScore, setBestScore }: UseMultiplayerProps) {
-  const [state, setState] = useState<GameState>()
+  const [status, setStatus] = useState<GameStatus>()
   const boardRef = useRef<Board>()
   const [, setGameVersion] = useState(0) // to trigger rerender value must change
 
@@ -21,7 +21,7 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
       boardRef.current.tileGrid = storageData.tileGrid
     }
 
-    setState("active")
+    setStatus("active")
     setGameVersion((v) => v + 1)
   }, [])
 
@@ -34,7 +34,7 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
 
     // blocked - end game
     if (!boardRef.current.nextMovePossible) {
-      setState("finished")
+      setStatus("finished")
     }
 
     if (boardRef.current.score > bestScore) {
@@ -44,13 +44,13 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
 
   const resetGame = () => {
     boardRef.current?.reset()
-    setState("active")
+    setStatus("active")
     setGameVersion(0)
   }
 
   const { score, tileGrid } = boardRef.current?.data || {}
   return {
-    state,
+    status,
     score,
     tileGrid,
     performMove,

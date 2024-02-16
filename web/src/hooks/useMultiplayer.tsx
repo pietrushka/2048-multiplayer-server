@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 import io, { Socket } from "socket.io-client"
-import { CLIENT_SIGNALS, SERVER_SIGNALS } from "../common/constants"
-import { BoardData, GameState, StartGamePayload, BoardsStateUpdatePayload, Move } from "../common/types"
+import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW } from "../common/constants"
+import { BoardData, GameStatus, Move, GameData } from "../common/types"
 import clientEmitter from "../utils/clientEmitter"
 
 const SERVER_URL = process.env.REACT_APP_SERVER_ENDPOINT || "http://localhost:4000"
@@ -16,14 +16,30 @@ const getPlayersBoardState = (boards: BoardData[], playerSocketId: string) => {
   return { playerBoardState, opponentBoardState }
 }
 
+const generateResultText = (playerId?: string, winner?: string) => {
+  if (!playerId || !winner) {
+    return
+  }
+
+  if (winner === DRAW) {
+    return "It is a draw"
+  }
+
+  return winner === playerId ? "You won" : "You lost"
+}
+
+type MultiplayerGameStatus = {
+  status: GameStatus
+  endGameTimestamp?: string
+  playerBoardState?: BoardData
+  opponentBoardState?: BoardData
+  winner?: string
+}
+
 export default function useMultiplayer(props: UseMultiplayerProps) {
   const { nickname } = props
-
   const socketIo = useRef<Socket>()
-  const [gameState, setGameState] = useState<GameState>()
-  const [endGameTimestamp, setendGameTimestamp] = useState<string>()
-  const [playerBoardState, setPlayerBoardState] = useState<BoardData>()
-  const [opponentBoardState, setOpponentBoardState] = useState<BoardData>()
+  const [gameState, setGameStatus] = useState<MultiplayerGameStatus>()
 
   // Connect to the socket server
   useEffect(() => {
@@ -33,9 +49,9 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
       signal: CLIENT_SIGNALS.join,
       data: { nickname },
     })
-    socketIo.current.on(SERVER_SIGNALS.startGame, handleGameStart)
-    socketIo.current.on(SERVER_SIGNALS.boardUpdate, handleBoardStateUpdate)
-    // socketIo.current.on(SERVER_SIGNALS.gameEnd)
+    socketIo.current.on(SERVER_SIGNALS.startGame, handleStateUpdate)
+    socketIo.current.on(SERVER_SIGNALS.boardUpdate, handleStateUpdate)
+    socketIo.current.on(SERVER_SIGNALS.endGame, handleStateUpdate)
 
     return () => {
       if (socketIo.current) {
@@ -44,29 +60,22 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     }
   }, [nickname])
 
-  const handleGameStart = (data: StartGamePayload) => {
+  const handleStateUpdate = (data: GameData) => {
     if (!socketIo.current?.id) {
       console.error("handleGameStart: no socketIo.current.id", socketIo.current)
       return
     }
+    const { status, endGameTimestamp, boards, winner } = data
 
-    setGameState(data.state)
-    setendGameTimestamp(data.endGameTimestamp)
+    const boardStates = getPlayersBoardState(boards, socketIo.current.id)
 
-    const boardStates = getPlayersBoardState(data.boards, socketIo.current.id)
-    setPlayerBoardState(boardStates.playerBoardState)
-    setOpponentBoardState(boardStates.opponentBoardState)
-  }
-
-  const handleBoardStateUpdate = (data: BoardsStateUpdatePayload) => {
-    if (!socketIo.current?.id) {
-      console.error("handleGameStart: no socketIo.current.id", socketIo.current)
-      return
-    }
-
-    const boardStates = getPlayersBoardState(data.boards, socketIo.current?.id)
-    setPlayerBoardState(boardStates.playerBoardState)
-    setOpponentBoardState(boardStates.opponentBoardState)
+    setGameStatus({
+      status,
+      endGameTimestamp,
+      winner,
+      playerBoardState: boardStates.playerBoardState,
+      opponentBoardState: boardStates.opponentBoardState,
+    })
   }
 
   // TODO useCallback
@@ -74,11 +83,15 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     clientEmitter(socketIo.current, { signal: CLIENT_SIGNALS.move, data: { move } })
   }
 
+  // TODO useMemo
+  const resultText = generateResultText(socketIo.current?.id, gameState?.winner)
+
   return {
-    gameState,
-    endGameTimestamp,
-    playerBoardState,
-    opponentBoardState,
+    status: gameState?.status,
+    endGameTimestamp: gameState?.endGameTimestamp,
+    playerBoardState: gameState?.playerBoardState,
+    opponentBoardState: gameState?.opponentBoardState,
     performMove,
+    resultText,
   }
 }

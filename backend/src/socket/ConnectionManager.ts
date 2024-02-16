@@ -79,7 +79,7 @@ export default class ConnectionManager {
   }
 
   createGame(players: string[]) {
-    const game = new Game(this.io, players)
+    const game = new Game(this.serverEmitter, players)
     this.games.set(game.id, game)
 
     players.forEach((playerId) => {

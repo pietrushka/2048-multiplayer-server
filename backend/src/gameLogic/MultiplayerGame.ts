@@ -1,36 +1,35 @@
-import socketio from "socket.io"
 import Board from "../../../web/src/common/Board"
 import { addTimeToCurrentTimestamp } from "../../../web/src/common/utils"
 import { Move, GameData } from "../../../web/src/common/types"
-import { GAME_TIME } from "../../../web/src/common/constants"
+import { DRAW, GAME_TIME } from "../../../web/src/common/constants"
+import ServerEmitter from "../socket/ServerEmitter"
 
 type handleGameEndPayload = { reason: "timeEnd" } | { reason: "playerBlocked"; playerId: string }
 
 export default class MultiplayerGame {
   id: string
-  state: GameData["state"]
+  status: GameData["status"]
   endGameTimestamp: GameData["endGameTimestamp"]
   boards: Board[]
   winner: GameData["winner"]
   socketIds: string[]
   private endGameTimoutId?: NodeJS.Timeout
-  io: socketio.Server
+  serverEmitter: ServerEmitter
 
-  // TODO probably not the best idea to pass io server to this class
-  constructor(io: socketio.Server, socketIds: string[]) {
+  constructor(serverEmitter: ServerEmitter, socketIds: string[]) {
     this.id = `game_${Date.now()}`
-    this.state = "loading"
+    this.status = "loading"
     this.socketIds = socketIds
     this.boards = [new Board(socketIds[0]), new Board(socketIds[1])]
     this.winner
     this.endGameTimestamp
     this.endGameTimoutId
-    this.io = io
+    this.serverEmitter = serverEmitter
   }
 
   get data(): GameData {
     return {
-      state: this.state,
+      status: this.status,
       endGameTimestamp: this.endGameTimestamp,
       boards: this.boards.map((board) => board.data),
       winner: this.winner,
@@ -39,7 +38,7 @@ export default class MultiplayerGame {
 
   startGame() {
     this.endGameTimestamp = addTimeToCurrentTimestamp(GAME_TIME)
-    this.state = "active"
+    this.status = "active"
 
     if (this.endGameTimoutId) {
       console.error("cleared timeout", this.endGameTimoutId)
@@ -69,8 +68,10 @@ export default class MultiplayerGame {
       clearTimeout(this.endGameTimoutId)
     }
 
-    this.state = "finished"
+    this.status = "finished"
     this.winner = this.determineWinner(payload)
+
+    this.serverEmitter.sendEndGame(this.id, this.data)
   }
 
   private determineWinner(payload: handleGameEndPayload): string {
@@ -86,7 +87,7 @@ export default class MultiplayerGame {
       default:
         // TODO handle this differentely
         console.error("determineWinner: reason not recognised")
-        return "draw"
+        return DRAW
     }
   }
   private findBlockedPlayer() {
@@ -103,7 +104,7 @@ export default class MultiplayerGame {
   private findScoreWinner() {
     if (!this.boards) {
       console.error("findScoreWinner: no boards")
-      return "draw" // TODO probably not the best handling
+      return DRAW
     }
 
     if (this.boards[0].score > this.boards[1].score) {
@@ -113,6 +114,6 @@ export default class MultiplayerGame {
       return this.boards[1].playerId
     }
 
-    return "draw"
+    return DRAW
   }
 }

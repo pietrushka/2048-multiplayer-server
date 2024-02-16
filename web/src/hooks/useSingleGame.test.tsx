@@ -44,7 +44,7 @@ describe("useSingleGame hook", () => {
 
     const { result } = renderHook(() => useSingleGame({ bestScore: 0, setBestScore: setBestScoreMock }))
 
-    expect(result.current.state).toEqual("active")
+    expect(result.current.status).toEqual("active")
     expect(result.current.score).toEqual(0)
     expect(result.current.tileGrid).toEqual(mockTileGrid)
   })
@@ -63,7 +63,7 @@ describe("useSingleGame hook", () => {
 
     const { result } = renderHook(() => useSingleGame({ bestScore: 0, setBestScore: setBestScoreMock }))
 
-    expect(result.current.state).toEqual("active")
+    expect(result.current.status).toEqual("active")
     expect(result.current.score).toEqual(mockStorageData.score)
     expect(result.current.tileGrid).toEqual(mockStorageData.tileGrid)
   })
@@ -117,13 +117,13 @@ describe("useSingleGame hook", () => {
     act(() => {
       result.current.performMove("UP")
     })
-    expect(result.current.state).toEqual("finished")
+    expect(result.current.status).toEqual("finished")
 
     // // RESET GAME FLOW
     act(() => {
       result.current.resetGame()
     })
-    expect(result.current.state).toEqual("active")
+    expect(result.current.status).toEqual("active")
     expect(result.current.score).toBe(0)
     expect(resetSpy).toHaveBeenCalled()
   })
