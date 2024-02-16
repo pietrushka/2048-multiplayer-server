@@ -13,7 +13,7 @@ export default class MultiplayerGame {
   boards: Board[]
   winner: GameData["winner"]
   socketIds: string[]
-  private endGameTimoutId?: NodeJS.Timeout
+  endGameTimoutId?: NodeJS.Timeout
   serverEmitter: ServerEmitter
 
   constructor(serverEmitter: ServerEmitter, socketIds: string[]) {
@@ -21,9 +21,6 @@ export default class MultiplayerGame {
     this.status = "loading"
     this.socketIds = socketIds
     this.boards = [new Board(socketIds[0]), new Board(socketIds[1])]
-    this.winner
-    this.endGameTimestamp
-    this.endGameTimoutId
     this.serverEmitter = serverEmitter
   }
 
@@ -41,7 +38,7 @@ export default class MultiplayerGame {
     this.status = "active"
 
     if (this.endGameTimoutId) {
-      console.error("cleared timeout", this.endGameTimoutId)
+      console.error("startGame: cleared timeout", this.endGameTimoutId)
       clearTimeout(this.endGameTimoutId)
     }
     this.endGameTimoutId = setTimeout(() => {
@@ -66,6 +63,7 @@ export default class MultiplayerGame {
   handleGameEnd(payload: handleGameEndPayload) {
     if (this.endGameTimoutId) {
       clearTimeout(this.endGameTimoutId)
+      this.endGameTimoutId = undefined
     }
 
     this.status = "finished"

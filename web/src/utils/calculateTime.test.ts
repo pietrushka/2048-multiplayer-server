@@ -6,5 +6,5 @@ test("formatDuration", () => {
 
 test("calculateRemainingSeconds", () => {
   const fiveMinutesFromNow = new Date(Date.now() + 300000).toISOString()
-  expect(calculateRemainingSeconds(fiveMinutesFromNow)).toBe("5:00")
+  expect(calculateRemainingSeconds(fiveMinutesFromNow)).toBe(300)
 })
