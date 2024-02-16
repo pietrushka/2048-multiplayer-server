@@ -1,27 +1,26 @@
-import React from 'react';
-import {Link} from "react-router-dom";
-import styled from '@emotion/styled';
+import { Link } from "react-router-dom"
+import styled from "@emotion/styled"
 
-import {usePlayer} from '../hooks/usePlayer'
+import { usePlayer } from "../hooks/usePlayer"
 
 function Home() {
-  const {nickname, setNickname, bestScore} = usePlayer()
+  const { nickname, setNickname, bestScore } = usePlayer()!
 
-  return(
+  return (
     <HomePage>
       <Heading>2048.vs</Heading>
       <BestScore>Best score: {bestScore}</BestScore>
       <NicknameLabel htmlFor="nickname-input">Your nickname:</NicknameLabel>
-      <NicknameInput value={nickname} onChange={e => setNickname(e.target.value)} id='nickname-input' />
+      <NicknameInput value={nickname} onChange={(e) => setNickname(e.target.value)} id="nickname-input" />
 
-        <Menu>
-          <MenuOption color='green'>
-            <Link to="/singleplayer">Singleplayer</Link>
-          </MenuOption>
-          <MenuOption color='blue'>
-            <Link to="/multiplayer">Multiplayer</Link>
-          </MenuOption>
-        </Menu>
+      <Menu>
+        <MenuOption color="green">
+          <Link to="/singleplayer">Singleplayer</Link>
+        </MenuOption>
+        <MenuOption color="blue">
+          <Link to="/multiplayer">Multiplayer</Link>
+        </MenuOption>
+      </Menu>
     </HomePage>
   )
 }
@@ -77,8 +76,8 @@ const NicknameInput = styled.input`
   border-radius: 1rem;
   border: none;
   font-size: 1.5rem;
-  margin: .25em 0;
-  padding: .25em .25em;
+  margin: 0.25em 0;
+  padding: 0.25em 0.25em;
   text-align: center;
   @media (min-width: 480px) {
     font-size: 1.75rem;
@@ -97,7 +96,7 @@ export const Menu = styled.ul`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  `
+`
 
 type MenuOptionProps = {
   color: string
@@ -106,10 +105,10 @@ type MenuOptionProps = {
 export const MenuOption = styled.li`
   width: 70%;
   font-size: 1.5rem;
-  margin: .6em 0;
+  margin: 0.6em 0;
   border-radius: 1em;
   background: ${(props: MenuOptionProps) => `var(--${props.color})`};
-  
+
   & > * {
     font-size: 1.5rem;
     margin: 0;
@@ -119,7 +118,7 @@ export const MenuOption = styled.li`
     text-align: center;
     color: #e1eef6;
     letter-spacing: 1px;
-    padding: .5em 0;
+    padding: 0.5em 0;
     cursor: pointer;
     border-radius: 1em;
     background: ${(props: MenuOptionProps) => `var(--${props.color})`};

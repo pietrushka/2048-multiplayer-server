@@ -7,7 +7,7 @@ import { usePlayer } from "../hooks/usePlayer"
 import useMultiplayer from "../hooks/useMultiplayer"
 
 const MultiGame = () => {
-  const { nickname } = usePlayer()
+  const { nickname } = usePlayer()!
   const { gameState, performMove, playerBoardState, opponentBoardState, endGameTimestamp } = useMultiplayer({
     nickname,
   })
@@ -25,12 +25,6 @@ const MultiGame = () => {
     typeof opponentBoardState?.score !== "number" ||
     !endGameTimestamp
   ) {
-    console.log("multigame early return", {
-      gameState,
-      playerBoardState,
-      opponentBoardState,
-      endGameTimestamp,
-    })
     return <div>Loading</div>
   }
 

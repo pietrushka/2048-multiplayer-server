@@ -6,9 +6,8 @@ import useSingleGame from "../hooks/useSingleGame"
 import { usePlayer } from "../hooks/usePlayer"
 
 function SingleGame() {
-  const { bestScore, setBestScore } = usePlayer()
+  const { bestScore, setBestScore } = usePlayer()!
   const { state, score, tileGrid, performMove, resetGame } = useSingleGame({ bestScore, setBestScore })
-  console.log("singleGame", { score, tileGrid })
 
   if (typeof tileGrid === "undefined" || typeof score === "undefined") {
     return <span>loading</span>

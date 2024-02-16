@@ -12,7 +12,6 @@ export default function emitter(socketIo: Socket | undefined, payload: EmitterPa
     console.error("tried to emit without scoket io", { socketIo, payload })
     return
   }
-  console.log("emitter", payload)
   switch (payload.signal) {
     case CLIENT_SIGNALS.join:
       socketIo.emit(CLIENT_SIGNALS.join, payload.data)

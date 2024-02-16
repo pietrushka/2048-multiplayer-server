@@ -29,7 +29,6 @@ const readLocalStorage =
     const itemString = localStorage.getItem(storageSpace)
 
     if (!itemString) {
-      console.log("no itemString")
       return
     }
 
@@ -37,7 +36,6 @@ const readLocalStorage =
     const isValid = validateObject(schema, item)
 
     if (!isValid) {
-      console.log("no valid")
       return
     }
 
