@@ -1,5 +1,4 @@
 import { Direction } from "../types"
-import { arrayDifferenceLeft, deepCopyArray, sum } from "../utils"
 
 function createZeroMatrix(size: number): number[][] {
   return Array.from({ length: size }, () => Array(size).fill(0))
@@ -66,9 +65,6 @@ export function rotateBoardLeft(board: number[][], direction: Direction, reverse
 
   switch (direction) {
     case "RIGHT":
-      rotateRight(board)
-      rotateRight(board)
-      break
     case "LEFT":
       rotateRight(board)
       rotateRight(board)
@@ -101,35 +97,24 @@ export function shiftTilesLeftInPlace(array: number[]) {
 
 export function combineToLeft(row: number[]) {
   let scoreIncrease = 0 // it is much easier to calculate this during the combination
-  let writePos = 0 // Track where to write the next non-zero/combined value.
 
   for (let i = 0; i < row.length - 1; i++) {
     if (row[i] !== 0) {
       const areTileValuesTheSame = row[i] === row[i + 1]
       if (areTileValuesTheSame) {
         const combinedValue = row[i] * 2
-        row[writePos++] = combinedValue // Combine and write.
+        row[i] = combinedValue // write combined value
+        row[i + 1] = 0
+        i++ // next one will be "0" so skipping
         scoreIncrease += combinedValue
-        i++ // Skip the next element as it has been combined.
-      } else {
-        row[writePos++] = row[i] // Just write the current value.
       }
     }
   }
 
-  // Handle the last element if it's not been part of a combination.
-  if (row[row.length - 1] !== 0 && (row.length < 2 || row[row.length - 2] !== row[row.length - 1])) {
-    row[writePos++] = row[row.length - 1]
-  }
-
-  // Fill the rest of the row with zeros.
-  while (writePos < row.length) {
-    row[writePos++] = 0
-  }
   return { row, scoreIncrease }
 }
 
-function combineAndShiftRight(array: number[]) {
+function combineAndShiftLeft(array: number[]) {
   shiftTilesLeftInPlace(array)
   const scoreIncrease = combineToLeft(array)
   shiftTilesLeftInPlace(array)
@@ -143,12 +128,11 @@ export function slideTiles(tileGrid: number[][], direction: Direction) {
   tileGrid = rotateBoardLeft(tileGrid, direction)
 
   for (const row of tileGrid) {
-    const { scoreIncrease: rowScoreIncrease } = combineAndShiftRight(row)
+    const { scoreIncrease: rowScoreIncrease } = combineAndShiftLeft(row)
     scoreIncrease += rowScoreIncrease
   }
 
   // rotate back to orginal direction
-
   tileGrid = rotateBoardLeft(tileGrid, direction, true)
 
   return { tileGrid, scoreIncrease }
@@ -175,11 +159,4 @@ export function movePossible(board: number[][]): boolean {
   }
 
   return false
-}
-
-export function calculateScoreIncrease(oldGrid: number[][], newGrid: number[][]): number {
-  const diff = arrayDifferenceLeft(newGrid.flat(), oldGrid.flat())
-  const oldSum = sum(oldGrid.flat())
-  const newSum = sum(newGrid.flat())
-  return sum(diff) + (newSum - oldSum)
 }

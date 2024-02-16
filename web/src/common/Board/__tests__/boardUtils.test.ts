@@ -86,10 +86,10 @@ describe("boardUtils", () => {
   })
   test("combineToLeft", () => {
     const result1 = combineToLeft([2, 2, 2, 2])
-    expect(result1.row).toEqual([4, 4, 0, 0])
+    expect(result1.row).toEqual([4, 0, 4, 0])
     expect(result1.scoreIncrease).toBe(8)
     const result2 = combineToLeft([2, 2, 2, 0])
-    expect(result2.row).toEqual([4, 2, 0, 0])
+    expect(result2.row).toEqual([4, 0, 2, 0])
     expect(result2.scoreIncrease).toBe(4)
     const result3 = combineToLeft([2, 2, 0, 0])
     expect(result3.row).toEqual([4, 0, 0, 0])
@@ -97,6 +97,12 @@ describe("boardUtils", () => {
     const result4 = combineToLeft([2, 0, 0, 0])
     expect(result4.row).toEqual([2, 0, 0, 0])
     expect(result4.scoreIncrease).toBe(0)
+    const result5 = combineToLeft([32, 8, 32, 32])
+    expect(result5.row).toEqual([32, 8, 64, 0])
+    expect(result5.scoreIncrease).toBe(64)
+    const result6 = combineToLeft([8, 4, 2, 8])
+    expect(result6.row).toEqual([8, 4, 2, 8])
+    expect(result6.scoreIncrease).toBe(0)
   })
   test("movePossible", () => {
     expect(
@@ -124,81 +130,4 @@ describe("boardUtils", () => {
       ])
     ).toBe(false)
   })
-  // test("calculateScoreIncrease - combine", () => {
-  //   const tileGridOld = [
-  //     [2, 0, 0, 0],
-  //     [2, 0, 0, 0],
-  //     [2, 0, 0, 0],
-  //     [2, 0, 0, 0],
-  //   ]
-  //   const tileGridNew = [
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [4, 0, 0, 0],
-  //     [4, 0, 0, 0],
-  //   ]
-
-  //   expect(calculateScoreIncrease(tileGridOld, tileGridNew)).toBe(8)
-  // })
-
-  // test("calculateScoreIncrease - no change", () => {
-  //   const tileGridOld = [
-  //     [2, 4, 0, 0],
-  //     [4, 2, 0, 0],
-  //     [2, 4, 0, 0],
-  //     [4, 2, 0, 0],
-  //   ]
-  //   const tileGridNew = [
-  //     [2, 4, 0, 0],
-  //     [4, 2, 0, 0],
-  //     [2, 4, 0, 0],
-  //     [4, 2, 0, 0],
-  //   ]
-  //   expect(calculateScoreIncrease(tileGridOld, tileGridNew)).toBe(0)
-  // })
-  // test("calculateScoreIncrease with multiple combinations", () => {
-  //   const tileGridOld = [
-  //     [2, 2, 4, 4],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0], // 12
-  //   ]
-  //   const tileGridNew = [
-  //     [4, 8, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0], // 16
-  //   ]
-  //   expect(calculateScoreIncrease(tileGridOld, tileGridNew)).toBe(16)
-  // })
-  // test("calculateScoreIncrease - new tile", () => {
-  //   const tileGridOld = [
-  //     [4, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //   ]
-  //   const tileGridNew = [
-  //     [0, 0, 0, 2], // new tile
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [4, 0, 0, 0],
-  //   ]
-  //   expect(calculateScoreIncrease(tileGridOld, tileGridNew)).toBe(2)
-  // })
-  // test("calculateScoreIncrease - complex combinations + new tile", () => {
-  //   const tileGridOld = [
-  //     [2, 2, 4, 4],
-  //     [4, 4, 2, 2],
-  //     [2, 0, 0, 2],
-  //     [2, 2, 2, 2],
-  //   ]
-  //   const tileGridNew = [
-  //     [4, 8, 0, 0],
-  //     [8, 4, 0, 0],
-  //     [4, 0, 0, 2], // new tile
-  //     [4, 4, 0, 0],
-  //   ]
-  //   expect(calculateScoreIncrease(tileGridOld, tileGridNew)).toBe(36)
-  // })
 })

@@ -195,4 +195,64 @@ describe("slideTiles", () => {
     ])
     expect(result.scoreIncrease).toBe(20)
   })
+
+  test("no ghost tiles", () => {
+    const result = slideTiles(
+      [
+        [0, 0, 0, 0],
+        [0, 0, 0, 4],
+        [0, 4, 2, 4],
+        [32, 32, 8, 32],
+      ],
+      "RIGHT"
+    )
+    expect(result.tileGrid).toEqual([
+      [0, 0, 0, 0],
+      [0, 0, 0, 4],
+      [0, 4, 2, 4],
+      [0, 64, 8, 32], // there was 32, 64, 8, 32
+    ])
+
+    expect(result.scoreIncrease).toBe(64)
+  })
+
+  test("unnamed case 1", () => {
+    const result = slideTiles(
+      [
+        [0, 0, 0, 2],
+        [0, 0, 0, 2],
+        [0, 0, 4, 2],
+        [16, 128, 4, 2],
+      ],
+      "UP"
+    )
+    expect(result.tileGrid).toEqual([
+      [16, 128, 8, 4],
+      [0, 0, 0, 4],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ])
+
+    expect(result.scoreIncrease).toBe(16)
+  })
+
+  test("unnamed case 2", () => {
+    const result = slideTiles(
+      [
+        [0, 2, 0, 0],
+        [0, 0, 0, 0],
+        [8, 0, 2, 0],
+        [2, 4, 16, 0],
+      ],
+      "DOWN"
+    )
+    expect(result.tileGrid).toEqual([
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [8, 2, 2, 0],
+      [2, 4, 16, 0],
+    ])
+
+    expect(result.scoreIncrease).toBe(0)
+  })
 })
