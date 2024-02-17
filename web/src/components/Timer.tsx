@@ -1,8 +1,5 @@
-import { useState } from "react"
-import {
-  calculateRemainingSeconds,
-  formatDuration,
-} from "../utils/calculateTime"
+import { useState, useEffect } from "react"
+import { calculateRemainingSeconds, formatDuration } from "../utils/calculateTime"
 import { useInterval } from "../hooks/useInterval"
 
 type TimerProps = {
@@ -12,11 +9,18 @@ type TimerProps = {
 export default function Timer({ endTimestamp }: TimerProps) {
   const [remainingSeconds, setRemainingSeconds] = useState<number>()
 
-  useInterval(() => {
+  useEffect(() => {
     setRemainingSeconds(calculateRemainingSeconds(endTimestamp))
-  }, 1000)
+  }, [endTimestamp])
 
-  if (typeof remainingSeconds !== "number") {
+  useInterval(
+    () => {
+      setRemainingSeconds(calculateRemainingSeconds(endTimestamp))
+    },
+    remainingSeconds && remainingSeconds >= 1 ? 1000 : null
+  )
+
+  if (typeof remainingSeconds !== "number" || remainingSeconds < 1) {
     return <p>-</p>
   }
 
