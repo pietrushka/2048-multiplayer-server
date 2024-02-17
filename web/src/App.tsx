@@ -10,15 +10,15 @@ import Layout from "./components/Layout"
 function App() {
   return (
     <PlayerProvider>
-      <Layout>
-        <BrowserRouter>
+      <BrowserRouter>
+        <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/singleplayer" element={<SingleGame />} />
             <Route path="/multiplayer" element={<MultiGame />} />
           </Routes>
-        </BrowserRouter>
-      </Layout>
+        </Layout>
+      </BrowserRouter>
     </PlayerProvider>
   )
 }

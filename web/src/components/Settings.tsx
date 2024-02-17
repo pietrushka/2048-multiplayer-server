@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
-import { AiOutlineSetting } from 'react-icons/ai';
-import { ImCross } from 'react-icons/im';
-
-import { Overlay, PopUp } from './GameResult';
-import { Menu, MenuOption } from '../pages/Home';
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import styled from "@emotion/styled"
+import { css } from "@emotion/react"
+import { AiOutlineSetting } from "react-icons/ai"
+import { ImCross } from "react-icons/im"
+import { Overlay, PopUp } from "./GameResult"
+import { Menu, MenuOption } from "../pages/Home"
 
 function Settings() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   return (
     <>
@@ -17,8 +16,8 @@ function Settings() {
         {!isVisible && <AiOutlineSetting />}
       </SettingsButton>
       {isVisible && (
-        <Overlay>
-          <PopUp>
+        <Overlay onClick={() => setIsVisible(false)}>
+          <PopUp onClick={(e) => e.stopPropagation()}>
             <HideSettingsBtn onClick={() => setIsVisible(false)}>
               <ImCross />
             </HideSettingsBtn>
@@ -34,10 +33,10 @@ function Settings() {
         </Overlay>
       )}
     </>
-  );
+  )
 }
 
-export default Settings;
+export default Settings
 
 const HideSettingsBtn = styled.button`
   position: absolute;
@@ -58,24 +57,24 @@ const HideSettingsBtn = styled.button`
     height: 1.5rem;
     width: 1.5rem;
   }
-`;
+`
 
 type SettingsButtonProps = {
-  isVisible: boolean;
-};
+  isVisible: boolean
+}
 
 const visibleSettings = css`
   background: transparent;
   svg {
     fill: #fff;
   }
-`;
+`
 
 const nonVisibleSettings = css`
   svg {
     fill: #776e65;
   }
-`;
+`
 
 const SettingsButton = styled.button`
   position: absolute;
@@ -94,11 +93,10 @@ const SettingsButton = styled.button`
     height: 100%;
   }
 
-  ${({ isVisible }: SettingsButtonProps) =>
-    isVisible ? visibleSettings : nonVisibleSettings}
+  ${({ isVisible }: SettingsButtonProps) => (isVisible ? visibleSettings : nonVisibleSettings)}
 
   @media (min-width: 480px) {
     width: 2.5rem;
     height: 2.5rem;
   }
-`;
+`

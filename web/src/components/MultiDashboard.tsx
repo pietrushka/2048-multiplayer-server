@@ -106,41 +106,41 @@ const ButtonsGroup = styled.div`
   justify-content: center;
   align-items: center;
 `
-const ShopBtnsBox = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
+// const ShopBtnsBox = styled.div`
+//   width: 100%;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+// `
 
-const ShopBtn = styled.button`
-  font-size: 1rem;
-  margin: 0.5em 0;
-  padding: 0.75em 0;
-  width: 45%;
-  background: #eee4da;
-  color: #776e65;
-  border-radius: 0.5em;
-  text-align: center;
+// const ShopBtn = styled.button`
+//   font-size: 1rem;
+//   margin: 0.5em 0;
+//   padding: 0.75em 0;
+//   width: 45%;
+//   background: #eee4da;
+//   color: #776e65;
+//   border-radius: 0.5em;
+//   text-align: center;
 
-  h3 {
-    margin: 0;
-  }
+//   h3 {
+//     margin: 0;
+//   }
 
-  p {
-    margin: 0;
-  }
-  &[disabled] {
-    filter: grayscale(1);
-  }
-`
+//   p {
+//     margin: 0;
+//   }
+//   &[disabled] {
+//     filter: grayscale(1);
+//   }
+// `
 
-const LargeButton = styled.button`
-  font-size: 1.5rem;
-  margin: 0.5em 0;
-  width: 90%;
-  padding: 0.25em 0;
-  background: #eee4da;
-  color: #776e65;
-  border-radius: 0.5em;
-`
+// const LargeButton = styled.button`
+//   font-size: 1.5rem;
+//   margin: 0.5em 0;
+//   width: 90%;
+//   padding: 0.25em 0;
+//   background: #eee4da;
+//   color: #776e65;
+//   border-radius: 0.5em;
+// `

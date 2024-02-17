@@ -1,6 +1,5 @@
 import styled from "@emotion/styled"
 import { Link } from "react-router-dom"
-
 import { Menu, MenuOption } from "../pages/Home"
 
 interface GameResultProps {
