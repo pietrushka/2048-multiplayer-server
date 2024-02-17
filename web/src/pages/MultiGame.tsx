@@ -9,9 +9,10 @@ import GameResult from "../components/GameResult"
 
 const MultiGame = () => {
   const { nickname } = usePlayer()!
-  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText } = useMultiplayer({
-    nickname,
-  })
+  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText, playAgain } =
+    useMultiplayer({
+      nickname,
+    })
 
   if (!status) {
     return <Lobby />
@@ -45,7 +46,7 @@ const MultiGame = () => {
         />
         <TileGrid tileGrid={playerBoardState?.tileGrid} performMove={performMove} />
       </MultiGameContainer>
-      {resultText && <GameResult result={resultText} playAgain={() => {}} />}
+      {resultText && <GameResult result={resultText} playAgain={playAgain} />}
     </>
   )
 }

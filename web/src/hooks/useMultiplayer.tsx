@@ -52,6 +52,7 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     socketIo.current.on(SERVER_SIGNALS.startGame, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.boardUpdate, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.endGame, handleStateUpdate)
+    socketIo.current.on(SERVER_SIGNALS.joinLobby, handleJoinLobby)
 
     return () => {
       if (socketIo.current) {
@@ -78,9 +79,17 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     })
   }
 
+  const handleJoinLobby = () => {
+    setGameStatus(undefined)
+  }
+
   // TODO useCallback
   const performMove = (move: Move) => {
     clientEmitter(socketIo.current, { signal: CLIENT_SIGNALS.move, data: { move } })
+  }
+
+  const playAgain = () => {
+    clientEmitter(socketIo.current, { signal: CLIENT_SIGNALS.playAgain })
   }
 
   // TODO useMemo
@@ -91,7 +100,8 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     endGameTimestamp: gameState?.endGameTimestamp,
     playerBoardState: gameState?.playerBoardState,
     opponentBoardState: gameState?.opponentBoardState,
-    performMove,
     resultText,
+    performMove,
+    playAgain,
   }
 }

@@ -30,13 +30,14 @@ export default class ConnectionManager {
   }
 
   handleConnection = (socket: socketio.Socket) => {
-    console.log(`New connection: ${socket.id}`)
+    console.info(`New connection: ${socket.id}`)
     const user = new User(socket)
     this.users.set(socket.id, user)
 
     socket.on(CLIENT_SIGNALS.join, this.handleJoin(socket))
     socket.on(CLIENT_SIGNALS.disconnect, this.handleDisconnect(socket))
     socket.on(CLIENT_SIGNALS.move, this.handleMove(socket))
+    socket.on(CLIENT_SIGNALS.playAgain, this.handlePLayAgain(socket))
   }
 
   handleJoin(socket: socketio.Socket) {
@@ -64,7 +65,7 @@ export default class ConnectionManager {
       }
 
       this.users.delete(socketId)
-      console.log(`Disconnected: ${socketId}`)
+      console.info(`Disconnected: ${socketId}`)
     }
   }
 
@@ -154,11 +155,29 @@ export default class ConnectionManager {
       return
     }
 
-    this.endGame(game.id)
+    if (game.status !== "finished") {
+      this.endGame(game.id)
+    }
     const isOnlyPlayer = game.socketIds.length < 2
 
     if (isOnlyPlayer) {
       this.games.delete(game.id)
+    }
+  }
+
+  handlePLayAgain(socket: socketio.Socket) {
+    return () => {
+      const socketId = socket.id
+      const user = this.users.get(socketId)
+      if (user) {
+        this.userDisconnectHandleGame(user)
+        user.gameId = null
+        socket.join("lobby")
+        this.lobbyUsers.add(socket.id)
+        this.serverEmitter.sendJoinLobby(socketId)
+      } else {
+        console.error("handlePLayAgain: no user connected with:", socketId)
+      }
     }
   }
 }
