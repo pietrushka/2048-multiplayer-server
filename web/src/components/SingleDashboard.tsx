@@ -1,3 +1,4 @@
+import { css } from "@emotion/react"
 import styled from "@emotion/styled"
 
 type SinglePlayerDashBoardProps = {
@@ -5,10 +6,11 @@ type SinglePlayerDashBoardProps = {
   bestScore: number
   // TODO
   // undoMove: () => void
-  // resetGame: () => void
+  playAgain: () => void
+  isResetable: boolean
 }
 
-function SingleDashboard({ score, bestScore }: SinglePlayerDashBoardProps) {
+function SingleDashboard({ score, bestScore, playAgain, isResetable }: SinglePlayerDashBoardProps) {
   return (
     <DashboardContainer>
       <ScoreGroup>
@@ -21,10 +23,12 @@ function SingleDashboard({ score, bestScore }: SinglePlayerDashBoardProps) {
           <p>{score}</p>
         </Score>
       </ScoreGroup>
-      {/* <ButtonsGroup>
-        <Button onClick={resetGame}>New game</Button>
-        <Button onClick={undoMove}>Undo</Button>
-      </ButtonsGroup> */}
+      <ButtonsGroup>
+        <Button onClick={playAgain} disabled={!isResetable}>
+          New game
+        </Button>
+        {/* <Button onClick={undoMove}>Undo</Button> */}
+      </ButtonsGroup>
     </DashboardContainer>
   )
 }
@@ -58,17 +62,23 @@ const Score = styled.div`
   }
 `
 
-// const ButtonsGroup = styled.div`
-//   display: flex;
-//   justify-content: space-evenly;
-//   align-items: center;
-// `
-// const Button = styled.button`
-//   font-size: 1.5rem;
-//   margin: 0.5em 0;
-//   width: 40%;
-//   padding: 0.25em 0;
-//   background: #eee4da;
-//   color: #776e65;
-//   border-radius: 0.5em;
-// `
+const ButtonsGroup = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+`
+const Button = styled.button<{ disabled: boolean }>`
+  ${({ disabled }) =>
+    disabled
+      ? css`
+          filter: grayscale(1);
+        `
+      : {}}
+  font-size: 1.5rem;
+  margin: 0.5em 0;
+  width: 40%;
+  padding: 0.25em 0;
+  background: #eee4da;
+  color: #776e65;
+  border-radius: 0.5em;
+`

@@ -11,7 +11,11 @@ type UseMultiplayerProps = {
 export default function useSingleGame({ bestScore, setBestScore }: UseMultiplayerProps) {
   const [status, setStatus] = useState<GameStatus>()
   const boardRef = useRef<Board>()
-  const [, setGameVersion] = useState(0) // to trigger rerender value must change
+  const [gameVerion, setGameVersion] = useState(0) // to trigger rerender value must change
+
+  const { score, tileGrid } = boardRef.current?.data || {}
+  const isResetable = gameVerion > 0
+  console.log({ gameVerion, isResetable })
 
   useEffect(() => {
     boardRef.current = new Board("playerId") // TODO fix "playerId" placeholder
@@ -22,7 +26,7 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
     }
 
     setStatus("active")
-    setGameVersion((v) => v + 1)
+    setGameVersion(0)
   }, [])
 
   const performMove = (direction: Direction) => {
@@ -43,17 +47,20 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
   }
 
   const resetGame = () => {
+    if (!isResetable) {
+      return
+    }
     boardRef.current?.reset()
     setStatus("active")
     setGameVersion(0)
   }
 
-  const { score, tileGrid } = boardRef.current?.data || {}
   return {
     status,
     score,
     tileGrid,
     performMove,
     resetGame,
+    isResetable,
   }
 }
