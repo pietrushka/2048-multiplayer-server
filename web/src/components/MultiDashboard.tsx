@@ -44,7 +44,7 @@ function MultiDashboard({
       <SecondSection>
         {opponentTileGrid && <TileGridDisplay size="small" tileGrid={opponentTileGrid} />}
         <ButtonsGroup>
-          <ShopBtnsBox>
+          {/* <ShopBtnsBox>
             <ShopBtn onClick={emitBomb} disabled={score < 250 ? true : false}>
               <h3>Bomb</h3>
               <p>250 points</p>
@@ -54,7 +54,7 @@ function MultiDashboard({
               <p>750 points</p>
             </ShopBtn>
           </ShopBtnsBox>
-          <LargeButton onClick={undoMove}>Undo</LargeButton>
+          <LargeButton onClick={undoMove}>Undo</LargeButton> */}
         </ButtonsGroup>
       </SecondSection>
     </DashboardContainer>
