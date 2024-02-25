@@ -44,7 +44,7 @@ const MultiGame = () => {
           emitBomb={() => {} /*  TODO implement emitGameEvent("bomb", 250) */}
           emitFreeze={() => {} /* TODO implement emitGameEvent("freeze", 750)*/}
         />
-        <TileGrid tileGrid={playerBoardState?.tileGrid} performMove={performMove} />
+        {/* <TileGrid tileGrid={playerBoardState?.tileGrid} performMove={performMove} /> */}
       </MultiGameContainer>
       {resultText && <GameResult result={resultText} playAgain={playAgain} />}
     </>

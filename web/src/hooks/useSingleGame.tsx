@@ -15,7 +15,6 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
 
   const { score, tileGrid } = boardRef.current?.data || {}
   const isResetable = gameVerion > 0
-  console.log({ gameVerion, isResetable })
 
   useEffect(() => {
     boardRef.current = new Board("playerId") // TODO fix "playerId" placeholder

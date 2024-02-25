@@ -1,8 +1,9 @@
-import { useEffect, useCallback, useRef } from "react"
+import { useEffect, useCallback, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import TileGridDisplay from "./TileGridDisplay"
 import { MOVES } from "../common/constants"
-import { Move, TileGrid as TileGridT } from "../common/types"
+import { Direction, Move, TileGrid as TileGridT } from "../common/types"
+import { useInterval } from "../hooks/useInterval"
 
 type Point = {
   x: number
@@ -76,9 +77,42 @@ export default function TileGrid({ performMove, tileGrid }: TileGridProps) {
     [handleTouchMove]
   )
 
+  // DEV
+  const tileGrid1: TileGridT = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 2],
+  ]
+  const tileGrid2: TileGridT = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [2, 0, 0, 0],
+  ]
+  const [devGridPrevious, setDevGridPrevious] = useState<TileGridT>(tileGrid1)
+  const [devGridCurrent, setDevGridCurrent] = useState<TileGridT>(tileGrid2)
+  const [devDirection, setDevDirection] = useState<Direction>("LEFT")
+  useInterval(() => {
+    if (devGridCurrent[3][0] === 2) {
+      setDevGridPrevious(tileGrid2)
+      setDevGridCurrent(tileGrid1)
+      setDevDirection("RIGHT")
+    } else {
+      setDevGridPrevious(tileGrid1)
+      setDevGridCurrent(tileGrid2)
+      setDevDirection("LEFT")
+    }
+  }, 3000)
+
   return (
     <BoardContainer onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-      <TileGridDisplay tileGrid={tileGrid} size="normal" />
+      <TileGridDisplay
+        tileGrid={devGridCurrent}
+        previousGrid={devGridPrevious}
+        direction={devDirection}
+        size="normal"
+      />
     </BoardContainer>
   )
 }

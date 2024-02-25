@@ -42,7 +42,7 @@ function MultiDashboard({
       </FirstSection>
 
       <SecondSection>
-        {opponentTileGrid && <TileGridDisplay size="small" tileGrid={opponentTileGrid} />}
+        {/* {opponentTileGrid && <TileGridDisplay size="small" tileGrid={opponentTileGrid} />} */}
         <ButtonsGroup>
           {/* <ShopBtnsBox>
             <ShopBtn onClick={emitBomb} disabled={score < 250 ? true : false}>

@@ -1,106 +1,89 @@
+import { forwardRef } from "react"
 import styled from "@emotion/styled"
 import { SerializedStyles, css } from "@emotion/react"
-import { TileGridSize } from "../types"
 import { TileValue, NonEmptyTileValue } from "../common/types"
 
-interface TileProps {
+type TileInnerProps = {
   value: TileValue
-  size?: TileGridSize
+  sideLength: number
+  xIndex: number
+  yIndex: number
 }
 
-const Tile: React.FC<TileProps> = ({ value, size = "normal" }) => {
-  return <Cell size={size}>{value !== 0 && <CellInner value={value}>{value}</CellInner>}</Cell>
-}
+export const StyledTile = styled.div<TileInnerProps>`
+  ${({ value }) =>
+    value === 0
+      ? css`
+          display: none;
+        `
+      : tilesColors[value]}
 
-export default Tile
+  ${({ sideLength, xIndex, yIndex }) => css`
+    width: ${sideLength}px;
+    height: ${sideLength}px;
+    left: ${10 + xIndex * (sideLength + 10)}px;
+    top: ${10 + yIndex * (sideLength + 10)}px;
+  `}
 
-interface CellProps {
-  size: TileGridSize
-}
-
-const Cell = styled.div<CellProps>`
-  position: relative;
-  padding-bottom: 100%;
-  background: #cdc1b4;
-  line-height: 0;
-  ${({ size }) => (size === "small" ? styleSmall : styleNormal)}
-`
-
-const CellInner = styled.div<{ value: NonEmptyTileValue }>`
-  background: #3c3a32;
-  color: #f9f6f2;
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  z-index: 10;
+  border-radius: 3px;
   font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height: 0;
-  border-radius: 3px;
-  z-index: 10;
-  ${({ value }) => tilesColors[value] || defaultTileStyle}
 `
 
-const styleSmall = css`
-  border-radius: 1px;
-  font-size: 0.6rem;
-`
-
-const styleNormal = css`
-  border-radius: 3px;
-  font-size: 1.6rem;
-`
-
-const defaultTileStyle = css`
-  font-size: 1.7em; // Default font size for unspecified values
-`
+// Wrap the styled component with forwardRef to forward the ref to the DOM element
+const Tile = forwardRef<HTMLDivElement, TileInnerProps>((props, ref) => {
+  return <StyledTile ref={ref} {...props} />
+})
 
 const tilesColors: Record<NonEmptyTileValue, SerializedStyles> = {
   2: css`
-    background: #eee4da;
+    background-color: #eee4da;
     color: #776e65;
   `,
   4: css`
-    background: #ede0c8;
+    background-color: #ede0c8;
     color: #776e65;
   `,
 
   8: css`
-    background: #f2b179;
+    background-color: #f2b179;
   `,
 
   16: css`
-    background: #f59563;
+    background-color: #f59563;
   `,
 
   32: css`
-    background: #f67c5f;
+    background-color: #f67c5f;
   `,
 
   64: css`
-    background: #f65e3b;
+    background-color: #f65e3b;
   `,
 
   128: css`
-    background: #edcf72;
+    background-color: #edcf72;
   `,
 
   256: css`
-    background: #edcc61;
+    background-color: #edcc61;
   `,
 
   512: css`
-    background: #edc850;
+    background-color: #edc850;
   `,
 
   1024: css`
-    background: #edc53f;
+    background-color: #edc53f;
   `,
 
   2048: css`
-    background: #edc22e;
+    background-color: #edc22e;
   `,
 }
+
+export default Tile

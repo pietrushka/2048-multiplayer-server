@@ -5,10 +5,12 @@
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@gsap/react": "^2.1.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.80",
+    "gsap": "^3.12.5",
     "immer": "^10.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
