@@ -12,12 +12,15 @@ type Point = {
 
 type TileGridProps = {
   performMove: (move: Move) => void
+  direction?: Direction
   tileGrid: TileGridT
 }
 
-export default function TileGrid({ performMove, tileGrid }: TileGridProps) {
-  const handleKeyboardInput = useCallback(
-    (e: KeyboardEvent) => {
+export default function TileGrid({ performMove, tileGrid, direction }: TileGridProps) {
+  const startPointerLocation = useRef<Point>()
+
+  useEffect(() => {
+    const handleKeyboardInput = (e: KeyboardEvent) => {
       e.preventDefault()
       switch (e.key) {
         case "ArrowDown":
@@ -33,14 +36,10 @@ export default function TileGrid({ performMove, tileGrid }: TileGridProps) {
           performMove(MOVES.RIGHT)
           break
       }
-    },
-    [performMove]
-  )
-
-  useEffect(() => {
+    }
     window.addEventListener("keydown", handleKeyboardInput)
     return () => window.removeEventListener("keydown", handleKeyboardInput)
-  }, [handleKeyboardInput])
+  }, [performMove])
 
   const handleTouchMove = useCallback(
     (startPoint: Point, endPoint: Point) => {
@@ -60,7 +59,6 @@ export default function TileGrid({ performMove, tileGrid }: TileGridProps) {
     [performMove]
   )
 
-  const startPointerLocation = useRef<Point>()
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0]
     startPointerLocation.current = { x: touch.pageX, y: touch.pageY }
@@ -76,43 +74,9 @@ export default function TileGrid({ performMove, tileGrid }: TileGridProps) {
     },
     [handleTouchMove]
   )
-
-  // DEV
-  const tileGrid1: TileGridT = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 2],
-  ]
-  const tileGrid2: TileGridT = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [2, 0, 0, 0],
-  ]
-  const [devGridPrevious, setDevGridPrevious] = useState<TileGridT>(tileGrid1)
-  const [devGridCurrent, setDevGridCurrent] = useState<TileGridT>(tileGrid2)
-  const [devDirection, setDevDirection] = useState<Direction>("LEFT")
-  useInterval(() => {
-    if (devGridCurrent[3][0] === 2) {
-      setDevGridPrevious(tileGrid2)
-      setDevGridCurrent(tileGrid1)
-      setDevDirection("RIGHT")
-    } else {
-      setDevGridPrevious(tileGrid1)
-      setDevGridCurrent(tileGrid2)
-      setDevDirection("LEFT")
-    }
-  }, 3000)
-
   return (
     <BoardContainer onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-      <TileGridDisplay
-        tileGrid={devGridCurrent}
-        previousGrid={devGridPrevious}
-        direction={devDirection}
-        size="normal"
-      />
+      <TileGridDisplay tileGrid={JSON.stringify(tileGrid)} direction={direction} />
     </BoardContainer>
   )
 }

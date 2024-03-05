@@ -7,7 +7,10 @@ import { usePlayer } from "../hooks/usePlayer"
 
 function SingleGame() {
   const { bestScore, setBestScore } = usePlayer()!
-  const { status, score, tileGrid, performMove, resetGame, isResetable } = useSingleGame({ bestScore, setBestScore })
+  const { status, score, tileGrid, performMove, resetGame, isResetable, direction } = useSingleGame({
+    bestScore,
+    setBestScore,
+  })
 
   if (typeof tileGrid === "undefined" || typeof score === "undefined") {
     return <span>loading</span>
@@ -15,7 +18,7 @@ function SingleGame() {
   return (
     <SingleGameContainer>
       <SingleDashboard score={score} bestScore={bestScore} playAgain={resetGame} isResetable={isResetable} />
-      <TileGrid tileGrid={tileGrid} performMove={performMove} />
+      <TileGrid tileGrid={tileGrid} direction={direction} performMove={performMove} />
       {status === "finished" && <GameResult result="Game End" playAgain={resetGame} />}
     </SingleGameContainer>
   )

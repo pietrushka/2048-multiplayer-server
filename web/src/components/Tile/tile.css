@@ -1,0 +1,461 @@
+  @keyframes tileSpawn {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes mergeTile {
+    from {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes move_xDiff-480_yDiff-480 {
+    from {
+      transform: translate(-480px, -480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-480_yDiff-320 {
+    from {
+      transform: translate(-480px, -320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-480_yDiff-160 {
+    from {
+      transform: translate(-480px, -160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-480_yDiff0 {
+    from {
+      transform: translate(-480px, 0px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-480_yDiff160 {
+    from {
+      transform: translate(-480px, 160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-480_yDiff320 {
+    from {
+      transform: translate(-480px, 320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-480_yDiff480 {
+    from {
+      transform: translate(-480px, 480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-320_yDiff-480 {
+    from {
+      transform: translate(-320px, -480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-320_yDiff-320 {
+    from {
+      transform: translate(-320px, -320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-320_yDiff-160 {
+    from {
+      transform: translate(-320px, -160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-320_yDiff0 {
+    from {
+      transform: translate(-320px, 0px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-320_yDiff160 {
+    from {
+      transform: translate(-320px, 160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-320_yDiff320 {
+    from {
+      transform: translate(-320px, 320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-320_yDiff480 {
+    from {
+      transform: translate(-320px, 480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-160_yDiff-480 {
+    from {
+      transform: translate(-160px, -480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-160_yDiff-320 {
+    from {
+      transform: translate(-160px, -320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-160_yDiff-160 {
+    from {
+      transform: translate(-160px, -160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-160_yDiff0 {
+    from {
+      transform: translate(-160px, 0px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-160_yDiff160 {
+    from {
+      transform: translate(-160px, 160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-160_yDiff320 {
+    from {
+      transform: translate(-160px, 320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff-160_yDiff480 {
+    from {
+      transform: translate(-160px, 480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff0_yDiff-480 {
+    from {
+      transform: translate(0px, -480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff0_yDiff-320 {
+    from {
+      transform: translate(0px, -320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff0_yDiff-160 {
+    from {
+      transform: translate(0px, -160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff0_yDiff0 {
+    from {
+      transform: translate(0px, 0px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff0_yDiff160 {
+    from {
+      transform: translate(0px, 160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff0_yDiff320 {
+    from {
+      transform: translate(0px, 320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff0_yDiff480 {
+    from {
+      transform: translate(0px, 480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff160_yDiff-480 {
+    from {
+      transform: translate(160px, -480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff160_yDiff-320 {
+    from {
+      transform: translate(160px, -320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff160_yDiff-160 {
+    from {
+      transform: translate(160px, -160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff160_yDiff0 {
+    from {
+      transform: translate(160px, 0px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff160_yDiff160 {
+    from {
+      transform: translate(160px, 160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff160_yDiff320 {
+    from {
+      transform: translate(160px, 320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff160_yDiff480 {
+    from {
+      transform: translate(160px, 480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff320_yDiff-480 {
+    from {
+      transform: translate(320px, -480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff320_yDiff-320 {
+    from {
+      transform: translate(320px, -320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff320_yDiff-160 {
+    from {
+      transform: translate(320px, -160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff320_yDiff0 {
+    from {
+      transform: translate(320px, 0px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff320_yDiff160 {
+    from {
+      transform: translate(320px, 160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff320_yDiff320 {
+    from {
+      transform: translate(320px, 320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff320_yDiff480 {
+    from {
+      transform: translate(320px, 480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff480_yDiff-480 {
+    from {
+      transform: translate(480px, -480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff480_yDiff-320 {
+    from {
+      transform: translate(480px, -320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff480_yDiff-160 {
+    from {
+      transform: translate(480px, -160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff480_yDiff0 {
+    from {
+      transform: translate(480px, 0px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff480_yDiff160 {
+    from {
+      transform: translate(480px, 160px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff480_yDiff320 {
+    from {
+      transform: translate(480px, 320px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes move_xDiff480_yDiff480 {
+    from {
+      transform: translate(480px, 480px);
+    }
+    to {
+      transform: translate(0px, 0px);
+    }
+  }
