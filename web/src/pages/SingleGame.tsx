@@ -4,6 +4,7 @@ import GameResult from "../components/GameResult"
 import SingleDashboard from "../components/SingleDashboard"
 import useSingleGame from "../hooks/useSingleGame"
 import { usePlayer } from "../hooks/usePlayer"
+import { mediaQueries } from "../styles"
 
 function SingleGame() {
   const { bestScore, setBestScore } = usePlayer()!
@@ -26,10 +27,22 @@ function SingleGame() {
 
 export default SingleGame
 
-const SingleGameContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`
+const SingleGameContainer = styled.div({
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "80vh",
+  justifyContent: "space-evenly",
+  width: "100%",
+
+  [mediaQueries.tabletPortrait]: {
+    width: "80%",
+  },
+
+  [mediaQueries.laptop]: {
+    width: "70vh",
+  },
+
+  [mediaQueries.largeScreen]: {
+    width: "60vh",
+  },
+})

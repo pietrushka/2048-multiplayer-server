@@ -1,3 +1,4 @@
+// TODO refactor
 import { css } from "@emotion/react"
 import styled from "@emotion/styled"
 
@@ -12,7 +13,7 @@ type SinglePlayerDashBoardProps = {
 
 function SingleDashboard({ score, bestScore, playAgain, isResetable }: SinglePlayerDashBoardProps) {
   return (
-    <DashboardContainer>
+    <div>
       <ScoreGroup>
         <Score>
           <h3>Best:</h3>
@@ -29,25 +30,19 @@ function SingleDashboard({ score, bestScore, playAgain, isResetable }: SinglePla
         </Button>
         {/* <Button onClick={undoMove}>Undo</Button> */}
       </ButtonsGroup>
-    </DashboardContainer>
+    </div>
   )
 }
 
 export default SingleDashboard
 
-const DashboardContainer = styled.div`
-  width: 100%;
-  margin: 0 auto;
-`
-
 const ScoreGroup = styled.div`
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  justify-content: space-between;
 `
 
 const Score = styled.div`
-  width: 45%;
+  width: 48%;
   text-align: center;
   background: #ede0c8;
   color: #776e65;
