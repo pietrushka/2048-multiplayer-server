@@ -1,19 +1,19 @@
 // Board is an controllable TileGrid
-import TileGridDisplay from "./TileGrid"
-import { Direction, Move, TileGrid as TileGridT } from "../common/types"
+import TileGrid from "./TileGrid"
+import { Direction, Move } from "../common/types"
 import useControlInput from "../hooks/useControlInput"
 
 type TileGridProps = {
   performMove: (move: Move) => void
   direction?: Direction
-  tileGrid: TileGridT
+  tileGridString: string
 }
 
-export default function Board({ performMove, tileGrid, direction }: TileGridProps) {
+export default function Board({ performMove, tileGridString, direction }: TileGridProps) {
   const { onTouchStart, onTouchEnd } = useControlInput(performMove)
   return (
     <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-      <TileGridDisplay tileGrid={JSON.stringify(tileGrid)} direction={direction} />
+      <TileGrid tileGridString={tileGridString} direction={direction} />
     </div>
   )
 }

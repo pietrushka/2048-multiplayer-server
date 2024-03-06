@@ -10,7 +10,7 @@ export type TileGrid = TileValue[][]
 export type BoardData = {
   playerId: string
   score: number
-  tileGrid: TileGrid
+  tileGridStateEncoded: string
 }
 
 export type GameStatus = "loading" | "active" | "finished"

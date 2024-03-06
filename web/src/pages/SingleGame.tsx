@@ -8,18 +8,18 @@ import { mediaQueries } from "../styles"
 
 function SingleGame() {
   const { bestScore, setBestScore } = usePlayer()!
-  const { status, score, tileGrid, performMove, resetGame, isResetable, direction } = useSingleGame({
+  const { status, score, tileGridString, performMove, resetGame, isResetable, direction } = useSingleGame({
     bestScore,
     setBestScore,
   })
 
-  if (typeof tileGrid === "undefined" || typeof score === "undefined") {
+  if (typeof tileGridString === "undefined" || typeof score === "undefined") {
     return <span>loading</span>
   }
   return (
     <SingleGameContainer>
       <SingleDashboard score={score} bestScore={bestScore} playAgain={resetGame} isResetable={isResetable} />
-      <Board tileGrid={tileGrid} direction={direction} performMove={performMove} />
+      <Board tileGridString={tileGridString} direction={direction} performMove={performMove} />
       {status === "finished" && <GameResult result="Game End" playAgain={resetGame} />}
     </SingleGameContainer>
   )

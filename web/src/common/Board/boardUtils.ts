@@ -160,3 +160,11 @@ export function movePossible(board: TileGrid): boolean {
 
   return false
 }
+
+export function encodeTileGridState(tileGrid: TileGrid, previousMove?: Direction) {
+  return JSON.stringify({ tileGrid, previousMove })
+}
+
+export function decodeTileGridState(tileGridStateString: string): { tileGrid: TileGrid; previousMove?: Direction } {
+  return JSON.parse(tileGridStateString)
+}

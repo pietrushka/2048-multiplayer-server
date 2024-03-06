@@ -1,9 +1,10 @@
 import { renderHook, act } from "@testing-library/react"
 import useSingleGame from "./useSingleGame"
 import { getStoredBoardData } from "../utils/localStorage"
-import { initializeBoard, spawnTile } from "../common/Board/boardUtils"
+import { encodeTileGridState, initializeBoard, spawnTile } from "../common/Board/boardUtils"
 import Board from "../common/Board"
 import { TileGrid } from "../common/types"
+import { DIRECTIONS } from "../common/constants"
 
 jest.mock("../utils/localStorage", () => ({
   getStoredBoardData: jest.fn(),
@@ -40,24 +41,25 @@ describe("useSingleGame hook", () => {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
       [2, 0, 0, 0],
-    ]
+    ] as TileGrid
     initializeBoardMock.mockImplementationOnce(() => mockTileGrid)
 
     const { result } = renderHook(() => useSingleGame({ bestScore: 0, setBestScore: setBestScoreMock }))
 
     expect(result.current.status).toEqual("active")
     expect(result.current.score).toEqual(0)
-    expect(result.current.tileGrid).toEqual(mockTileGrid)
+    expect(result.current.tileGridStateEncoded).toEqual(encodeTileGridState(mockTileGrid))
   })
 
   test("initializes with stored data if available", () => {
+    const mockTileGrid = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [4, 2, 2, 128],
+      [2048, 1024, 512, 256],
+    ] as TileGrid
     const mockStorageData = {
-      tileGrid: [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [4, 2, 2, 128],
-        [2048, 1024, 512, 256],
-      ],
+      tileGrid: mockTileGrid,
       score: 10204,
     }
     getStoredBoardDataMock.mockReturnValueOnce(mockStorageData)
@@ -66,7 +68,7 @@ describe("useSingleGame hook", () => {
 
     expect(result.current.status).toEqual("active")
     expect(result.current.score).toEqual(mockStorageData.score)
-    expect(result.current.tileGrid).toEqual(mockStorageData.tileGrid)
+    expect(result.current.tileGridStateEncoded).toEqual(encodeTileGridState(mockTileGrid))
   })
 
   test("performMove", () => {
@@ -76,6 +78,7 @@ describe("useSingleGame hook", () => {
       [0, 0, 0, 4],
       [0, 0, 2, 4],
     ]
+    const mockMove = DIRECTIONS.UP
     initializeBoardMock.mockReturnValueOnce(mockTileGrid)
 
     spawnTileMock.mockImplementationOnce((tileGrid: TileGrid) => {
@@ -88,15 +91,20 @@ describe("useSingleGame hook", () => {
     const { result } = renderHook(() => useSingleGame({ bestScore: initialBestScore, setBestScore: setBestScoreMock }))
 
     act(() => {
-      result.current.performMove("UP")
+      result.current.performMove(mockMove)
     })
 
-    expect(result.current.tileGrid).toEqual([
-      [2, 0, 2, 8],
-      [0, 0, 0, 8],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-    ])
+    expect(result.current.tileGridStateEncoded).toEqual(
+      encodeTileGridState(
+        [
+          [2, 0, 2, 8],
+          [0, 0, 0, 8],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+        ],
+        mockMove
+      )
+    )
     expect(result.current.score).toEqual(newScore)
     expect(setBestScoreMock).toHaveBeenCalledWith(newScore)
   })

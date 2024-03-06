@@ -41,6 +41,7 @@ const ScoreGroup = styled.div`
   justify-content: space-between;
 `
 
+// TODO same on MultiDashboard
 const Score = styled.div`
   width: 48%;
   text-align: center;
