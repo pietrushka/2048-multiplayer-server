@@ -12,7 +12,6 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
   const [status, setStatus] = useState<GameStatus>()
   const boardRef = useRef<Board>()
   const [gameVerion, setGameVersion] = useState(0) // to trigger rerender value must change
-  const [direction, setDirection] = useState<Direction>()
 
   const { score, tileGridStateEncoded } = boardRef.current?.data || {}
   const isResetable = gameVerion > 0
@@ -33,7 +32,6 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
     if (!boardRef.current) {
       return
     }
-    setDirection(direction)
     boardRef.current.handleMove(direction)
     setGameVersion((v) => v + 1)
 
@@ -60,7 +58,6 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
     status,
     score,
     tileGridStateEncoded,
-    direction,
     performMove,
     resetGame,
     isResetable,

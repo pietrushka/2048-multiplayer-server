@@ -1,4 +1,6 @@
+import { encodeTileGridState } from "../../common/Board/boardUtils"
 import { DIRECTIONS, MOVES } from "../../common/constants"
+import { TileGrid } from "../../common/types"
 import parseTileGridState from "./parseTileGridState"
 
 test("simple move", () => {
@@ -7,16 +9,16 @@ test("simple move", () => {
     [0, 0, 0, 2],
     [0, 0, 0, 2],
     [0, 0, 0, 2],
-  ]
+  ] as TileGrid
   const currentTileGrid = [
     [2, 0, 0, 0],
     [2, 0, 0, 0],
     [2, 0, 0, 0],
     [2, 0, 0, 0],
-  ]
+  ] as TileGrid
   const move = MOVES.LEFT
 
-  const result = parseTileGridState(JSON.stringify(currentTileGrid), JSON.stringify(previousTileGrid), move)
+  const result = parseTileGridState(encodeTileGridState(currentTileGrid, move), encodeTileGridState(previousTileGrid))
 
   expect(result).toEqual([
     [
@@ -80,16 +82,16 @@ test("simple move non-left direction", () => {
     [2, 0, 0, 0],
     [2, 0, 0, 0],
     [2, 0, 0, 0],
-  ]
+  ] as TileGrid
   const currentTileGrid = [
     [0, 0, 0, 2],
     [0, 0, 0, 2],
     [0, 0, 0, 2],
     [0, 0, 0, 2],
-  ]
+  ] as TileGrid
   const move = MOVES.RIGHT
 
-  const result = parseTileGridState(JSON.stringify(currentTileGrid), JSON.stringify(previousTileGrid), move)
+  const result = parseTileGridState(encodeTileGridState(currentTileGrid, move), encodeTileGridState(previousTileGrid))
 
   expect(result).toEqual(
     // using arrayContaining because order rotated,
@@ -157,16 +159,16 @@ test("differnt kind of moves", () => {
     [0, 2, 0, 0],
     [0, 0, 2, 8],
     [8, 4, 2, 4],
-  ]
+  ] as TileGrid
   const currentTileGrid = [
     [4, 2, 0, 0],
     [2, 0, 0, 0],
     [2, 8, 0, 0],
     [8, 4, 2, 4],
-  ]
+  ] as TileGrid
   const move = MOVES.LEFT
 
-  const result = parseTileGridState(JSON.stringify(currentTileGrid), JSON.stringify(previousTileGrid), move)
+  const result = parseTileGridState(encodeTileGridState(currentTileGrid, move), encodeTileGridState(previousTileGrid))
   expect(result).toEqual([
     [
       {
@@ -284,16 +286,16 @@ test("find new values after move", () => {
     [0, 0, 0, 2],
     [0, 0, 0, 2],
     [0, 0, 0, 2],
-  ]
+  ] as TileGrid
   const currentTileGrid = [
     [2, 0, 0, 0],
     [2, 0, 0, 2],
     [2, 0, 2, 0],
     [2, 2, 0, 0],
-  ]
+  ] as TileGrid
   const move = MOVES.LEFT
 
-  const result = parseTileGridState(JSON.stringify(currentTileGrid), JSON.stringify(previousTileGrid), move)
+  const result = parseTileGridState(encodeTileGridState(currentTileGrid, move), encodeTileGridState(previousTileGrid))
   expect(result).toEqual([
     [
       {
@@ -389,16 +391,16 @@ test("merges", () => {
     [4, 0, 4, 4],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
-  ]
+  ] as TileGrid
   const currentTileGrid = [
     [8, 4, 0, 0],
     [8, 4, 4, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
-  ]
-  const direction = DIRECTIONS.LEFT
+  ] as TileGrid
+  const move = DIRECTIONS.LEFT
 
-  const result = parseTileGridState(JSON.stringify(currentTileGrid), JSON.stringify(previousTileGrid), direction)
+  const result = parseTileGridState(encodeTileGridState(currentTileGrid, move), encodeTileGridState(previousTileGrid))
   expect(result[0]).toEqual([
     {
       value: 8,
@@ -482,22 +484,23 @@ test("merges", () => {
   ])
 })
 
+// TODO fix test name
 test("xd", () => {
   const previousTileGrid = [
     [0, 0, 0, 2],
     [0, 0, 0, 2],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
-  ]
+  ] as TileGrid
   const currentTileGrid = [
     [0, 0, 0, 2],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 4],
-  ]
-  const direction = DIRECTIONS.DOWN
+  ] as TileGrid
+  const move = DIRECTIONS.DOWN
 
-  const result = parseTileGridState(JSON.stringify(currentTileGrid), JSON.stringify(previousTileGrid), direction)
+  const result = parseTileGridState(encodeTileGridState(currentTileGrid, move), encodeTileGridState(previousTileGrid))
   expect(result).toEqual([
     [
       {

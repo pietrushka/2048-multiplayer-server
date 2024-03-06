@@ -1,7 +1,7 @@
 // TODO refactor
 
 import { TileGrid, TileValue, Direction } from "../../common/types"
-import { rotateBoardLeft } from "../../common/Board/boardUtils"
+import { decodeTileGridState, rotateBoardLeft } from "../../common/Board/boardUtils"
 import rotateCoordinateLeft from "../../utils/rotateCoordinatesLeft"
 import { areArraysEqual, deepCopyArray } from "../../common/utils"
 
@@ -195,14 +195,12 @@ function validateWithCurrentState(
   return result
 }
 
-export default function parseTileGridState(
-  currentTileGridString: string,
-  previousTileGridString?: string,
-  direction?: Direction
-) {
-  const currentTileGrid = JSON.parse(currentTileGridString) as TileGrid
-  const previousTileGrid =
-    typeof previousTileGridString === "string" ? (JSON.parse(previousTileGridString) as TileGrid) : undefined
+export default function parseTileGridState(currentTileGridStateEncoded: string, previousTileGridStateEncoded?: string) {
+  const { tileGrid: currentTileGrid, previousMove: direction } = decodeTileGridState(currentTileGridStateEncoded)
+  const { tileGrid: previousTileGrid } =
+    typeof previousTileGridStateEncoded === "string"
+      ? decodeTileGridState(previousTileGridStateEncoded)
+      : { tileGrid: undefined }
   // TODO remove this
   if (previousTileGrid && areArraysEqual(currentTileGrid, previousTileGrid)) {
     return currentTileGrid.map((row, yIndex) =>

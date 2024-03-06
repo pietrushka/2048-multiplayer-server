@@ -7,17 +7,15 @@ import parseTileGridState from "./parseTileGridState"
 import usePrevious from "../../hooks/usePrevious"
 import useResizeObserver from "../../hooks/useResizeObserver"
 import { calcTileAndGapSize } from "./utils"
-import { Direction } from "../../common/types"
 import Background from "./Background"
 
 export type TilesProps = {
-  tileGridString: string
-  direction?: Direction
+  tileGridStateEncoded: string
 }
 
-function TileGrid({ tileGridString, direction }: TilesProps) {
+function TileGrid({ tileGridStateEncoded }: TilesProps) {
   const boardRef = useRef(null)
-  const previousGrid = usePrevious(tileGridString)
+  const previousGrid = usePrevious(tileGridStateEncoded)
 
   const { width = 0 } = useResizeObserver({
     ref: boardRef,
@@ -26,8 +24,8 @@ function TileGrid({ tileGridString, direction }: TilesProps) {
 
   // TODO is this meme needed?
   const gridState = useMemo(
-    () => parseTileGridState(tileGridString, previousGrid, direction).flat(),
-    [tileGridString, previousGrid, direction]
+    () => parseTileGridState(tileGridStateEncoded, previousGrid).flat(),
+    [tileGridStateEncoded, previousGrid]
   )
 
   const theme = calcTileAndGapSize(width)
@@ -45,7 +43,7 @@ function TileGrid({ tileGridString, direction }: TilesProps) {
 
 export default memo(
   TileGrid,
-  (prevState: TilesProps, nextState: TilesProps) => prevState.tileGridString === nextState.tileGridString
+  (prevState: TilesProps, nextState: TilesProps) => prevState.tileGridStateEncoded === nextState.tileGridStateEncoded
 )
 
 const Board = styled.div<{ gapSize: number; borderRadius: number }>`
