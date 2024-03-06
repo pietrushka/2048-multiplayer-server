@@ -1,4 +1,4 @@
-import { DIRECTIONS, MOVES } from "../common/constants"
+import { DIRECTIONS, MOVES } from "../../common/constants"
 import parseTileGridState from "./parseTileGridState"
 
 test("simple move", () => {

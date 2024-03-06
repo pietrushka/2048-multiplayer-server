@@ -1,5 +1,5 @@
-import styled from "@emotion/styled"
-import TileGridDisplay from "./TileGridDisplay"
+// Board is an controllable TileGrid
+import TileGridDisplay from "./TileGrid"
 import { Direction, Move, TileGrid as TileGridT } from "../common/types"
 import useControlInput from "../hooks/useControlInput"
 
@@ -9,17 +9,11 @@ type TileGridProps = {
   tileGrid: TileGridT
 }
 
-export default function TileGrid({ performMove, tileGrid, direction }: TileGridProps) {
+export default function Board({ performMove, tileGrid, direction }: TileGridProps) {
   const { onTouchStart, onTouchEnd } = useControlInput(performMove)
   return (
-    <BoardContainer onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <TileGridDisplay tileGrid={JSON.stringify(tileGrid)} direction={direction} />
-    </BoardContainer>
+    </div>
   )
 }
-
-const BoardContainer = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  margin-bottom: 5%;
-`

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import TileGrid from "../components/TileGrid"
+import Board from "../components/Board"
 import GameResult from "../components/GameResult"
 import SingleDashboard from "../components/SingleDashboard"
 import useSingleGame from "../hooks/useSingleGame"
@@ -18,7 +18,7 @@ function SingleGame() {
   return (
     <SingleGameContainer>
       <SingleDashboard score={score} bestScore={bestScore} playAgain={resetGame} isResetable={isResetable} />
-      <TileGrid tileGrid={tileGrid} direction={direction} performMove={performMove} />
+      <Board tileGrid={tileGrid} direction={direction} performMove={performMove} />
       {status === "finished" && <GameResult result="Game End" playAgain={resetGame} />}
     </SingleGameContainer>
   )

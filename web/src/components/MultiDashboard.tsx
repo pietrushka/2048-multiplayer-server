@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import Timer from "./Timer"
-import TileGridDisplay from "./TileGridDisplay"
+// import TileGridDisplay from "./TileGridDisplay"
 import { TileGrid } from "../common/types"
 
 interface MultiDashboardProps {
