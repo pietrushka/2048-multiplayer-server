@@ -1,6 +1,5 @@
 import styled from "@emotion/styled"
-
-import TileGrid from "../components/TileGrid"
+import Board from "../components/Board"
 import MultiDashboard from "../components/MultiDashboard"
 import { Lobby } from "../components/Lobby"
 import { usePlayer } from "../hooks/usePlayer"
@@ -21,9 +20,9 @@ const MultiGame = () => {
   // TODO this if is ugly af
   if (
     status === "loading" ||
-    !playerBoardState?.tileGrid ||
+    !playerBoardState?.tileGridStateEncoded ||
     typeof playerBoardState?.score !== "number" ||
-    !opponentBoardState?.tileGrid ||
+    !opponentBoardState?.tileGridStateEncoded ||
     typeof opponentBoardState?.score !== "number" ||
     !endGameTimestamp
   ) {
@@ -36,7 +35,7 @@ const MultiGame = () => {
         <MultiDashboard
           score={playerBoardState.score}
           opponentScore={opponentBoardState.score}
-          opponentTileGrid={opponentBoardState.tileGrid}
+          opponentTileGridStateEncoded={opponentBoardState.tileGridStateEncoded}
           endTimestamp={endGameTimestamp}
           undoMove={() => {
             /* TODO implement */
@@ -44,7 +43,7 @@ const MultiGame = () => {
           emitBomb={() => {} /*  TODO implement emitGameEvent("bomb", 250) */}
           emitFreeze={() => {} /* TODO implement emitGameEvent("freeze", 750)*/}
         />
-        {/* <TileGrid tileGrid={playerBoardState?.tileGrid} performMove={performMove} /> */}
+        <Board tileGridStateEncoded={playerBoardState.tileGridStateEncoded} performMove={performMove} />
       </MultiGameContainer>
       {resultText && <GameResult result={resultText} playAgain={playAgain} />}
     </>
@@ -53,10 +52,10 @@ const MultiGame = () => {
 
 export default MultiGame
 
-const MultiGameContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`
+const MultiGameContainer = styled.div({
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-evenly",
+  minHeight: "90vh",
+})

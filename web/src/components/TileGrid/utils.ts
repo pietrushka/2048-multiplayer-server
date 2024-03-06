@@ -1,13 +1,14 @@
 import { TileAnimationData } from "./parseTileGridState"
-import { ANIMATION_TIME, borderRadiusToTileRatio, gapToTileRatio } from "./styles"
+import { ANIMATION_TIME, borderRadiusToTileGridRatio, gapToTileRatio, approxTileToFontSizeRatio } from "./styles"
 
-export const calcTileAndGapSize = (width: number) => {
+export const prepareBoardSizing = (width: number) => {
   const tileSize = width / (4 + 5 * gapToTileRatio)
   const gapSize = tileSize * gapToTileRatio
 
-  const borderRadius = width * borderRadiusToTileRatio
+  const borderRadius = width * borderRadiusToTileGridRatio
+  const fontSize = Math.ceil(tileSize * approxTileToFontSizeRatio)
 
-  return { tileSize, gapSize, borderRadius }
+  return { tileSize, gapSize, borderRadius, fontSize }
 }
 
 function calcPositionIndexDiff(

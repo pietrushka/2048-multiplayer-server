@@ -2,7 +2,8 @@ import { SerializedStyles, css } from "@emotion/react"
 import { NonEmptyTileValue } from "../../common/types"
 
 export const gapToTileRatio = 0.1
-export const borderRadiusToTileRatio = 0.015
+export const borderRadiusToTileGridRatio = 0.015
+export const approxTileToFontSizeRatio = 0.45 // after rounding it might be slightly different
 
 // TODO refactor
 export const tilesColorStyles: Record<NonEmptyTileValue, SerializedStyles> = {

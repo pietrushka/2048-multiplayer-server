@@ -1,12 +1,11 @@
 import styled from "@emotion/styled"
 import Timer from "./Timer"
-// import TileGridDisplay from "./TileGridDisplay"
-import { TileGrid } from "../common/types"
+import TileGrid from "./TileGrid"
 
 interface MultiDashboardProps {
   score: number
   opponentScore: number
-  opponentTileGrid: TileGrid
+  opponentTileGridStateEncoded: string
   endTimestamp: string
   undoMove: () => void
   emitBomb: () => void
@@ -17,65 +16,53 @@ function MultiDashboard({
   score,
   undoMove,
   opponentScore,
-  opponentTileGrid,
+  opponentTileGridStateEncoded,
   endTimestamp,
   emitBomb,
   emitFreeze,
 }: MultiDashboardProps) {
   return (
-    <DashboardContainer>
-      <FirstSection>
-        <StatsGroup>
-          <Score>
-            <h3>Opponent</h3>
-            <p>{opponentScore}</p>
-          </Score>
-          <Score>
-            <h3>You</h3>
-            <p>{score}</p>
-          </Score>
-          <Score>
-            <h3>Time</h3>
-            <Timer endTimestamp={endTimestamp} />
-          </Score>
-        </StatsGroup>
-      </FirstSection>
+    <>
+      <Stats>
+        <Score>
+          <h3>Opponent</h3>
+          <p>{opponentScore}</p>
+        </Score>
+        <Score>
+          <h3>You</h3>
+          <p>{score}</p>
+        </Score>
+        <Score>
+          <h3>Time</h3>
+          <Timer endTimestamp={endTimestamp} />
+        </Score>
+      </Stats>
 
-      <SecondSection>
-        {/* {opponentTileGrid && <TileGridDisplay size="small" tileGrid={opponentTileGrid} />} */}
-        <ButtonsGroup>
-          {/* <ShopBtnsBox>
-            <ShopBtn onClick={emitBomb} disabled={score < 250 ? true : false}>
-              <h3>Bomb</h3>
-              <p>250 points</p>
-            </ShopBtn>
-            <ShopBtn onClick={emitFreeze} disabled={score < 750 ? true : false}>
-              <h3>Freeze</h3>
-              <p>750 points</p>
-            </ShopBtn>
-          </ShopBtnsBox>
-          <LargeButton onClick={undoMove}>Undo</LargeButton> */}
-        </ButtonsGroup>
-      </SecondSection>
-    </DashboardContainer>
+      <OpponentTileGrid>
+        {opponentTileGridStateEncoded && <TileGrid tileGridStateEncoded={opponentTileGridStateEncoded} />}
+      </OpponentTileGrid>
+      {/* <ButtonsGroup>
+        <ShopBtnsBox>
+          <ShopBtn onClick={emitBomb} disabled={score < 250 ? true : false}>
+            <h3>Bomb</h3>
+            <p>250 points</p>
+          </ShopBtn>
+          <ShopBtn onClick={emitFreeze} disabled={score < 750 ? true : false}>
+            <h3>Freeze</h3>
+            <p>750 points</p>
+          </ShopBtn>
+        </ShopBtnsBox>
+        <LargeButton onClick={undoMove}>Undo</LargeButton>
+      </ButtonsGroup> */}
+    </>
   )
 }
 
 export default MultiDashboard
 
-const DashboardContainer = styled.div`
-  width: 93%;
-  margin: 0 auto 0.5rem auto;
-`
-
-const FirstSection = styled.div`
-  margin-bottom: 0.5rem;
-`
-
-const StatsGroup = styled.div`
+const Stats = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
 `
 
 const Score = styled.div`
@@ -94,18 +81,18 @@ const Score = styled.div`
   }
 `
 
-const SecondSection = styled.div`
-  display: flex;
-`
+const OpponentTileGrid = styled.div({
+  maxWidth: "40vw",
+})
 
-const ButtonsGroup = styled.div`
-  margin-left: 0.5rem;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
+// const ButtonsGroup = styled.div`
+//   margin-left: 0.5rem;
+//   width: 50%;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+// `
 // const ShopBtnsBox = styled.div`
 //   width: 100%;
 //   display: flex;

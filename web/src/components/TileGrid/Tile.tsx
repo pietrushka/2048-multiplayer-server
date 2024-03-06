@@ -45,7 +45,6 @@ const StyledTile = styled.div<{
   mergedInto: boolean
   borderRadius: number
 }>`
-  font-size: 2rem;
   position: absolute;
   font-weight: bold;
   display: flex;
@@ -56,6 +55,7 @@ const StyledTile = styled.div<{
   color: #f9f6f2;
 
   ${({ theme, xIndex, yIndex, value, borderRadius }) => css`
+    font-size: ${theme.fontSize}px;
     width: ${theme.tileSize}px;
     height: ${theme.tileSize}px;
     top: ${yIndex * (theme.tileSize + theme.gapSize) + theme.gapSize}px;

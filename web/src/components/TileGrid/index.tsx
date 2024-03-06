@@ -6,7 +6,7 @@ import Tile from "./Tile"
 import parseTileGridState from "./parseTileGridState"
 import usePrevious from "../../hooks/usePrevious"
 import useResizeObserver from "../../hooks/useResizeObserver"
-import { calcTileAndGapSize } from "./utils"
+import { prepareBoardSizing } from "./utils"
 import Background from "./Background"
 
 export type TilesProps = {
@@ -28,7 +28,7 @@ function TileGrid({ tileGridStateEncoded }: TilesProps) {
     [tileGridStateEncoded, previousGrid]
   )
 
-  const theme = calcTileAndGapSize(width)
+  const theme = prepareBoardSizing(width)
   return (
     <Board ref={boardRef} gapSize={theme.gapSize} borderRadius={theme.borderRadius}>
       <ThemeProvider theme={theme}>

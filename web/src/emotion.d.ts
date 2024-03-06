@@ -5,5 +5,6 @@ declare module "@emotion/react" {
     gapSize: number
     borderRadius: number
     tileSize: number
+    fontSize: number
   }
 }
