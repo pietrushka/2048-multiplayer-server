@@ -1,6 +1,7 @@
 import styled from "@emotion/styled"
 import Timer from "./Timer"
 import TileGrid from "./TileGrid"
+import { DashboardScore, GameButton, mediaQueries } from "../styles"
 
 interface MultiDashboardProps {
   score: number
@@ -18,116 +19,83 @@ function MultiDashboard({
   opponentScore,
   opponentTileGridStateEncoded,
   endTimestamp,
-  emitBomb,
-  emitFreeze,
+  emitBomb, // TODO
+  emitFreeze, // TODO
 }: MultiDashboardProps) {
   return (
     <>
-      <Stats>
-        <Score>
+      <StatsContainer>
+        <DashboardScore>
           <h3>Opponent</h3>
-          <p>{opponentScore}</p>
-        </Score>
-        <Score>
+          <span>{opponentScore}</span>
+        </DashboardScore>
+        <DashboardScore>
           <h3>You</h3>
-          <p>{score}</p>
-        </Score>
-        <Score>
+          <span>{score}</span>
+        </DashboardScore>
+        <DashboardScore>
           <h3>Time</h3>
           <Timer endTimestamp={endTimestamp} />
-        </Score>
-      </Stats>
+        </DashboardScore>
+      </StatsContainer>
 
-      <OpponentTileGrid>
-        {opponentTileGridStateEncoded && <TileGrid tileGridStateEncoded={opponentTileGridStateEncoded} />}
-      </OpponentTileGrid>
-      {/* <ButtonsGroup>
-        <ShopBtnsBox>
-          <ShopBtn onClick={emitBomb} disabled={score < 250 ? true : false}>
-            <h3>Bomb</h3>
-            <p>250 points</p>
-          </ShopBtn>
-          <ShopBtn onClick={emitFreeze} disabled={score < 750 ? true : false}>
-            <h3>Freeze</h3>
-            <p>750 points</p>
-          </ShopBtn>
-        </ShopBtnsBox>
-        <LargeButton onClick={undoMove}>Undo</LargeButton>
-      </ButtonsGroup> */}
+      <BottomSection>
+        <OpponentTileGrid>
+          {opponentTileGridStateEncoded && <TileGrid tileGridStateEncoded={opponentTileGridStateEncoded} />}
+        </OpponentTileGrid>
+
+        {/* <ButtonsContainer>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "space-between", fontSize: "inherit" }}>
+            <GameButton onClick={emitBomb} disabled={score < 250 ? true : false}>
+              <h4>Bomb</h4>
+              <span>250 points</span>
+            </GameButton>
+            <GameButton onClick={emitFreeze} disabled={score < 750 ? true : false}>
+              <h4>Freeze</h4>
+              <span>750 points</span>
+            </GameButton>
+          </div>
+          <GameButton onClick={undoMove}>
+            <h4>Undo</h4>
+          </GameButton>
+        </ButtonsContainer> */}
+      </BottomSection>
     </>
   )
 }
 
 export default MultiDashboard
 
-const Stats = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
-const Score = styled.div`
-  width: 30%;
-  text-align: center;
-  background: #ede0c8;
-  color: #776e65;
-  border-radius: 0.5em;
-  h3 {
-    font-size: 1.25rem;
-    margin: 0.25em 0;
-  }
-  p {
-    font-size: 1.1rem;
-    margin: 0.25em 0;
-  }
-`
-
-const OpponentTileGrid = styled.div({
-  maxWidth: "40vw",
+const StatsContainer = styled.div({
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr 1fr",
+  gap: "3%",
 })
 
-// const ButtonsGroup = styled.div`
-//   margin-left: 0.5rem;
-//   width: 50%;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-// `
-// const ShopBtnsBox = styled.div`
-//   width: 100%;
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-// `
+const BottomSection = styled.div({
+  display: "flex",
+  justifyContent: "space-between",
+})
 
-// const ShopBtn = styled.button`
-//   font-size: 1rem;
-//   margin: 0.5em 0;
-//   padding: 0.75em 0;
-//   width: 45%;
-//   background: #eee4da;
-//   color: #776e65;
-//   border-radius: 0.5em;
-//   text-align: center;
+const OpponentTileGrid = styled.div({
+  width: "40%",
+})
 
-//   h3 {
-//     margin: 0;
-//   }
+// const ButtonsContainer = styled.div({
+//   width: "55%",
+//   display: "flex",
+//   flexDirection: "column",
+//   fontSize: 14,
 
-//   p {
-//     margin: 0;
-//   }
-//   &[disabled] {
-//     filter: grayscale(1);
-//   }
-// `
+//   [mediaQueries.tabletPortrait]: {
+//     fontSize: 18,
+//   },
 
-// const LargeButton = styled.button`
-//   font-size: 1.5rem;
-//   margin: 0.5em 0;
-//   width: 90%;
-//   padding: 0.25em 0;
-//   background: #eee4da;
-//   color: #776e65;
-//   border-radius: 0.5em;
-// `
+//   [mediaQueries.largeTabletPortrait]: {
+//     fontSize: 24,
+//   },
+
+//   [mediaQueries.desktop]: {
+//     fontSize: 16,
+//   },
+// })

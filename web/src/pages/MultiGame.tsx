@@ -1,10 +1,10 @@
-import styled from "@emotion/styled"
 import Board from "../components/Board"
 import MultiDashboard from "../components/MultiDashboard"
 import { Lobby } from "../components/Lobby"
 import { usePlayer } from "../hooks/usePlayer"
 import useMultiplayer from "../hooks/useMultiplayer"
 import GameResult from "../components/GameResult"
+import { GameContainer } from "../styles"
 
 const MultiGame = () => {
   const { nickname } = usePlayer()!
@@ -31,7 +31,7 @@ const MultiGame = () => {
 
   return (
     <>
-      <MultiGameContainer>
+      <GameContainer>
         <MultiDashboard
           score={playerBoardState.score}
           opponentScore={opponentBoardState.score}
@@ -44,18 +44,10 @@ const MultiGame = () => {
           emitFreeze={() => {} /* TODO implement emitGameEvent("freeze", 750)*/}
         />
         <Board tileGridStateEncoded={playerBoardState.tileGridStateEncoded} performMove={performMove} />
-      </MultiGameContainer>
+      </GameContainer>
       {resultText && <GameResult result={resultText} playAgain={playAgain} />}
     </>
   )
 }
 
 export default MultiGame
-
-const MultiGameContainer = styled.div({
-  width: "100%",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-evenly",
-  minHeight: "90vh",
-})
