@@ -1,25 +1,25 @@
 {
+    "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "strict": true,
+        "target": "ES2020",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
-        "target": "ES2020",
-        "esModuleInterop": true,
+        "lib": [
+            "es2015"
+        ],
         "sourceMap": true,
         "outDir": "dist",
         "types": [
             "node",
             "jest"
         ],
-        "lib": [
-            "es2015"
-        ]
     },
-    "exclude": [
-        "node_modules"
-    ],
     "include": [
-        "**/*.ts",
-        "jest.config.js"
+        ".",
+    ],
+    "exclude": [
+        "dist",
+        "build",
+        "node_modules"
     ]
 }

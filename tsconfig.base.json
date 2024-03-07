@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "Default",
+    "compilerOptions": {
+        "strict": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "noUnusedLocals": false,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "composite": false,
+        "declaration": true,
+        "declarationMap": true,
+        "inlineSources": false,
+        "noUnusedParameters": false,
+        "preserveWatchOutput": true,
+        "noFallthroughCasesInSwitch": true,
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
