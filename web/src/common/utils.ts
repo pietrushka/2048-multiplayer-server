@@ -6,7 +6,7 @@ export function chunk<T>(array: T[], size: number): T[][] {
   return chunkedArray
 }
 
-export const deepCopyArray = (array: unknown[]) => JSON.parse(JSON.stringify(array))
+export const deepCopyArray = <T>(array: T[]): T[] => JSON.parse(JSON.stringify(array))
 
 export const sum = (array: number[]) => array.reduce((acc, x) => acc + x, 0)
 

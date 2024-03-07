@@ -1,32 +1,27 @@
-import styled from "@emotion/styled"
-import TileGrid from "../components/TileGrid"
+import Board from "../components/Board"
 import GameResult from "../components/GameResult"
 import SingleDashboard from "../components/SingleDashboard"
 import useSingleGame from "../hooks/useSingleGame"
 import { usePlayer } from "../hooks/usePlayer"
+import { GameContainer } from "../styles"
 
 function SingleGame() {
   const { bestScore, setBestScore } = usePlayer()!
-  const { status, score, tileGrid, performMove, resetGame, isResetable } = useSingleGame({ bestScore, setBestScore })
+  const { status, score, tileGridStateEncoded, performMove, resetGame, isResetable } = useSingleGame({
+    bestScore,
+    setBestScore,
+  })
 
-  if (typeof tileGrid === "undefined" || typeof score === "undefined") {
+  if (typeof tileGridStateEncoded === "undefined" || typeof score === "undefined") {
     return <span>loading</span>
   }
   return (
-    <SingleGameContainer>
+    <GameContainer>
       <SingleDashboard score={score} bestScore={bestScore} playAgain={resetGame} isResetable={isResetable} />
-      <TileGrid tileGrid={tileGrid} performMove={performMove} />
+      <Board tileGridStateEncoded={tileGridStateEncoded} performMove={performMove} />
       {status === "finished" && <GameResult result="Game End" playAgain={resetGame} />}
-    </SingleGameContainer>
+    </GameContainer>
   )
 }
 
 export default SingleGame
-
-const SingleGameContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`

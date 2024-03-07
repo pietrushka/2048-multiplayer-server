@@ -1,6 +1,7 @@
 import Board from "../index"
-import { spawnTile, initializeBoard } from "../boardUtils"
+import { spawnTile, initializeBoard, encodeTileGridState } from "../boardUtils"
 import { TileGrid } from "../../types"
+import { DIRECTIONS } from "../../constants"
 
 // mocking predict where new tiles will spawn
 jest.mock("../boardUtils", () => ({
@@ -26,12 +27,12 @@ describe("Board", () => {
 
     expect(board.data).toEqual({
       playerId: mockPlayerId,
-      tileGrid: [
+      tileGridStateEncoded: encodeTileGridState([
         [0, 0, 0, 2],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [2, 0, 0, 0],
-      ],
+      ]),
       score: 0,
     })
     expect(board.nextMovePossible).toBe(true)
@@ -44,20 +45,24 @@ describe("Board", () => {
       [0, 0, 0, 0],
       [0, 0, 0, 2],
     ])
+    const mockMove = DIRECTIONS.UP
     const board = new Board(mockPlayerId)
 
     spawnTileMock.mockImplementationOnce((tileGrid: TileGrid) => (tileGrid[3][0] = 2))
 
-    board.handleMove("UP")
+    board.handleMove(mockMove)
 
     expect(board.data).toEqual({
       playerId: mockPlayerId,
-      tileGrid: [
-        [0, 0, 0, 4],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [2, 0, 0, 0],
-      ],
+      tileGridStateEncoded: encodeTileGridState(
+        [
+          [0, 0, 0, 4],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [2, 0, 0, 0],
+        ],
+        mockMove
+      ),
       score: 4,
     })
     expect(board.nextMovePossible).toBe(true)

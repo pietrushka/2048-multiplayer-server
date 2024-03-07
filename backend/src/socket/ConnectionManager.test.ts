@@ -17,7 +17,7 @@ function waitFor(socket: ServerSocket | ClientSocket, event: string) {
 const createBoardData = (playerId: string) => ({
   playerId,
   score: expect.any(Number),
-  tileGrid: expect.any(Array),
+  tileGridStateEncoded: expect.any(String),
 })
 
 const joinPlayers = async ({

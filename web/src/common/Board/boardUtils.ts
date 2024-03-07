@@ -38,7 +38,7 @@ export function initializeBoard(boardSize: number) {
   return board
 }
 
-function rotateRight(matrix: TileGrid) {
+function rotateRight(matrix: unknown[][]) {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = i + 1; j < matrix[i].length; j++) {
       const temp = matrix[i][j]
@@ -51,7 +51,7 @@ function rotateRight(matrix: TileGrid) {
   }
 }
 
-export function rotateBoardLeft(board: TileGrid, direction: Direction, reverse: boolean = false): TileGrid {
+export function rotateBoardLeft<T>(board: T[][], direction: Direction, reverse: boolean = false) {
   if (direction === "LEFT") {
     return board
   }
@@ -159,4 +159,12 @@ export function movePossible(board: TileGrid): boolean {
   }
 
   return false
+}
+
+export function encodeTileGridState(tileGrid: TileGrid, previousMove?: Direction) {
+  return JSON.stringify({ tileGrid, previousMove })
+}
+
+export function decodeTileGridState(tileGridStateString: string): { tileGrid: TileGrid; previousMove?: Direction } {
+  return JSON.parse(tileGridStateString)
 }
