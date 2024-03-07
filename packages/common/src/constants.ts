@@ -1,6 +1,3 @@
-// TODO monorepo setup
-// moved into React src directory as a walkaround for reacet complaining about importing from outside
-
 import { Direction, Move } from "./types"
 
 export const LOBBY_CHECK_INTERVAL_MS = 2000

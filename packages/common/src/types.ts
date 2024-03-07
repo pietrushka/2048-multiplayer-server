@@ -1,6 +1,3 @@
-// TODO monorepo setup
-// moved into React src directory as a walkaround for reacet complaining about importing from outside
-
 export type NonEmptyTileValue = 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048
 
 export type TileValue = NonEmptyTileValue | 0
