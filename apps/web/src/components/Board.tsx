@@ -1,6 +1,6 @@
 // Board is an controllable TileGrid
+import { Move } from "shared-logic"
 import TileGrid from "./TileGrid"
-import { Move } from "../common/types"
 import useControlInput from "../hooks/useControlInput"
 
 type TileGridProps = {

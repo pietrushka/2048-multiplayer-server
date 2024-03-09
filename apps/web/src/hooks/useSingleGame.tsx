@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Direction, GameStatus } from "../common/types"
-import Board from "../common/Board"
+import { Board, Direction, GameStatus } from "shared-logic"
 import { getStoredBoardData } from "../utils/localStorage"
 
 type UseMultiplayerProps = {

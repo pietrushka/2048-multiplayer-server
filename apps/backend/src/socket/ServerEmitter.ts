@@ -1,6 +1,5 @@
 import { Server } from "socket.io"
-import { SERVER_SIGNALS } from "../../../web/src/common/constants"
-import { StartGamePayload, BoardsStateUpdatePayload, EndGamePayload } from "../../../web/src/common/types"
+import { StartGamePayload, BoardsStateUpdatePayload, EndGamePayload, SERVER_SIGNALS } from "shared-logic"
 
 export default class ServerEmitter {
   io: Server

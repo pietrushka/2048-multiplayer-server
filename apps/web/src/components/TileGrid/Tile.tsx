@@ -3,7 +3,7 @@ import { css, useTheme } from "@emotion/react"
 import { tilesColorStyles } from "./styles"
 import { getAnimations } from "./utils"
 import { TileAnimationData } from "./parseTileGridState"
-import { NonEmptyTileValue } from "../../common/types"
+import { NonEmptyTileValue } from "shared-logic"
 
 export default function Tile(props: TileAnimationData) {
   const theme = useTheme() // TODO check is this ok solution

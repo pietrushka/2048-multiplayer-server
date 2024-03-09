@@ -1,4 +1,4 @@
-import { TileGrid } from "../common/types"
+import { TileGrid } from "shared-logic"
 
 type TypeString = "string" | "number" | "numberArrayArray"
 

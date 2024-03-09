@@ -1,18 +1,15 @@
 import { renderHook, act } from "@testing-library/react"
+import { TileGrid, DIRECTIONS, Board, encodeTileGridState, initializeBoard, spawnTile } from "shared-logic"
 import useSingleGame from "./useSingleGame"
 import { getStoredBoardData } from "../utils/localStorage"
-import { encodeTileGridState, initializeBoard, spawnTile } from "../common/Board/boardUtils"
-import Board from "../common/Board"
-import { TileGrid } from "../common/types"
-import { DIRECTIONS } from "../common/constants"
 
 jest.mock("../utils/localStorage", () => ({
   getStoredBoardData: jest.fn(),
 }))
 const getStoredBoardDataMock = getStoredBoardData as jest.Mock
 
-jest.mock("../common/Board/boardUtils", () => {
-  const actualBoardUtils = jest.requireActual("../common/Board/boardUtils")
+jest.mock("shared-logic", () => {
+  const actualBoardUtils = jest.requireActual("shared-logic")
   return {
     ...actualBoardUtils,
     initializeBoard: jest.fn(),
@@ -28,7 +25,7 @@ describe("useSingleGame hook", () => {
   // TODO mocking in beforeEach looks like walkaround, probably should handle default mock in jest.mock
   // but wasn't able to successfully use actualBoardUtils in it
   beforeEach(() => {
-    const actualBoardUtils = jest.requireActual("../common/Board/boardUtils")
+    const actualBoardUtils = jest.requireActual("shared-logic")
     initializeBoardMock.mockImplementation(actualBoardUtils.initializeBoard)
     spawnTileMock.mockImplementation(actualBoardUtils.spawnTile)
 

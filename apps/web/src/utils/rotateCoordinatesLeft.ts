@@ -1,5 +1,4 @@
-import { Direction } from "../common/types"
-import { DIRECTIONS } from "../common/constants"
+import { Direction, DIRECTIONS } from "shared-logic"
 
 export default function rotateCoordinateLeft(
   [x, y]: number[],

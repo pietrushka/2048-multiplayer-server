@@ -1,9 +1,14 @@
 import socketio from "socket.io"
 import Game from "../gameLogic/MultiplayerGame"
 import User from "./User"
-import { chunk } from "../../../web/src/common/utils"
-import { MIN_PLAYERS_TO_START, CLIENT_SIGNALS, LOBBY_CHECK_INTERVAL_MS } from "../../../web/src/common/constants"
-import { Move, isStartGamePayload } from "../../../web/src/common/types"
+import {
+  chunk,
+  MIN_PLAYERS_TO_START,
+  CLIENT_SIGNALS,
+  LOBBY_CHECK_INTERVAL_MS,
+  Move,
+  isStartGamePayload,
+} from "shared-logic"
 import ServerEmitter from "./ServerEmitter"
 
 export default class ConnectionManager {

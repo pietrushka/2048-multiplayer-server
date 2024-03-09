@@ -1,4 +1,4 @@
-import Board from "../index"
+import { Board } from "../index"
 import { spawnTile, initializeBoard, encodeTileGridState } from "../boardUtils"
 import { TileGrid } from "../../types"
 import { DIRECTIONS } from "../../constants"

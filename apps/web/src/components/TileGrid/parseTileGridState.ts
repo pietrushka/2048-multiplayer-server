@@ -1,9 +1,15 @@
 // TODO refactor
 
-import { TileGrid, TileValue, Direction } from "../../common/types"
-import { decodeTileGridState, rotateBoardLeft } from "../../common/Board/boardUtils"
+import {
+  TileGrid,
+  TileValue,
+  Direction,
+  decodeTileGridState,
+  rotateBoardLeft,
+  areArraysEqual,
+  deepCopyArray,
+} from "shared-logic"
 import rotateCoordinateLeft from "../../utils/rotateCoordinatesLeft"
-import { areArraysEqual, deepCopyArray } from "../../common/utils"
 
 export interface TileAnimationData {
   value: TileValue

@@ -1,7 +1,4 @@
-import Board from "../../../web/src/common/Board"
-import { addTimeToCurrentTimestamp } from "../../../web/src/common/utils"
-import { Move, GameData } from "../../../web/src/common/types"
-import { DRAW, GAME_TIME } from "../../../web/src/common/constants"
+import { Board, addTimeToCurrentTimestamp, Move, GameData, DRAW, GAME_TIME } from "shared-logic"
 import ServerEmitter from "../socket/ServerEmitter"
 
 type handleGameEndPayload = { reason: "timeEnd" } | { reason: "playerBlocked"; playerId: string }

@@ -4,7 +4,7 @@ import { initializeBoard, slideTiles, spawnTile, movePossible, encodeTileGridSta
 import { deepCopyArray, areArraysEqual } from "../utils"
 import { TileGrid } from "../types"
 
-export default class Board {
+export class Board {
   playerId: string
   score: number
   tileGrid: TileGrid

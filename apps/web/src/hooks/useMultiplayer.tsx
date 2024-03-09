@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import io, { Socket } from "socket.io-client"
-import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW } from "../common/constants"
-import { BoardData, GameStatus, Move, GameData } from "../common/types"
+import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW, BoardData, GameStatus, Move, GameData } from "shared-logic"
 import clientEmitter from "../utils/clientEmitter"
 
 const SERVER_URL = process.env.REACT_APP_SERVER_ENDPOINT || "http://localhost:4000"

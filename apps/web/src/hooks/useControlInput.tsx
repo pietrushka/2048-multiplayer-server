@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useRef } from "react"
-import { DIRECTIONS } from "../common/constants"
-import { Direction } from "../common/types"
+import { DIRECTIONS, Direction } from "shared-logic"
 
 type Point = {
   x: number

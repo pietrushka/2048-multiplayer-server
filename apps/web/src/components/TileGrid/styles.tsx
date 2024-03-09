@@ -1,5 +1,5 @@
 import { SerializedStyles, css } from "@emotion/react"
-import { NonEmptyTileValue } from "../../common/types"
+import { NonEmptyTileValue } from "shared-logic"
 
 export const gapToTileRatio = 0.1
 export const borderRadiusToTileGridRatio = 0.015

@@ -1,6 +1,4 @@
-import { encodeTileGridState } from "../../common/Board/boardUtils"
-import { DIRECTIONS, MOVES } from "../../common/constants"
-import { TileGrid } from "../../common/types"
+import { TileGrid, encodeTileGridState, DIRECTIONS, MOVES } from "shared-logic"
 import parseTileGridState from "./parseTileGridState"
 
 test("simple move", () => {

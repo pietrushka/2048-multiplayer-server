@@ -3,10 +3,8 @@ import { AddressInfo } from "node:net"
 import { io as ioc, Socket as ClientSocket } from "socket.io-client"
 import { Server, Socket as ServerSocket } from "socket.io"
 import ConnectionManager from "./ConnectionManager"
-import { CLIENT_SIGNALS, SERVER_SIGNALS } from "../../../web/src/common/constants"
-import { MOVES } from "../../../web/src/common/constants"
 import MultiplayerGame from "../gameLogic/MultiplayerGame"
-import { StartGamePayload } from "../../../web/src/common/types"
+import { StartGamePayload, MOVES, CLIENT_SIGNALS, SERVER_SIGNALS } from "shared-logic"
 
 function waitFor(socket: ServerSocket | ClientSocket, event: string) {
   return new Promise((resolve) => {

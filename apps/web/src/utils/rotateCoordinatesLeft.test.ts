@@ -1,5 +1,4 @@
-import { Direction } from "../common/types"
-import { DIRECTIONS } from "../common/constants"
+import { Direction, DIRECTIONS } from "shared-logic"
 import rotateCoordinateLeft from "./rotateCoordinatesLeft"
 
 // prettier-ignore

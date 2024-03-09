@@ -1,5 +1,5 @@
 import validateObject, { Schema } from "./validateObject"
-import { TileGrid } from "../common/types"
+import { TileGrid } from "shared-logic"
 
 export const BOARD_STORAGE_SPACE = "2048.vs_board"
 export const PLAYER_STORAGE_SPACE = "2048.vs_player"

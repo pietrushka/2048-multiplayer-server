@@ -1,6 +1,5 @@
 import { Socket } from "socket.io-client"
-import { CLIENT_SIGNALS } from "../common/constants"
-import { JoinPayload, MovePayload } from "../common/types"
+import { CLIENT_SIGNALS, JoinPayload, MovePayload } from "shared-logic"
 
 type EmitterPayload =
   | { signal: typeof CLIENT_SIGNALS.join; data: JoinPayload }

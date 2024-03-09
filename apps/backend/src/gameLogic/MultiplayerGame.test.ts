@@ -1,7 +1,7 @@
 import { Server } from "socket.io"
 import MultiplayerGame from "./MultiplayerGame"
 import ServerEmitter from "../socket/ServerEmitter"
-import Board from "../../../web/src/common/Board"
+import { Board } from "shared-logic"
 
 jest.mock("../socket/ServerEmitter", () => {
   return jest.fn().mockImplementation(() => ({
