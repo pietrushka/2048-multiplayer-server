@@ -8,10 +8,8 @@ import { NonEmptyTileValue } from "shared-logic"
 export default function Tile(props: TileAnimationData) {
   const theme = useTheme() // TODO check is this ok solution
 
-  const animations = getAnimations(props, theme.tileSize, theme.gapSize)
-  if (animations.length) {
-    console.log(animations)
-  }
+  const animations = getAnimations(props)
+
   if (props.value === 0) return null
   return (
     <StyledTile
@@ -22,7 +20,7 @@ export default function Tile(props: TileAnimationData) {
       mergedInto={props.mergedInto}
       borderRadius={theme.borderRadius}
       style={{
-        ...(animations.length ? { animation: animations.join(", ") } : {}), // TODO refactor
+        ...(animations.length ? { animation: animations.join(", ") } : {}),
         ...(props.mergedInto ? { zIndex: 2 } : {}),
         ...(props.isNew ? { transform: "scale(0)" } : {}),
       }}

@@ -11,11 +11,7 @@ export const prepareBoardSizing = (width: number) => {
   return { tileSize, gapSize, borderRadius, fontSize }
 }
 
-function calcPositionIndexDiff(
-  { xIndex, yIndex, prevXIndex, prevYIndex }: TileAnimationData,
-  tileSize: number,
-  gapSize: number
-) {
+function calcPositionIndexDiff({ xIndex, yIndex, prevXIndex, prevYIndex }: TileAnimationData) {
   if (xIndex === prevXIndex && yIndex === prevYIndex) return
 
   const xDiff = prevXIndex - xIndex
@@ -23,8 +19,8 @@ function calcPositionIndexDiff(
   return { xDiff, yDiff }
 }
 
-export function getAnimations(data: TileAnimationData, tileSize: number, gapSize: number) {
-  const positionDiff = calcPositionIndexDiff(data, tileSize, gapSize)
+export function getAnimations(data: TileAnimationData) {
+  const positionDiff = calcPositionIndexDiff(data)
 
   const animations = []
   if (positionDiff) {
@@ -34,7 +30,7 @@ export function getAnimations(data: TileAnimationData, tileSize: number, gapSize
 
   if (data.isNew) {
     animations.push(
-      `tileSpawn ${ANIMATION_TIME.singleAnimationTime}s forwards ${ANIMATION_TIME.newTileAnimationDelay}s`
+      `tileSpawn ${ANIMATION_TIME.singleAnimationTime}s forwards ${ANIMATION_TIME.newTileAnimationDelay}s`,
     )
   }
 

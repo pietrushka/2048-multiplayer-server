@@ -41,7 +41,7 @@ class Tile implements TileAnimationData {
     yIndex: number,
     prevXIndex: number,
     prevYIndex: number,
-    isRotatedLeft: boolean
+    isRotatedLeft: boolean,
   ) {
     // tiles can overlap so use prevIndexes as well
     this.value = value
@@ -164,27 +164,13 @@ function analyzePreviousGrid(previousTileGrid?: TileGrid, direction?: Direction)
 }
 
 // TODO refactor
-function validateWithCurrentState(
-  previousGridResult: TileAnimationData[],
-  currentTileGrid: TileGrid,
-  previousTileGrid?: TileGrid
-) {
+function validateWithCurrentState(previousGridResult: TileAnimationData[], currentTileGrid: TileGrid) {
   const result: TileAnimationData[][] = []
   // no need for currentTileGrid to be rotated
   currentTileGrid.forEach((row, yIndex) => {
     const rowResult: TileAnimationData[] = []
     row.forEach((value, xIndex) => {
       const tiles = previousGridResult.filter((el) => el.xIndex === xIndex && el.yIndex === yIndex)
-
-      // FOR DEV PURPOSE
-      if (value && tiles.length && tiles.find((el) => !el.isMerged)?.value !== value) {
-        console.log({ value, xIndex, yIndex, tiles, previousGridResult, currentTileGrid, previousTileGrid })
-        throw new Error("Value doesn't match")
-      }
-      if (!value && tiles.length) {
-        console.log({ value, xIndex, yIndex, tiles, previousGridResult, currentTileGrid, previousTileGrid })
-        throw new Error("There is a previousGridResult but current grid value is 0")
-      }
 
       // add new tile
       if (value && !tiles.length) {
@@ -213,10 +199,10 @@ export default function parseTileGridState(currentTileGridStateEncoded: string, 
       row.map((value, xIndex) => {
         const tile = new Tile(value, xIndex, yIndex, xIndex, yIndex, false)
         return tile.data
-      })
+      }),
     )
   }
   const previousGridResult = analyzePreviousGrid(previousTileGrid, direction)
 
-  return validateWithCurrentState(previousGridResult, currentTileGrid, previousTileGrid)
+  return validateWithCurrentState(previousGridResult, currentTileGrid)
 }

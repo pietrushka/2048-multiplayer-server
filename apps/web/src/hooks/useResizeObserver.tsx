@@ -48,7 +48,7 @@ const initialSize: Size = {
  * <div ref={myRef}>Hello, world!</div>
  */
 export default function useResizeObserver<T extends HTMLElement = HTMLElement>(
-  options: UseResizeObserverOptions<T>
+  options: UseResizeObserverOptions<T>,
 ): UseResizeObserverResult {
   const { ref, box = "content-box" } = options
   const [{ width, height }, setSize] = useState<Size>(initialSize)
@@ -67,8 +67,8 @@ export default function useResizeObserver<T extends HTMLElement = HTMLElement>(
         box === "border-box"
           ? "borderBoxSize"
           : box === "device-pixel-content-box"
-          ? "devicePixelContentBoxSize"
-          : "contentBoxSize"
+            ? "devicePixelContentBoxSize"
+            : "contentBoxSize"
 
       const newWidth = extractSize(entry, boxProp, "inlineSize")
       const newHeight = extractSize(entry, boxProp, "blockSize")
@@ -103,7 +103,7 @@ export default function useResizeObserver<T extends HTMLElement = HTMLElement>(
 function extractSize(
   entry: ResizeObserverEntry,
   box: BoxSizesKey,
-  sizeType: keyof ResizeObserverSize
+  sizeType: keyof ResizeObserverSize,
 ): number | undefined {
   if (!entry[box]) {
     if (box === "contentBoxSize") {
@@ -114,6 +114,6 @@ function extractSize(
 
   return Array.isArray(entry[box])
     ? entry[box][0][sizeType]
-    : // @ts-ignore Support Firefox's non-standard behavior
+    : // @ts-expect-error Support Firefox's non-standard behavior
       (entry[box][sizeType] as number)
 }

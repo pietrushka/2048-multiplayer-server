@@ -1,27 +1,19 @@
 import styled from "@emotion/styled"
 import Timer from "./Timer"
 import TileGrid from "./TileGrid"
-import { DashboardScore, GameButton, mediaQueries } from "../styles"
+import { DashboardScore } from "../styles"
 
 interface MultiDashboardProps {
   score: number
   opponentScore: number
   opponentTileGridStateEncoded: string
   endTimestamp: string
-  undoMove: () => void
-  emitBomb: () => void
-  emitFreeze: () => void
+  undoMove: () => void // TODO
+  emitBomb: () => void // TODO
+  emitFreeze: () => void // TODO
 }
 
-function MultiDashboard({
-  score,
-  undoMove,
-  opponentScore,
-  opponentTileGridStateEncoded,
-  endTimestamp,
-  emitBomb, // TODO
-  emitFreeze, // TODO
-}: MultiDashboardProps) {
+function MultiDashboard({ score, opponentScore, opponentTileGridStateEncoded, endTimestamp }: MultiDashboardProps) {
   return (
     <>
       <StatsContainer>
