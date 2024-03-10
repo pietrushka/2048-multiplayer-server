@@ -1,4 +1,4 @@
-import { slideTiles } from "../boardUtils"
+import { slideTiles } from "../src/Board/boardUtils"
 
 // Although the board is always rotated left to slide tiles,
 // testing different directions can help catch some bugs.

@@ -11,17 +11,15 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
-    "test": "jest"
+    "test": "pnpm jest"
   },
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.25",
     "jest": "^29.7.0",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.1",
     "typescript": "^5.4.2"
-  },
-  "dependencies": {
-    "build": "^0.1.4",
-    "tsup": "^8.0.1"
   }
 }

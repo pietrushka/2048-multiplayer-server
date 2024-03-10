@@ -1,11 +1,11 @@
-import { Board } from "../index"
-import { spawnTile, initializeBoard, encodeTileGridState } from "../boardUtils"
-import { TileGrid } from "../../types"
-import { DIRECTIONS } from "../../constants"
+import { Board } from "../src/Board/index"
+import { spawnTile, initializeBoard, encodeTileGridState } from "../src/Board/boardUtils"
+import { TileGrid } from "../src/types"
+import { DIRECTIONS } from "../src/constants"
 
 // mocking predict where new tiles will spawn
-jest.mock("../boardUtils", () => ({
-  ...jest.requireActual("../boardUtils"),
+jest.mock("../src/Board/boardUtils", () => ({
+  ...jest.requireActual("../src/Board/boardUtils"),
   initializeBoard: jest.fn(),
   spawnTile: jest.fn(),
 }))
