@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "pnpm test -r"
+    "test": "pnpm test -r",
+    "startServer": "cd apps/backend && pnpm start"
   },
   "license": "ISC",
   "dependencies": {

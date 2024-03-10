@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsup src/* tsconfig.build.json",
-    "start": "node dist/src/index",
+    "build": "rm -rf dist && tsup src/* tsconfig.build.json",
+    "start": "node dist/index",
     "dev": "tsx --watch ./src/index.ts",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
