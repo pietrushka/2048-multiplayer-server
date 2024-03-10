@@ -13,6 +13,10 @@ app.get("/", (req, res) => {
   res.json({ message: "ok" })
 })
 
+app.get("/healthcheck", (req, res) => {
+  res.status(200).send("ok")
+})
+
 SocketServer(httpServer)
 
 httpServer.listen(PORT, () => console.log(`server runnin on port ${PORT}`))
