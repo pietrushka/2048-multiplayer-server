@@ -1,0 +1,24 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "NodeNext",
+        "lib": [
+            "ESNext"
+        ],
+        "sourceMap": true,
+        "outDir": "dist",
+        "types": [
+            "node",
+            "jest"
+        ],
+    },
+    "include": [
+        ".",
+    ],
+    "exclude": [
+        "dist",
+        "build",
+        "node_modules",
+    ]
+}
