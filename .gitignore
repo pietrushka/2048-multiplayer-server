@@ -4,3 +4,5 @@ dist-ssr
 *.local
 .env
 .cache
+repo_boundle.zip
+temp/

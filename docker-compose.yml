@@ -10,11 +10,10 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - SERVER_PORT=4000
     networks:
       - app-network
-    ports:
-      - "4000:4000"
+    ports: 
+      - '80:8081' 
 
 networks:
   app-network:

@@ -3,7 +3,7 @@ import cors from "cors"
 import http from "http"
 import SocketServer from "./socket"
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 8081
 
 const app = express()
 app.use(cors())

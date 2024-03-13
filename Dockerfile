@@ -8,11 +8,8 @@ WORKDIR /app
 FROM base AS prod-deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-FROM base
-COPY --from=prod-deps /app/node_modules /app/node_modules
-
 RUN pnpm --filter shared-logic build
 RUN pnpm --filter backend build
 
-EXPOSE 4000
+EXPOSE 8081
 CMD ["pnpm", "startServer"]
