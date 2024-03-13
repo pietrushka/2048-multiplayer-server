@@ -1,19 +1,16 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist && tsup src/* ./tsconfig.build.json",
+    "build": "pnpm buildUtils && tsup src/index.ts --tsconfig ./tsconfig.build.json",
     "start": "node dist/src/index",
-    "dev": "tsx --watch ./src/index.ts",
+    "dev": "pnpm buildUtils && tsx --watch ./src/index.ts",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "test": "pnpm jest"
+    "test": "pnpm jest",
+    "buildUtils": "pnpm --filter shared-logic build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@types/jest": "^29.5.12",
