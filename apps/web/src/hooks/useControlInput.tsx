@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useRef } from "react"
 import { DIRECTIONS, Direction } from "shared-logic"
+import useDebounce from "./useDebounce"
 
 type Point = {
   x: number
@@ -8,28 +9,29 @@ type Point = {
 
 export default function useControlInput(handleMove: (direction: Direction) => void) {
   const startPointerLocation = useRef<Point>()
+  const debouncedHandleMove = useDebounce(handleMove, 100)
 
   useEffect(() => {
     const handleKeyboardInput = (e: KeyboardEvent) => {
       e.preventDefault()
       switch (e.key) {
         case "ArrowDown":
-          handleMove(DIRECTIONS.DOWN)
+          debouncedHandleMove(DIRECTIONS.DOWN)
           break
         case "ArrowUp":
-          handleMove(DIRECTIONS.UP)
+          debouncedHandleMove(DIRECTIONS.UP)
           break
         case "ArrowLeft":
-          handleMove(DIRECTIONS.LEFT)
+          debouncedHandleMove(DIRECTIONS.LEFT)
           break
         case "ArrowRight":
-          handleMove(DIRECTIONS.RIGHT)
+          debouncedHandleMove(DIRECTIONS.RIGHT)
           break
       }
     }
     window.addEventListener("keydown", handleKeyboardInput)
     return () => window.removeEventListener("keydown", handleKeyboardInput)
-  }, [handleMove])
+  }, [debouncedHandleMove])
 
   const handleTouchMove = useCallback(
     (startPoint: Point, endPoint: Point) => {
@@ -41,12 +43,12 @@ export default function useControlInput(handleMove: (direction: Direction) => vo
       if (Math.max(absDx, absDy) < 20) return
 
       if (absDx > absDy) {
-        handleMove(dx > 0 ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT)
+        debouncedHandleMove(dx > 0 ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT)
       } else {
-        handleMove(dy > 0 ? DIRECTIONS.DOWN : DIRECTIONS.UP)
+        debouncedHandleMove(dy > 0 ? DIRECTIONS.DOWN : DIRECTIONS.UP)
       }
     },
-    [handleMove]
+    [debouncedHandleMove],
   )
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
@@ -62,7 +64,7 @@ export default function useControlInput(handleMove: (direction: Direction) => vo
         handleTouchMove(startPointerLocation.current, endPointerLocation)
       }
     },
-    [handleTouchMove]
+    [handleTouchMove],
   )
 
   return { onTouchStart, onTouchEnd }
