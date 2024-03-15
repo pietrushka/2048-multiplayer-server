@@ -1,5 +1,6 @@
 import { SerializedStyles, css } from "@emotion/react"
 import { NonEmptyTileValue } from "shared-logic"
+import COLORS from "../../styles/colors"
 
 export const gapToTileRatio = 0.1
 export const borderRadiusToTileGridRatio = 0.015
@@ -8,12 +9,12 @@ export const approxTileToFontSizeRatio = 0.45 // after rounding it might be slig
 // TODO refactor
 export const tilesColorStyles: Record<NonEmptyTileValue, SerializedStyles> = {
   2: css`
-    background-color: #eee4da;
-    color: #776e65;
+    background-color: ${COLORS.warmGray};
+    color: ${COLORS.font};
   `,
   4: css`
     background-color: #ede0c8;
-    color: #776e65;
+    color: ${COLORS.font};
   `,
   8: css`
     background-color: #f2b179;

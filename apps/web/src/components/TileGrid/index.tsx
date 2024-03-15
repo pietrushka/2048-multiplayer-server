@@ -8,6 +8,7 @@ import usePrevious from "../../hooks/usePrevious"
 import useResizeObserver from "../../hooks/useResizeObserver"
 import { prepareBoardSizing } from "./utils"
 import Background from "./Background"
+import COLORS from "../../styles/colors"
 
 export type TilesProps = {
   tileGridStateEncoded: string
@@ -25,7 +26,7 @@ function TileGrid({ tileGridStateEncoded }: TilesProps) {
   // TODO is this meme needed?
   const gridState = useMemo(
     () => parseTileGridState(tileGridStateEncoded, previousGrid).flat(),
-    [tileGridStateEncoded, previousGrid]
+    [tileGridStateEncoded, previousGrid],
   )
 
   const theme = prepareBoardSizing(width)
@@ -43,13 +44,13 @@ function TileGrid({ tileGridStateEncoded }: TilesProps) {
 
 export default memo(
   TileGrid,
-  (prevState: TilesProps, nextState: TilesProps) => prevState.tileGridStateEncoded === nextState.tileGridStateEncoded
+  (prevState: TilesProps, nextState: TilesProps) => prevState.tileGridStateEncoded === nextState.tileGridStateEncoded,
 )
 
 const Board = styled.div<{ gapSize: number; borderRadius: number }>`
   aspect-ratio: 1 / 1;
   position: relative;
-  background: #bbada0;
+  background: ${COLORS.board};
   display: grid;
   grid-template-rows: repeat(4, 1fr);
   grid-template-columns: repeat(4, 1fr);

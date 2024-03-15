@@ -4,6 +4,7 @@ import { tilesColorStyles } from "./styles"
 import { getAnimations } from "./utils"
 import { TileAnimationData } from "./parseTileGridState"
 import { NonEmptyTileValue } from "shared-logic"
+import COLORS from "../../styles/colors"
 
 export default function Tile(props: TileAnimationData) {
   const theme = useTheme() // TODO check is this ok solution
@@ -50,7 +51,7 @@ const StyledTile = styled.div<{
   align-items: center;
   line-height: 0;
   border-radius: 3px;
-  color: #f9f6f2;
+  color: ${COLORS.lightFont};
 
   ${({ theme, xIndex, yIndex, value, borderRadius }) => css`
     font-size: ${theme.fontSize}px;

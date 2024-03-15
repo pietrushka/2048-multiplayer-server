@@ -7,9 +7,11 @@ type Point = {
   y: number
 }
 
+const DEBOUNCE_DELAY_MS = 100
+
 export default function useControlInput(handleMove: (direction: Direction) => void) {
   const startPointerLocation = useRef<Point>()
-  const debouncedHandleMove = useDebounce(handleMove, 100)
+  const debouncedHandleMove = useDebounce(handleMove, DEBOUNCE_DELAY_MS)
 
   useEffect(() => {
     const handleKeyboardInput = (e: KeyboardEvent) => {

@@ -1,11 +1,10 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import styled from "@emotion/styled"
-import { css } from "@emotion/react"
 import { AiOutlineSetting } from "react-icons/ai"
 import { ImCross } from "react-icons/im"
 import { Overlay, PopUp } from "./GameResult"
 import { Menu, MenuOption } from "../pages/Home"
+import COLORS from "../styles/colors"
 
 function Settings() {
   const [isVisible, setIsVisible] = useState(false)
@@ -23,10 +22,8 @@ function Settings() {
             </HideSettingsBtn>
             <h1>Settings</h1>
             <Menu>
-              <MenuOption color="red">
-                <Link to="/" onClick={() => setIsVisible(false)}>
-                  Go to menu
-                </Link>
+              <MenuOption backgroundColor={COLORS.red} onClick={() => setIsVisible(false)}>
+                Go to menu
               </MenuOption>
             </Menu>
           </PopUp>
@@ -59,24 +56,7 @@ const HideSettingsBtn = styled.button`
   }
 `
 
-type SettingsButtonProps = {
-  isVisible: boolean
-}
-
-const visibleSettings = css`
-  background: transparent;
-  svg {
-    fill: #fff;
-  }
-`
-
-const nonVisibleSettings = css`
-  svg {
-    fill: #776e65;
-  }
-`
-
-const SettingsButton = styled.button`
+const SettingsButton = styled.button<{ isVisible: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -91,9 +71,8 @@ const SettingsButton = styled.button`
   svg {
     width: 100%;
     height: 100%;
+    fill: ${COLORS.font};
   }
-
-  ${({ isVisible }: SettingsButtonProps) => (isVisible ? visibleSettings : nonVisibleSettings)}
 
   @media (min-width: 480px) {
     width: 2.5rem;

@@ -1,6 +1,7 @@
 import styled from "@emotion/styled"
 import { Link } from "react-router-dom"
 import { Menu, MenuOption } from "../pages/Home"
+import COLORS from "../styles/colors"
 
 interface GameResultProps {
   result?: string
@@ -13,10 +14,10 @@ export default function GameResult({ result, playAgain }: GameResultProps) {
       <PopUp>
         <h1>{result}</h1>
         <Menu>
-          <MenuOption color="green">
+          <MenuOption backgroundColor={COLORS.green}>
             <button onClick={playAgain}>Play again</button>
           </MenuOption>
-          <MenuOption color="red">
+          <MenuOption backgroundColor={COLORS.red}>
             <Link to="/">Exit</Link>
           </MenuOption>
         </Menu>

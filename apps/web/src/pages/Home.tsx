@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import styled from "@emotion/styled"
-
 import { usePlayer } from "../hooks/usePlayer"
+import COLORS from "../styles/colors"
 
 function Home() {
   const { nickname, setNickname, bestScore } = usePlayer()!
@@ -14,10 +14,10 @@ function Home() {
       <NicknameInput value={nickname} onChange={(e) => setNickname(e.target.value)} id="nickname-input" />
 
       <Menu>
-        <MenuOption color="green">
+        <MenuOption backgroundColor={COLORS.green}>
           <Link to="/singleplayer">Singleplayer</Link>
         </MenuOption>
-        <MenuOption color="blue">
+        <MenuOption backgroundColor={COLORS.blue}>
           <Link to="/multiplayer">Multiplayer</Link>
         </MenuOption>
       </Menu>
@@ -71,8 +71,8 @@ const NicknameLabel = styled.label`
 `
 
 const NicknameInput = styled.input`
-  background: #eee4da;
-  color: #776e65;
+  background: ${COLORS.warmGray};
+  color: ${COLORS.font};
   border-radius: 1rem;
   border: none;
   font-size: 1.5rem;
@@ -98,16 +98,12 @@ export const Menu = styled.ul`
   align-items: center;
 `
 
-type MenuOptionProps = {
-  color: string
-}
-
-export const MenuOption = styled.li`
+export const MenuOption = styled.li<{ backgroundColor: string }>`
   width: 70%;
   font-size: 1.5rem;
   margin: 0.6em 0;
   border-radius: 1em;
-  background: ${(props: MenuOptionProps) => `var(--${props.color})`};
+  background: ${(props) => props.backgroundColor};
 
   & > * {
     font-size: 1.5rem;
@@ -116,12 +112,12 @@ export const MenuOption = styled.li`
     font-weight: 600;
     display: block;
     text-align: center;
-    color: #e1eef6;
+    color: ${COLORS.lightFont};
     letter-spacing: 1px;
     padding: 0.5em 0;
     cursor: pointer;
     border-radius: 1em;
-    background: ${(props: MenuOptionProps) => `var(--${props.color})`};
+    background: ${(props) => props.backgroundColor};
   }
 
   @media (min-width: 480px) {
