@@ -1,5 +1,4 @@
 import styled from "@emotion/styled"
-import Settings from "./Settings"
 import COLORS from "../styles/colors"
 
 interface LayoutProps {
@@ -9,7 +8,6 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   return (
     <View>
-      <Settings />
       <LayoutContainer>{children}</LayoutContainer>
     </View>
   )

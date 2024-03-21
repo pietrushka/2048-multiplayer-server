@@ -87,10 +87,6 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     clientEmitter(socketIo.current, { signal: CLIENT_SIGNALS.move, data: { move } })
   }
 
-  const playAgain = () => {
-    clientEmitter(socketIo.current, { signal: CLIENT_SIGNALS.playAgain })
-  }
-
   // TODO useMemo
   const resultText = generateResultText(socketIo.current?.id, gameState?.winner)
 
@@ -101,6 +97,5 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     opponentBoardState: gameState?.opponentBoardState,
     resultText,
     performMove,
-    playAgain,
   }
 }

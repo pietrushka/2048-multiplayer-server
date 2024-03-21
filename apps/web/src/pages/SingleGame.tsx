@@ -4,6 +4,7 @@ import SingleDashboard from "../components/SingleDashboard"
 import useSingleGame from "../hooks/useSingleGame"
 import { usePlayer } from "../hooks/usePlayer"
 import { GameContainer } from "../styles"
+import Settings from "../components/Settings"
 
 function SingleGame() {
   const { bestScore, setBestScore } = usePlayer()!
@@ -16,11 +17,14 @@ function SingleGame() {
     return <span>loading</span>
   }
   return (
-    <GameContainer>
-      <SingleDashboard score={score} bestScore={bestScore} playAgain={resetGame} isResetable={isResetable} />
-      <Board tileGridStateEncoded={tileGridStateEncoded} performMove={performMove} />
-      {status === "finished" && <GameResult result="Game End" playAgain={resetGame} />}
-    </GameContainer>
+    <>
+      <Settings />
+      <GameContainer>
+        <SingleDashboard score={score} bestScore={bestScore} playAgain={resetGame} isResetable={isResetable} />
+        <Board tileGridStateEncoded={tileGridStateEncoded} performMove={performMove} />
+        {status === "finished" && <GameResult result="Game End" />}
+      </GameContainer>
+    </>
   )
 }
 

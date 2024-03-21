@@ -5,13 +5,13 @@ import { usePlayer } from "../hooks/usePlayer"
 import useMultiplayer from "../hooks/useMultiplayer"
 import GameResult from "../components/GameResult"
 import { GameContainer } from "../styles"
+import Settings from "../components/Settings"
 
 const MultiGame = () => {
   const { nickname } = usePlayer()!
-  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText, playAgain } =
-    useMultiplayer({
-      nickname,
-    })
+  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText } = useMultiplayer({
+    nickname,
+  })
 
   if (!status) {
     return <Lobby />
@@ -31,6 +31,7 @@ const MultiGame = () => {
 
   return (
     <>
+      <Settings />
       <GameContainer>
         <MultiDashboard
           score={playerBoardState.score}
@@ -45,7 +46,7 @@ const MultiGame = () => {
         />
         <Board tileGridStateEncoded={playerBoardState.tileGridStateEncoded} performMove={performMove} />
       </GameContainer>
-      {resultText && <GameResult result={resultText} playAgain={playAgain} />}
+      {resultText && <GameResult result={resultText} />}
     </>
   )
 }

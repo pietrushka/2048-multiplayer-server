@@ -1,8 +1,7 @@
 // TODO refactor
-import { Link } from "react-router-dom"
 import styled from "@emotion/styled"
-import { Menu, MenuOption } from "../pages/Home"
 import COLORS from "../styles/colors"
+import StyledLink from "./StyledLink"
 
 export const Lobby = () => {
   return (
@@ -12,11 +11,11 @@ export const Lobby = () => {
         <MagnifyingGlassHandle />
       </MagnifyingGlassOverlay>
       <LobbyText>Looking for an opponent</LobbyText>
-      <Menu>
-        <MenuOption backgroundColor={COLORS.red}>
-          <Link to="/">Exit</Link>
-        </MenuOption>
-      </Menu>
+      <Options>
+        <StyledLink bgColor="red" href="/">
+          Exit
+        </StyledLink>
+      </Options>
     </PageContainer>
   )
 }
@@ -67,6 +66,11 @@ const MagnifyingGlassHandle = styled.div`
   border-top-right-radius: 30%;
   border-bottom-right-radius: 30%;
 `
+
 const LobbyText = styled.p`
   font-size: 1.5rem;
 `
+
+const Options = styled.div({
+  padding: "1rem 0",
+})
