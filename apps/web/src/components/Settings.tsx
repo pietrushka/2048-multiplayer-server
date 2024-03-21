@@ -5,6 +5,7 @@ import { AiOutlineSetting } from "react-icons/ai"
 import COLORS from "../styles/colors"
 import StyledLink, { LinkList } from "./StyledLink"
 import Modal from "./Modal"
+import { mediaQueries } from "../styles"
 
 function Settings() {
   const [isVisible, setIsVisible] = useState(false)
@@ -39,12 +40,13 @@ const SettingsButton = styled.button<{ isVisible: boolean }>({
   outline: "none",
   cursor: "pointer",
   background: "transparent",
+
   svg: {
     width: "100%",
     height: "100%",
     fill: COLORS.font,
   },
-  "@media (min-width: 480px)": {
+  [mediaQueries.tabletPortrait]: {
     width: "2.5rem",
     height: "2.5rem",
   },

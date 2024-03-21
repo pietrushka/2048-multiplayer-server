@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 import { usePlayer } from "../hooks/usePlayer"
 import COLORS from "../styles/colors"
 import StyledLink, { LinkList } from "../components/StyledLink"
+import { mediaQueries } from "../styles"
 
 function Home() {
   const { nickname, setNickname, bestScore } = usePlayer()!
@@ -32,62 +33,45 @@ const HomePage = styled.div({
   flexDirection: "column",
   justifyContent: "space-between",
   alignItems: "center",
+  fontSize: 12,
+  gap: "1.2em",
+
+  [mediaQueries.tabletPortrait]: {
+    fontSize: 16,
+  },
+
+  [mediaQueries.largeTabletPortrait]: {
+    gap: "1.5em",
+  },
+  [mediaQueries.laptop]: {
+    gap: "2em",
+  },
 })
 
-const Heading = styled.div({
-  fontSize: "5rem",
-  margin: "0 0 1rem 0",
-  "@media (min-width: 480px)": {
-    fontSize: "6rem",
-  },
-  "@media (min-width: 768px)": {
-    fontSize: "7rem",
-  },
-  "@media (min-width: 1024px)": {
-    fontSize: "6rem",
-  },
+const Heading = styled.h1({
+  fontSize: "7em",
+  lineHeight: "2em",
+  fontWeight: 500,
+  margin: 0,
 })
 
 const BestScore = styled.p({
-  margin: "1em auto",
   textAlign: "center",
-  fontSize: "1.25rem",
+  fontSize: "2em",
+  margin: 0,
 })
 
 const NicknameLabel = styled.label({
-  display: "block",
-  margin: "0 auto",
-  textAlign: "center",
-  fontSize: "1.25rem",
-  "@media (min-width: 480px)": {
-    fontSize: "1.5rem",
-  },
-  "@media (min-width: 768px)": {
-    fontSize: "1.75rem",
-  },
-  "@media (min-width: 1024px)": {
-    fontSize: "1.5rem",
-  },
+  fontSize: "2em",
+  margin: 0,
 })
 
 const NicknameInput = styled.input({
-  minwidth: "300px",
+  fontSize: "2.5em",
   background: COLORS.warmGray,
   color: COLORS.font,
   borderRadius: "1rem",
   border: "none",
-  fontSize: "1.5rem",
-  margin: "0.25em 0",
-  padding: "0.25em 0.25em",
+  padding: "0.25em 0",
   textAlign: "center",
-
-  "@media (min-width: 480px)": {
-    fontSize: "1.75rem",
-  },
-  "@media (min-width: 768px)": {
-    fontSize: "2rem",
-  },
-  "@media (min-width: 1024px)": {
-    fontSize: "1.75rem",
-  },
 })
