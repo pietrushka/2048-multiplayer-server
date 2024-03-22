@@ -1,6 +1,7 @@
 import { ReactNode } from "react"
 import styled from "@emotion/styled"
 import { ImCross } from "react-icons/im"
+import { mediaQueries } from "../styles"
 
 type ModalProps = {
   children: ReactNode
@@ -44,7 +45,16 @@ export const PopUp = styled.div({
   position: "relative",
   background: "white",
   borderRadius: "1em",
-  width: "90vw",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  maxWidth: "90vw",
+  boxSizing: "border-box",
+  padding: "1em",
+
+  [mediaQueries.tabletPortrait]: {
+    padding: "1.5em",
+  },
 })
 
 const Header = styled.h3({
