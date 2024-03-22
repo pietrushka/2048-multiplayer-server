@@ -34,6 +34,17 @@ export default class ConnectionManager {
     this.lobbyCheckInterval = setInterval(() => this.checkLobby(), LOBBY_CHECK_INTERVAL_MS)
   }
 
+  resetState() {
+    this.users.clear()
+    this.games.clear()
+    this.lobbyUsers.clear()
+
+    clearInterval(this.lobbyCheckInterval)
+    this.lobbyCheckInterval = setInterval(() => this.checkLobby(), LOBBY_CHECK_INTERVAL_MS)
+
+    console.info("State has been reset")
+  }
+
   handleConnection = (socket: socketio.Socket) => {
     console.info(`New connection: ${socket.id}`)
     const user = new User(socket)

@@ -12,5 +12,6 @@ export default function SocketServer(httpServer: http.Server) {
     },
   })
 
-  new ConnectionManager(io)
+  const connectionoManager = new ConnectionManager(io)
+  return connectionoManager
 }
