@@ -94,7 +94,7 @@ describe("WHOLE GAME FLOW", () => {
     io.close()
     clientSocket1.close()
     clientSocket2.close()
-    connectionManager.stopLobbyCheck()
+    connectionManager.stopIntervals()
   })
 
   test("join of a 2 players should start game", async () => {

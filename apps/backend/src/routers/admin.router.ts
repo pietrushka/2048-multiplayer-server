@@ -14,21 +14,20 @@ export default class AdminRouter {
 
   registerRoutes() {
     this.router.get("/state", adminAuth, (req, res) => {
-      const users = [...this.connectionManager.users].map(([_, { socket, nickname, gameId }]) => ({
+      const users = [...this.connectionManager.users].map(([_, { userId, socket, nickname, gameId }]) => ({
+        userId,
         socketId: socket.id,
         nickname,
         gameId,
       }))
       const lobby = [...this.connectionManager.lobbyUsers]
-      const games = [...this.connectionManager.games].map(
-        ([_, { id, status, endGameTimestamp, winner, socketIds }]) => ({
-          id,
-          status,
-          endGameTimestamp,
-          winner,
-          socketIds,
-        }),
-      )
+      const games = [...this.connectionManager.games].map(([_, { id, status, endGameTimestamp, winner, players }]) => ({
+        id,
+        status,
+        endGameTimestamp,
+        winner,
+        playerIds: players.map((x) => x.userId),
+      }))
       res.json({ users, lobby, games })
     })
 
