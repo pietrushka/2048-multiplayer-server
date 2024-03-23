@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import { usePlayer } from "../hooks/usePlayer"
+import { usePlayer } from "../contexts/PlayerContext"
 import COLORS from "../styles/colors"
 import StyledLink, { LinkList } from "../components/StyledLink"
 import { mediaQueries } from "../styles"
