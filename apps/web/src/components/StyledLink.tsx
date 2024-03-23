@@ -27,7 +27,9 @@ export default function StyledLink({ children, bgColor, href, onClick }: ButtonP
   )
 }
 
-const LinkButton = styled(Link)<Pick<ButtonProps, "bgColor">>(
+const LinkButton = styled(Link, {
+  shouldForwardProp: (prop) => prop !== "bgColor",
+})<Pick<ButtonProps, "bgColor">>(
   {
     borderRadius: "1.5rem",
     display: "flex",
