@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "pnpm buildUtils && tsup src/index.ts --tsconfig ./tsconfig.build.json",
-    "start": "node dist/src/index",
+    "start": "node dist/index",
     "dev": "pnpm buildUtils && tsx --watch ./src/index.ts",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",

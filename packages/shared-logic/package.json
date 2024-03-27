@@ -10,10 +10,10 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm,cjs --dts --tsconfig ./tsconfig.build.json",
     "test": "pnpm jest"
   },
-  "devDependencies": {
+  "dependencies": {
     "@jest/types": "^29.6.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.25",

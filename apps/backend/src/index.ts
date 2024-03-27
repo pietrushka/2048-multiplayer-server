@@ -20,10 +20,6 @@ const connectionManager = SocketServer(httpServer)
 
 // REST API
 app.get("/", (req, res) => {
-  res.json({ message: "ok" })
-})
-
-app.get("/healthcheck", (req, res) => {
   res.status(200).send("ok")
 })
 
