@@ -2,8 +2,10 @@ import { useEffect, useState, useRef } from "react"
 import io, { Socket } from "socket.io-client"
 import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW, BoardData, GameStatus, Move, GameData } from "shared-logic"
 import clientEmitter from "../utils/clientEmitter"
+import { getUserIdentifier } from "../utils/userIdentifier"
 
-const SERVER_URL = "http://localhost:8081"
+const SERVER_URL =
+  process.env.NODE_ENV === "production" ? (process.env.REACT_APP_SERVER_ENDPOINT as string) : "http://localhost:8081"
 
 type UseMultiplayerProps = {
   nickname: string
@@ -42,7 +44,9 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
 
   // Connect to the socket server
   useEffect(() => {
-    socketIo.current = io(SERVER_URL)
+    socketIo.current = io(SERVER_URL, {
+      withCredentials: true,
+    })
 
     clientEmitter(socketIo.current, {
       signal: CLIENT_SIGNALS.join,
@@ -53,12 +57,18 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     socketIo.current.on(SERVER_SIGNALS.endGame, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.joinLobby, handleJoinLobby)
 
-    return () => {
+    const cleanupSocket = async () => {
       if (socketIo.current) {
         socketIo.current.disconnect()
       }
     }
-  }, [nickname])
+    window.addEventListener("beforeunload", cleanupSocket)
+
+    return () => {
+      cleanupSocket()
+      window.removeEventListener("beforeunload", cleanupSocket)
+    }
+  }, [])
 
   const handleStateUpdate = (data: GameData) => {
     if (!socketIo.current?.id) {
@@ -67,7 +77,9 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     }
     const { status, endGameTimestamp, boards, winner } = data
 
-    const boardStates = getPlayersBoardState(boards, socketIo.current.id)
+    const userIdentifier = getUserIdentifier()
+    if (!userIdentifier) return // TODO error handling
+    const boardStates = getPlayersBoardState(boards, userIdentifier)
 
     setGameStatus({
       status,

@@ -1,5 +1,8 @@
-import { Board, addTimeToCurrentTimestamp, Move, GameData, DRAW, GAME_TIME } from "shared-logic"
+import { Board, addTimeToCurrentTimestamp, Move, GameData, DRAW } from "shared-logic"
 import ServerEmitter from "../socket/ServerEmitter"
+import User from "../socket/User"
+
+const GAME_TIME = 5 * 60 * 1000 // 5min * 60s * 1000ms
 
 type handleGameEndPayload = { reason: "timeEnd" } | { reason: "playerBlocked"; playerId: string }
 
@@ -9,15 +12,15 @@ export default class MultiplayerGame {
   endGameTimestamp: GameData["endGameTimestamp"]
   boards: Board[]
   winner: GameData["winner"]
-  socketIds: string[]
+  players: User[]
   endGameTimoutId?: NodeJS.Timeout
   serverEmitter: ServerEmitter
 
-  constructor(serverEmitter: ServerEmitter, socketIds: string[]) {
+  constructor(serverEmitter: ServerEmitter, players: User[]) {
     this.id = `game_${Date.now()}`
     this.status = "loading"
-    this.socketIds = socketIds
-    this.boards = [new Board(socketIds[0]), new Board(socketIds[1])]
+    this.players = players
+    this.boards = [new Board(players[0].userId), new Board(players[1].userId)]
     this.serverEmitter = serverEmitter
   }
 
@@ -78,7 +81,7 @@ export default class MultiplayerGame {
         }
         return this.findScoreWinner()
       case "playerBlocked":
-        return this.socketIds.find((x) => x !== payload.playerId)!
+        return this.players.find((x) => x.userId !== payload.playerId)!.userId
       default:
         console.error("determineWinner: reason not recognised")
         return DRAW
@@ -90,7 +93,7 @@ export default class MultiplayerGame {
     }
     for (const board of this.boards) {
       if (!board.nextMovePossible) {
-        return this.socketIds.find((x) => x !== board.playerId)!
+        return this.players.find((x) => x.userId !== board.playerId)?.userId
       }
     }
   }

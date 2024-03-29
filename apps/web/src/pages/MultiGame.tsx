@@ -1,7 +1,7 @@
 import Board from "../components/Board"
 import MultiDashboard from "../components/MultiDashboard"
 import { Lobby } from "../components/Lobby"
-import { usePlayer } from "../hooks/usePlayer"
+import { usePlayer } from "../contexts/PlayerContext"
 import useMultiplayer from "../hooks/useMultiplayer"
 import GameResult from "../components/GameResult"
 import { GameContainer } from "../styles"

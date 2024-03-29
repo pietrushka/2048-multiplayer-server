@@ -20,7 +20,7 @@ export default class ServerEmitter {
     this.io.to(gameId).emit(SERVER_SIGNALS.endGame, payload)
   }
 
-  sendJoinLobby(playerId: string) {
-    this.io.to(playerId).emit(SERVER_SIGNALS.joinLobby)
+  sendJoinLobby(socketId: string) {
+    this.io.to(socketId).emit(SERVER_SIGNALS.joinLobby)
   }
 }

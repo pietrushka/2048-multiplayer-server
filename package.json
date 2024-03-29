@@ -6,9 +6,7 @@
   "scripts": {
     "test": "pnpm test -r",
     "startServer": "pnpm --filter backend start",
-    "zipRepoForEB": "rm -rf repo_boundle.zip && zip -r repo_boundle.zip ./ -x '*node_modules/*' -x '*.vscode/*' -x '*dist/*' -x '*__tests__/*' -x '*.git/*' -x 'apps/web/*'",
-    "unzip": "rm -rf ./temp && unzip repo_boundle.zip -d ./temp",
-    "docker": "pnpm prepare && pnpm zipRepoForEB && pnpm unzip && cd temp && docker compose up"
+    "dockerBackend": "chmod +x scripts/docker-backend.sh && scripts//docker-backend.sh"
   },
   "license": "ISC",
   "dependencies": {

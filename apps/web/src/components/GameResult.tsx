@@ -1,4 +1,3 @@
-import styled from "@emotion/styled"
 import StyledLink, { LinkList } from "./StyledLink"
 import Modal from "./Modal"
 

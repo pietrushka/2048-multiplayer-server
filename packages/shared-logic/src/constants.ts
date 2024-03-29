@@ -1,10 +1,8 @@
 import { Direction, Move } from "./types"
 
-export const LOBBY_CHECK_INTERVAL_MS = 2000
-
-export const GAME_TIME = 5 * 60 * 1000 // 5min * 60s * 1000ms
-
-export const MIN_PLAYERS_TO_START = 2
+export const COOKIE_NAMES = {
+  PLAYER_IDENTIFIER: "PLAYER_IDENTIFIER",
+}
 
 export const DEFAULT_BOARD_SIZE = 4
 

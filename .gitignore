@@ -4,5 +4,9 @@ dist-ssr
 *.local
 .env
 .cache
-repo_boundle.zip
+backend_archive.zip
 temp/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

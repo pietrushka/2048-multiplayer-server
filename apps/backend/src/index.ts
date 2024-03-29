@@ -4,6 +4,7 @@ import http from "http"
 import SocketServer from "./socket"
 import AdminRouter from "./routers/admin.router"
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
 
 dotenv.config()
 
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 8081
 
 const app = express()
 app.use(cors())
+app.use(cookieParser())
 const httpServer = http.createServer(app)
 
 // SOCKETS
@@ -18,10 +20,6 @@ const connectionManager = SocketServer(httpServer)
 
 // REST API
 app.get("/", (req, res) => {
-  res.json({ message: "ok" })
-})
-
-app.get("/healthcheck", (req, res) => {
   res.status(200).send("ok")
 })
 

@@ -1,21 +1,20 @@
 import socketio from "socket.io"
 import Game from "../gameLogic/MultiplayerGame"
 import User from "./User"
-import {
-  chunk,
-  MIN_PLAYERS_TO_START,
-  CLIENT_SIGNALS,
-  LOBBY_CHECK_INTERVAL_MS,
-  Move,
-  isStartGamePayload,
-} from "shared-logic"
 import ServerEmitter from "./ServerEmitter"
+import { chunk, CLIENT_SIGNALS, Move, isStartGamePayload, COOKIE_NAMES } from "shared-logic"
+
+const MIN_PLAYERS_TO_START = 2
+
+const LOBBY_CHECK_INTERVAL_MS = 2000
+const CLEAN_UP_INTERVAL_MS = 2000 // 5min * 60s * 1000ms
 
 export default class ConnectionManager {
   users: Map<string, User>
   games: Map<string, Game>
   lobbyUsers: Set<string>
   private lobbyCheckInterval
+  private cleanUpInterval
   serverEmitter: ServerEmitter
 
   constructor(private io: socketio.Server) {
@@ -26,85 +25,77 @@ export default class ConnectionManager {
 
     this.serverEmitter = new ServerEmitter(io)
 
-    this.io.on("connection", (socket: socketio.Socket) => {
-      this.handleConnection(socket)
-    })
+    this.io.on("connection", this.handleConnection)
 
-    // Start the lobby check timer
-    this.lobbyCheckInterval = setInterval(() => this.checkLobby(), LOBBY_CHECK_INTERVAL_MS)
-  }
-
-  resetState() {
-    this.users.clear()
-    this.games.clear()
-    this.lobbyUsers.clear()
-
-    clearInterval(this.lobbyCheckInterval)
     this.lobbyCheckInterval = setInterval(() => this.checkLobby(), LOBBY_CHECK_INTERVAL_MS)
 
-    console.info("State has been reset")
+    this.cleanUpInterval = setInterval(() => this.cleanUp(), CLEAN_UP_INTERVAL_MS)
   }
 
   handleConnection = (socket: socketio.Socket) => {
-    console.info(`New connection: ${socket.id}`)
-    const user = new User(socket)
-    this.users.set(socket.id, user)
+    // @ts-expect-error - cookie vialates default request structure
+    const userId = socket.request?.cookies?.[COOKIE_NAMES.PLAYER_IDENTIFIER] as string | undefined
+    if (!userId) {
+      console.error("no userId")
+      return
+    }
+    const user = new User(socket, userId)
+    this.users.set(userId, user)
 
-    socket.on(CLIENT_SIGNALS.join, this.handleJoin(socket))
-    socket.on(CLIENT_SIGNALS.disconnect, this.handleDisconnect(socket))
-    socket.on(CLIENT_SIGNALS.move, this.handleMove(socket))
-    socket.on(CLIENT_SIGNALS.playAgain, this.handlePLayAgain(socket))
+    socket.on(CLIENT_SIGNALS.join, this.handleJoin(socket, userId))
+    socket.on(CLIENT_SIGNALS.disconnect, this.handleDisconnect(socket, userId))
+    socket.on(CLIENT_SIGNALS.move, this.handleMove(socket, userId))
+    socket.on(CLIENT_SIGNALS.playAgain, this.handlePLayAgain(socket, userId))
   }
 
-  handleJoin(socket: socketio.Socket) {
+  handleJoin(socket: socketio.Socket, userId: string) {
     return (data: { nickname: string }) => {
-      const socketId = socket.id
-      const user = this.users.get(socketId)
+      const user = this.users.get(userId)
       if (user) {
         user.nickname = data.nickname
         socket.join("lobby")
-        this.lobbyUsers.add(socket.id)
+        this.lobbyUsers.add(userId)
       } else {
-        console.error("handleJoin: no user connected with:", socketId)
+        console.error("handleJoin: no user connected with:", userId)
       }
     }
   }
-  handleDisconnect(socket: socketio.Socket) {
+  handleDisconnect(socket: socketio.Socket, userId: string) {
     return () => {
-      const socketId = socket.id
-      const user = this.users.get(socketId)
+      const user = this.users.get(userId)
 
       if (user) {
         this.userDisconnectHandleGame(user)
       } else {
-        console.error("handleDisconnect: no user", { socketId })
+        console.error("handleDisconnect: no user", { userId })
       }
 
-      this.users.delete(socketId)
-      console.info(`Disconnected: ${socketId}`)
+      this.users.delete(userId)
+      console.info(`Disconnected: ${userId}`)
     }
   }
 
   checkLobby() {
     const playerChunks = chunk(Array.from(this.lobbyUsers), MIN_PLAYERS_TO_START)
 
-    for (const players of playerChunks) {
+    for (const playerIds of playerChunks) {
+      const players = playerIds.map((id) => this.users.get(id)).filter((user): user is User => user instanceof User)
       if (players.length === MIN_PLAYERS_TO_START) {
         this.createGame(players)
       }
     }
   }
 
-  createGame(players: string[]) {
+  createGame(players: User[]) {
     const game = new Game(this.serverEmitter, players)
     this.games.set(game.id, game)
 
-    players.forEach((playerId) => {
-      const user = this.users.get(playerId)
+    players.forEach((player) => {
+      const user = this.users.get(player.userId)
       if (user) {
         user.gameId = game.id
         user.socket.join(game.id)
-        this.lobbyUsers.delete(playerId)
+        this.lobbyUsers.delete(player.userId)
       }
     })
 
@@ -119,11 +110,9 @@ export default class ConnectionManager {
     }
   }
 
-  handleMove(socket: socketio.Socket) {
+  handleMove(socket: socketio.Socket, userId: string) {
     return (data: { move: Move }) => {
-      const socketId = socket.id
-
-      const user = this.users.get(socketId)
+      const user = this.users.get(userId)
       if (!user) {
         console.error("handleMove: no user")
         return
@@ -141,14 +130,10 @@ export default class ConnectionManager {
         return
       }
 
-      game.handleMove(data.move, socketId)
+      game.handleMove(data.move, userId)
 
       this.serverEmitter.sendBoardUpdate(game.id, game.data)
     }
-  }
-
-  stopLobbyCheck() {
-    clearInterval(this.lobbyCheckInterval)
   }
 
   endGame(gameId: string) {
@@ -174,26 +159,46 @@ export default class ConnectionManager {
     if (game.status !== "finished") {
       this.endGame(game.id)
     }
-    const isOnlyPlayer = game.socketIds.length < 2
+    const isOnlyPlayer = game.players.length < 2
 
     if (isOnlyPlayer) {
       this.games.delete(game.id)
     }
   }
 
-  handlePLayAgain(socket: socketio.Socket) {
+  handlePLayAgain(socket: socketio.Socket, userId: string) {
     return () => {
-      const socketId = socket.id
-      const user = this.users.get(socketId)
+      const user = this.users.get(userId)
       if (user) {
         this.userDisconnectHandleGame(user)
         user.gameId = null
         socket.join("lobby")
-        this.lobbyUsers.add(socket.id)
-        this.serverEmitter.sendJoinLobby(socketId)
+        this.lobbyUsers.add(userId)
+        this.serverEmitter.sendJoinLobby(socket.id)
       } else {
-        console.error("handlePLayAgain: no user connected with:", socketId)
+        console.error("handlePLayAgain: no user connected with:", userId)
       }
     }
+  }
+
+  resetState() {
+    this.users.clear()
+    this.games.clear()
+    this.lobbyUsers.clear()
+    console.info("State has been reset")
+  }
+
+  cleanUp() {
+    // TODO improve the cleanup
+    for (const [gameId, game] of this.games) {
+      if (game.status === "finished") {
+        this.games.delete(gameId)
+      }
+    }
+  }
+
+  stopIntervals() {
+    clearInterval(this.lobbyCheckInterval)
+    clearInterval(this.cleanUpInterval)
   }
 }

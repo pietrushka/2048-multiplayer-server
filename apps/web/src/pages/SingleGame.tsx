@@ -2,7 +2,7 @@ import Board from "../components/Board"
 import GameResult from "../components/GameResult"
 import SingleDashboard from "../components/SingleDashboard"
 import useSingleGame from "../hooks/useSingleGame"
-import { usePlayer } from "../hooks/usePlayer"
+import { usePlayer } from "../contexts/PlayerContext"
 import { GameContainer } from "../styles"
 import Settings from "../components/Settings"
 
