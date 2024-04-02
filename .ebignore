@@ -2,7 +2,6 @@ node_modules
 **/dist
 dist-ssr
 *.local
-.env
 .cache
 backend_boundle.zip
 temp/
