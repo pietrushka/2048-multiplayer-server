@@ -44,9 +44,7 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
 
   // Connect to the socket server
   useEffect(() => {
-    socketIo.current = io(SERVER_URL, {
-      withCredentials: true,
-    })
+    socketIo.current = io(SERVER_URL)
 
     clientEmitter(socketIo.current, {
       signal: CLIENT_SIGNALS.join,
