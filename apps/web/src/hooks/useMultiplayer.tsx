@@ -5,7 +5,7 @@ import clientEmitter from "../utils/clientEmitter"
 import { getUserIdentifier } from "../utils/userIdentifier"
 
 const SERVER_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:8081" : (process.env.REACT_APP_SERVER_ENDPOINT as string)
+  process.env.NODE_ENV === "production" ? (process.env.REACT_APP_SERVER_ENDPOINT as string) : "http://localhost:8081"
 
 type UseMultiplayerProps = {
   nickname: string
