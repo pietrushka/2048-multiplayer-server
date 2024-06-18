@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import io, { Socket } from "socket.io-client"
-import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW, BoardData, GameStatus, Move, GameData } from "shared-logic"
+import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW, BoardData, GameStatus, Move, GameData, COOKIE_NAMES } from "shared-logic"
 import clientEmitter from "../utils/clientEmitter"
 import { getUserIdentifier } from "../utils/userIdentifier"
 
@@ -41,8 +41,11 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
 
   // Connect to the socket server
   useEffect(() => {
+    const userIdentifier = getUserIdentifier()
     socketIo.current = io(process.env.REACT_APP_SERVER_URL as string, {
-      withCredentials: true,
+      query: {
+        [COOKIE_NAMES.PLAYER_IDENTIFIER]: userIdentifier,
+      },
     })
 
     clientEmitter(socketIo.current, {

@@ -9,7 +9,6 @@ export default function SocketServer(httpServer: http.Server) {
       origin: ["http://localhost:3000", "https://2048vs.com"],
       methods: ["GET", "POST"],
       allowedHeaders: ["*"],
-      credentials: true,
     },
     connectionStateRecovery: {},
   })

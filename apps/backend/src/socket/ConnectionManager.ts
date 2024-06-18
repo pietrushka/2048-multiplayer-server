@@ -33,19 +33,19 @@ export default class ConnectionManager {
   }
 
   handleConnection = (socket: socketio.Socket) => {
-    // @ts-expect-error - cookie vialates default request structure
-    const userId = socket.request?.cookies?.[COOKIE_NAMES.PLAYER_IDENTIFIER] as string | undefined
-    if (!userId) {
-      console.error("no userId")
+    const playerIdentifier = socket.handshake.query?.[COOKIE_NAMES.PLAYER_IDENTIFIER] as string | undefined
+
+    if (!playerIdentifier) {
+      console.error("no playerIdentifier", { request: socket.handshake.query })
       return
     }
-    const user = new User(socket, userId)
-    this.users.set(userId, user)
+    const user = new User(socket, playerIdentifier)
+    this.users.set(playerIdentifier, user)
 
-    socket.on(CLIENT_SIGNALS.join, this.handleJoin(socket, userId))
-    socket.on(CLIENT_SIGNALS.disconnect, this.handleDisconnect(socket, userId))
-    socket.on(CLIENT_SIGNALS.move, this.handleMove(socket, userId))
-    socket.on(CLIENT_SIGNALS.playAgain, this.handlePLayAgain(socket, userId))
+    socket.on(CLIENT_SIGNALS.join, this.handleJoin(socket, playerIdentifier))
+    socket.on(CLIENT_SIGNALS.disconnect, this.handleDisconnect(socket, playerIdentifier))
+    socket.on(CLIENT_SIGNALS.move, this.handleMove(socket, playerIdentifier))
+    socket.on(CLIENT_SIGNALS.playAgain, this.handlePLayAgain(socket, playerIdentifier))
   }
 
   handleJoin(socket: socketio.Socket, userId: string) {
