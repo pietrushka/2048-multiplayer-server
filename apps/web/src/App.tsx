@@ -14,6 +14,7 @@ function App() {
     // TODO use server generated jwt tokens - is client - client possible?
     // TODO maybe move this to backend - on handshake
     setUserIdentifier()
+    console.log(process.env.REACT_APP_SERVER_URL)
   }, [])
 
   return (

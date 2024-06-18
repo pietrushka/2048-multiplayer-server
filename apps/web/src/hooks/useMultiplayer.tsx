@@ -4,9 +4,6 @@ import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW, BoardData, GameStatus, Move, Game
 import clientEmitter from "../utils/clientEmitter"
 import { getUserIdentifier } from "../utils/userIdentifier"
 
-const SERVER_URL =
-  process.env.NODE_ENV === "production" ? (process.env.REACT_APP_SERVER_ENDPOINT as string) : "http://localhost:8081"
-
 type UseMultiplayerProps = {
   nickname: string
 }
@@ -44,7 +41,9 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
 
   // Connect to the socket server
   useEffect(() => {
-    socketIo.current = io(SERVER_URL)
+    socketIo.current = io(process.env.REACT_APP_SERVER_URL as string, {
+      withCredentials: true,
+    })
 
     clientEmitter(socketIo.current, {
       signal: CLIENT_SIGNALS.join,
