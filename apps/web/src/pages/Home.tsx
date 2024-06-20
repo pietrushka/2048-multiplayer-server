@@ -3,12 +3,14 @@ import { usePlayer } from "../contexts/PlayerContext"
 import COLORS from "../styles/colors"
 import StyledLink, { LinkList } from "../components/StyledLink"
 import { mediaQueries } from "../styles"
+import Navbar from "../components/Navbar"
 
-function Home() {
+export default function Home() {
   const { nickname, setNickname, bestScore } = usePlayer()!
 
   return (
     <HomePage>
+      <Navbar />
       <Heading>2048.vs</Heading>
       <BestScore>Best score: {bestScore}</BestScore>
       <NicknameLabel htmlFor="nickname-input">Your nickname:</NicknameLabel>
@@ -25,8 +27,6 @@ function Home() {
     </HomePage>
   )
 }
-
-export default Home
 
 const HomePage = styled.div({
   display: "flex",
