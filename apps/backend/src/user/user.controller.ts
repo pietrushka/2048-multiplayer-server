@@ -3,7 +3,8 @@ import { z } from "zod"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import cookie from "cookie"
-import { checkIsEmailTaken, checkIsNicknameTaken, getUserByEmail, getUserById, insertUser } from "../db/user.dao"
+import * as UserService from "./user.service"
+import * as UserDAO from "./user.dao"
 import authenticateToken from "../utils/authenticateToken"
 
 export async function getUserData(request: Request, response: Response) {
@@ -12,7 +13,7 @@ export async function getUserData(request: Request, response: Response) {
     return response.status(tokenResult.statusCode).json({ message: tokenResult.message })
   }
 
-  const user = await getUserById(tokenResult.userId)
+  const user = await UserDAO.getUserById(tokenResult.userId)
   if (!user) {
     return response.status(404).json({ message: "User not found" })
   }
@@ -41,24 +42,17 @@ export async function register(request: Request, response: Response) {
     }
     const { email, nickname, password } = data.body
 
-    const isEmailTaken = await checkIsEmailTaken(email)
+    const isEmailTaken = await UserDAO.checkIsEmailTaken(email)
     if (isEmailTaken) {
       return response.status(401).json({ message: "Email already exists" })
     }
 
-    const isNicknameTaken = await checkIsNicknameTaken(email)
+    const isNicknameTaken = await UserDAO.checkIsNicknameTaken(email)
     if (isNicknameTaken) {
       return response.status(401).json({ message: "Nickname already exists" })
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    const user = {
-      email,
-      nickname,
-      password: hashedPassword,
-    }
-    await insertUser(user)
+    const userId = await UserService.createUser({ email, nickname, password })
 
     return response.status(200).json({ message: "User registered" })
   } catch (error) {
@@ -80,7 +74,7 @@ export async function login(request: Request, response: Response) {
       body: { email, password },
     } = loginSchema.parse(request)
 
-    const user = await getUserByEmail(email)
+    const user = await UserDAO.getUserByEmail(email)
     if (!user) {
       return response.status(401).json({ message: "Invalid email or password" })
     }
