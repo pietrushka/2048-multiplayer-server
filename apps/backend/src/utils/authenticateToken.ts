@@ -1,27 +1,44 @@
-import { Request, Response } from "express"
+import { Request } from "express"
 import jwt from "jsonwebtoken"
 
 interface DecodedToken {
   id: string
 }
 
-export default function authenticateToken(req: Request, res: Response): string | undefined {
+type AuthenticateTokenResult =
+  | { isValid: true; userId: string; statusCode?: undefined; message?: undefined }
+  | { isValid: false; userId?: undefined; statusCode: number; message: string }
+
+export default function authenticateToken(req: Request): AuthenticateTokenResult {
   try {
     const accessToken = req.cookies.accessToken
     if (!accessToken) {
-      res.status(401).json({ error: "Invalid token" })
-      return
+      return {
+        isValid: false,
+        statusCode: 401,
+        message: "Invalid token",
+      }
     }
 
     const decodedToken = jwt.verify(accessToken, process.env.JWT_SECRET as string) as DecodedToken
     if (!decodedToken.id) {
-      res.status(401).json({ error: "Invalid token" })
-      return
+      return {
+        isValid: false,
+        statusCode: 401,
+        message: "Invalid token",
+      }
     }
 
-    return decodedToken.id
+    return {
+      isValid: true,
+      userId: decodedToken.id,
+    }
   } catch (error) {
     console.error(error)
-    res.status(401).json({ error: "Invalid token" })
+    return {
+      isValid: false,
+      statusCode: 401,
+      message: "Invalid token",
+    }
   }
 }

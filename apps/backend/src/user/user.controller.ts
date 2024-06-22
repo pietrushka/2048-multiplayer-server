@@ -7,12 +7,12 @@ import { checkIsEmailTaken, checkIsNicknameTaken, getUserByEmail, getUserById, i
 import authenticateToken from "../utils/authenticateToken"
 
 export async function getUserData(request: Request, response: Response) {
-  const userId = authenticateToken(request, response)
-  if (!userId) {
-    return
+  const tokenResult = authenticateToken(request)
+  if (!tokenResult.isValid) {
+    return response.status(tokenResult.statusCode).json({ message: tokenResult.message })
   }
 
-  const user = await getUserById(userId)
+  const user = await getUserById(tokenResult.userId)
   if (!user) {
     return response.status(404).json({ message: "User not found" })
   }
