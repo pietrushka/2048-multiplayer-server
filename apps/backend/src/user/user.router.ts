@@ -1,14 +1,16 @@
 import { Router } from "express"
-import { register, login, getUserData, logout } from "./user.controller"
+import * as userController from "./user.controller"
 
 const router: Router = Router()
 
-router.get("/me", getUserData)
+router.get("/me", userController.getUserData)
 
-router.post("/logout", logout)
+router.post("/logout", userController.logout)
 
-router.post("/register", register)
+router.post("/register", userController.register)
 
-router.post("/login", login)
+router.post("/login", userController.login)
+
+router.post("/activate/:token", userController.activateAccount)
 
 export default router

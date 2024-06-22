@@ -5,7 +5,10 @@ import jwt from "jsonwebtoken"
 import cookie from "cookie"
 import * as UserService from "./user.service"
 import * as UserDAO from "./user.dao"
+import * as TokenService from "../token/token.service"
+import * as TokenDAO from "../token/token.dao"
 import authenticateToken from "../utils/authenticateToken"
+import { TokenType } from "../token/token.interface"
 
 export async function getUserData(request: Request, response: Response) {
   const tokenResult = authenticateToken(request)
@@ -54,7 +57,32 @@ export async function register(request: Request, response: Response) {
 
     const userId = await UserService.createUser({ email, nickname, password })
 
+    await TokenService.createAndSendAccountActivationToken({ userId, email })
+
     return response.status(200).json({ message: "User registered" })
+  } catch (error) {
+    console.error("error", JSON.stringify(error, null, 2))
+    return response.status(400).json({ message: "Server error" })
+  }
+}
+
+export async function activateAccount(request: Request, response: Response) {
+  try {
+    const { token } = request.params
+    if (!token) {
+      return response.status(400).json({ message: "Token is required" })
+    }
+
+    const tokenResult = await TokenService.validateToken({ token })
+    if (!tokenResult.isValid) {
+      return response.status(401).json({ message: tokenResult.errorMessage })
+    }
+
+    const { userId } = tokenResult
+    await UserDAO.updateIsActive({ id: userId, isActive: true })
+    await TokenDAO.deleteUserToken({ type: TokenType.activateAccount, userId })
+
+    return response.status(200).json({ message: "Account activated" })
   } catch (error) {
     console.error("error", JSON.stringify(error, null, 2))
     return response.status(400).json({ message: "Server error" })
