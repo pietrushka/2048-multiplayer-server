@@ -5,23 +5,19 @@ import { mediaQueries } from "../styles"
 
 type ModalProps = {
   children: ReactNode
-  setIsVisible?: (isVisible: boolean) => void
-  header?: string
+  closeModal?: () => void
 }
 
-export default function Modal({ setIsVisible, children, header }: ModalProps) {
-  const closeModal = () => {
-    if (setIsVisible) {
-      setIsVisible(false)
-    }
+export default function Modal({ closeModal, children }: ModalProps) {
+  function handleCloseModal() {
+    closeModal?.()
   }
   return (
-    <Overlay onClick={closeModal}>
+    <Overlay onClick={handleCloseModal}>
       <PopUp onClick={(e) => e.stopPropagation()}>
-        <CloseModalButton onClick={closeModal}>
+        <CloseModalButton onClick={handleCloseModal}>
           <ImCross />
         </CloseModalButton>
-        <Header>{header}</Header>
         {children}
       </PopUp>
     </Overlay>
@@ -55,11 +51,6 @@ export const PopUp = styled.div({
   [mediaQueries.tabletPortrait]: {
     padding: "1.5em",
   },
-})
-
-const Header = styled.h3({
-  textAlign: "center",
-  fontSize: "2rem",
 })
 
 const CloseModalButton = styled.button({

@@ -15,7 +15,8 @@ function Settings() {
         {!isVisible && <AiOutlineSetting />}
       </SettingsButton>
       {isVisible && (
-        <Modal header="Settings" setIsVisible={setIsVisible}>
+        <Modal closeModal={() => setIsVisible(false)}>
+          <h2>Settings</h2>
           <LinkList>
             <StyledLink bgColor="red" href="/" onClick={() => setIsVisible(false)}>
               Go to menu
