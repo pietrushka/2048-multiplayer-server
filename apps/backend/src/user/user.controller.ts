@@ -114,6 +114,10 @@ export async function login(request: Request, response: Response) {
       return response.status(401).json({ message: "Invalid email or password" })
     }
 
+    if (!user.isActive) {
+      return response.status(401).json({ message: "User is not active" })
+    }
+
     const isValid = await bcrypt.compare(password, user.password)
     if (!isValid) {
       return response.status(401).json({ message: "Invalid email or password" })

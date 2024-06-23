@@ -66,9 +66,6 @@ export default function generateActivationEmail(activationLink: string) {
             <p><a href="${activationLink}" class="activation-link">Activate Account</a></p>
             <p>If you did not sign up for this account, please ignore this email.</p>
         </div>
-        <div class="footer">
-            <p>&copy; 2024 Your Company. All rights reserved.</p>
-        </div>
     </div>
 </body>
 </html>

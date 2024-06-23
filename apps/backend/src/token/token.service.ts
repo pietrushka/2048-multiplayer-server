@@ -28,7 +28,7 @@ export async function createAndSendAccountActivationToken({ userId, email }: { u
     timeToExpire: 12 * 60 * 60 * 1000, // 12 hours
   })
 
-  const activationUrl = `${process.env.FRONTEND_URL}/activate/${activationToken}`
+  const activationUrl = `${process.env.FRONTEND_URL}/?authForm=activateAccount&token=${activationToken}`
   await EmailService.sendAccountActivationEmail({ to: email, activationUrl: activationUrl })
 }
 
@@ -42,7 +42,7 @@ export async function createAndSendPasswordResetToken({ userId, email }: { userI
     timeToExpire: 60 * 60 * 1000, // 1 hour
   })
 
-  const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${passwordResetToken}`
+  const resetPasswordUrl = `${process.env.FRONTEND_URL}/?authForm=forgotPassword&token=${passwordResetToken}`
   await EmailService.sendPasswordResetEmail({ to: email, resetPasswordUrl: resetPasswordUrl })
 }
 

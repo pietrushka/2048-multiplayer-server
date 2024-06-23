@@ -66,9 +66,6 @@ export default function generatePasswordResetEmail(resetPasswordUrl: string) {
               <p><a href="${resetPasswordUrl}" class="reset-link">Reset Password</a></p>
               <p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
           </div>
-          <div class="footer">
-              <p>&copy; 2024 Your Company. All rights reserved.</p>
-          </div>
       </div>
   </body>
   </html>

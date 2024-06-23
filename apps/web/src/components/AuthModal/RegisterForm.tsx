@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Form, Button, Heading, Input, Error, InputGroup } from "../Common"
 
@@ -9,11 +8,10 @@ type FormValues = {
 }
 
 export default function RegisterForm() {
-  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors, isLoading, isSubmitSuccessful },
     setError,
   } = useForm<FormValues>()
 
@@ -29,7 +27,6 @@ export default function RegisterForm() {
       })
 
       if (response.ok) {
-        navigate("/login")
         return
       }
 
@@ -40,6 +37,15 @@ export default function RegisterForm() {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  if (isSubmitSuccessful) {
+    return (
+      <Form>
+        <Heading>You have successfully registered</Heading>
+        <p>Check your email for the activation link</p>
+      </Form>
+    )
   }
 
   return (
