@@ -3,6 +3,7 @@ import RegisterForm from "./RegisterForm"
 import LoginForm from "./LoginForm"
 import ForgotPasswordForm from "./ForgotPasswordForm"
 import ResetPasswordForm from "./ResetPasswordForm"
+import ActivateAccount from "./ActivateAccount"
 import useAuthFormParam from "./useAuthFormParam"
 
 const authFormMap = {
@@ -10,6 +11,7 @@ const authFormMap = {
   login: LoginForm,
   forgotPassword: ForgotPasswordForm,
   resetPassword: ResetPasswordForm,
+  activateAccount: ActivateAccount,
 }
 
 export default function AuthModal() {
