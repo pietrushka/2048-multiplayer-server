@@ -9,7 +9,8 @@
     "dockerBackend": "chmod +x scripts/docker-backend.sh && scripts//docker-backend.sh",
     "buildClient": "pnpm --filter web build",
     "dev": "concurrently \"pnpm --filter web dev\" \"pnpm --filter backend dev\" \"pnpm startDb\"",
-    "startDb": "docker compose --env-file .env -f docker-compose-dev.yaml up"
+    "startDb": "docker compose --env-file .env -f docker-compose-dev.yaml up",
+    "composeStartServer": "docker compose --env-file .env -f docker-compose.yaml up"
   },
   "license": "ISC",
   "dependencies": {

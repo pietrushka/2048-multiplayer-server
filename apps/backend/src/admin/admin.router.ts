@@ -1,6 +1,8 @@
 import { Router } from "express"
 import ConnectionManager from "../socket/ConnectionManager"
-import { adminAuth } from "../middlewares/adminAuth"
+import { adminAuth } from "./adminAuth"
+import sql from "../db/sql"
+import { createTokensTable, createUsersTable } from "../db/createTables"
 
 export default class AdminRouter {
   public router: Router
@@ -34,6 +36,20 @@ export default class AdminRouter {
     this.router.post("/reset", adminAuth, (req, res) => {
       this.connectionManager.resetState()
       res.status(200).send("ok")
+    })
+
+    this.router.get("/db-state", adminAuth, async (req, res) => {
+      const dbUsers = await sql`SELECT * FROM users;`
+      const dbTokens = await sql`SELECT * FROM tokens;`
+      res.status(200).json({ dbUsers, dbTokens })
+    })
+
+    this.router.post("/db-reset", adminAuth, async (req, res) => {
+      await sql`DROP TABLE IF EXISTS tokens;`
+      await sql`DROP TABLE IF EXISTS users;`
+      await createUsersTable()
+      await createTokensTable()
+      res.status(200).send("db reset")
     })
   }
 }
