@@ -22,3 +22,8 @@ export async function createUser({ email, password, nickname }: CreateUser): Pro
   })
   return id
 }
+
+export async function changeUserPassword({ id, password }: { id: string; password: string }) {
+  const hashedPassword = await bcrypt.hash(password, 10)
+  await UserDAO.updatePassword({ id, password: hashedPassword })
+}

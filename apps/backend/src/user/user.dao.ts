@@ -13,7 +13,7 @@ export async function checkIsNicknameTaken(nickname: string): Promise<boolean> {
 }
 
 export async function getUserByEmail(email: string): Promise<User | undefined> {
-  const [row] = await sql<UserDB[]>`SELECT id,email, password FROM users WHERE email = ${email} LIMIT 1`
+  const [row] = await sql<UserDB[]>`SELECT * FROM users WHERE email = ${email} LIMIT 1`
   return row ? objectToCamel(row) : undefined
 }
 
@@ -30,4 +30,8 @@ export async function insertUser(user: User): Promise<void> {
 
 export async function updateIsActive({ id, isActive }: { id: string; isActive: boolean }) {
   await sql`UPDATE users SET is_active = ${isActive} WHERE id = ${id}`
+}
+
+export async function updatePassword({ id, password }: { id: string; password: string }) {
+  await sql`UPDATE users SET password = ${password} WHERE id = ${id}`
 }

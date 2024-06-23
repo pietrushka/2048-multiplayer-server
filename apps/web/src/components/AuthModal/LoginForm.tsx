@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Form, Button, Heading, Input, Error, InputGroup } from "./AuthCommon"
+import { Form, Button, Heading, Input, Error, InputGroup } from "../Common"
+import { useAuth } from "../../contexts/AuthContext"
 
 type FormValues = {
-  nickname: string
   email: string
   password: string
 }
 
-export default function RegisterForm() {
+export default function LoginForm() {
   const navigate = useNavigate()
   const {
     register,
@@ -16,20 +16,23 @@ export default function RegisterForm() {
     formState: { errors, isLoading },
     setError,
   } = useForm<FormValues>()
+  const { fetchUser } = useAuth()
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const url = `${process.env.REACT_APP_SERVER_URL}/user/register`
+      const url = `${process.env.REACT_APP_SERVER_URL}/user/login`
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        credentials: "include",
       })
 
       if (response.ok) {
-        navigate("/login")
+        navigate("/")
+        fetchUser()
         return
       }
 
@@ -44,12 +47,7 @@ export default function RegisterForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <Heading>Register</Heading>
-      <InputGroup>
-        <Input id="nickname" {...register("nickname", { required: "Last name is required" })} placeholder="Nickname" />
-        <Error>{errors.nickname?.message}</Error>
-      </InputGroup>
-
+      <Heading>Login</Heading>
       <InputGroup>
         <Input
           id="email"
@@ -70,20 +68,16 @@ export default function RegisterForm() {
         <Input
           id="password"
           type="password"
+          placeholder="Password"
           {...register("password", {
             required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password must have at least 8 characters",
-            },
           })}
-          placeholder="Password"
         />
         <Error>{errors.password?.message}</Error>
       </InputGroup>
 
       <Button type="submit" disabled={isLoading}>
-        Register
+        Login
       </Button>
       <Error>{errors?.root?.serverError?.message}</Error>
     </Form>

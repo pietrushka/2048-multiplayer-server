@@ -1,5 +1,6 @@
 import { Resend } from "resend"
-import generateActivationEmailHTML from "./templates/accountActivation"
+import generateActivationEmailHTML from "./templates/generateActivationEmail"
+import generatePasswordResetEmail from "./templates/generatePasswordResetEmail"
 
 const noreplyEmail = "noreply@2048vs.com"
 
@@ -14,6 +15,16 @@ class EmailService {
 
   sendAccountActivationEmail = ({ to, activationUrl }: { to: string; activationUrl: string }) => {
     const { subject, html } = generateActivationEmailHTML(activationUrl)
+    this.resend.emails.send({
+      from: noreplyEmail,
+      to,
+      subject,
+      html,
+    })
+  }
+
+  sendPasswordResetEmail = ({ to, resetPasswordUrl }: { to: string; resetPasswordUrl: string }) => {
+    const { subject, html } = generatePasswordResetEmail(resetPasswordUrl)
     this.resend.emails.send({
       from: noreplyEmail,
       to,

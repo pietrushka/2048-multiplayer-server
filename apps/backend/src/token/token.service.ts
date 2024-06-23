@@ -8,19 +8,20 @@ type CreateToken = {
   type: TokenType
   timeToExpire: number
 }
-
 async function createToken({ userId, type, timeToExpire }: CreateToken): Promise<string> {
   const token = crypto.randomBytes(16).toString("hex")
   const expireAt = new Date()
   expireAt.setTime(expireAt.getTime() + timeToExpire)
+  const expireAtISO = expireAt.toISOString()
 
-  await tokenDAO.insertToken({ token, userId, expireAt, type })
+  await tokenDAO.insertToken({ token, userId, expireAt: expireAtISO, type })
 
   return token
 }
 
 export async function createAndSendAccountActivationToken({ userId, email }: { userId: string; email: string }) {
-  await tokenDAO.deleteUserToken({ userId, type: TokenType.activateAccount })
+  // just to be sure
+  await tokenDAO.deleteUserTokens({ userId, type: TokenType.activateAccount })
   const activationToken = await createToken({
     userId,
     type: TokenType.activateAccount,
@@ -29,6 +30,20 @@ export async function createAndSendAccountActivationToken({ userId, email }: { u
 
   const activationUrl = `${process.env.FRONTEND_URL}/activate/${activationToken}`
   await EmailService.sendAccountActivationEmail({ to: email, activationUrl: activationUrl })
+}
+
+export async function createAndSendPasswordResetToken({ userId, email }: { userId: string; email: string }) {
+  // only one token should be active
+  await tokenDAO.deleteUserTokens({ userId, type: TokenType.resetPassword })
+
+  const passwordResetToken = await createToken({
+    userId,
+    type: TokenType.resetPassword,
+    timeToExpire: 60 * 60 * 1000, // 1 hour
+  })
+
+  const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${passwordResetToken}`
+  await EmailService.sendPasswordResetEmail({ to: email, resetPasswordUrl: resetPasswordUrl })
 }
 
 type ValidationResult =
@@ -41,11 +56,15 @@ type ValidationResult =
       errorMessage: string
     }
 
-export async function validateToken({ token }: { token: string }): Promise<ValidationResult> {
+export async function validateToken({ token, type }: { token: string; type: TokenType }): Promise<ValidationResult> {
   try {
     const tokenRow = await tokenDAO.getTokenRow(token)
     if (!tokenRow) {
       return { isValid: false, errorMessage: "Token not found" }
+    }
+
+    if (tokenRow.type !== type) {
+      return { isValid: false, errorMessage: "Token not valid" }
     }
 
     if (new Date(tokenRow.expireAt) < new Date()) {

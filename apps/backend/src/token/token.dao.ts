@@ -13,7 +13,7 @@ type DeleteUserToken = {
   type: TokenType
   userId: string
 }
-export async function deleteUserToken({ type, userId }: DeleteUserToken) {
+export async function deleteUserTokens({ type, userId }: DeleteUserToken) {
   await sql`DELETE FROM tokens WHERE type = ${type} AND user_id = ${userId}`
 }
 
@@ -22,4 +22,8 @@ export async function getTokenRow(token: string): Promise<Token | undefined> {
     SELECT * FROM tokens WHERE token = ${token}
   `
   return row ? objectToCamel(row) : undefined
+}
+
+export async function deleteToken({ token }: { token: string }) {
+  await sql`DELETE FROM tokens WHERE token = ${token}`
 }

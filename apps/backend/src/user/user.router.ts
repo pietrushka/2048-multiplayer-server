@@ -13,4 +13,8 @@ router.post("/login", userController.login)
 
 router.post("/activate/:token", userController.activateAccount)
 
+router.post("/forgot-password/:email", userController.forgotPassword)
+
+router.post("/reset-password/:token", userController.resetPassword)
+
 export default router

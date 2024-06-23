@@ -4,6 +4,7 @@ import COLORS from "../styles/colors"
 import StyledLink, { LinkList } from "../components/StyledLink"
 import { mediaQueries } from "../styles"
 import Navbar from "../components/Navbar"
+import AuthModal from "../components/AuthModal"
 
 export default function Home() {
   const { nickname, setNickname, bestScore } = usePlayer()!
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <HomePage>
       <Navbar />
+      <AuthModal />
       <Heading>2048.vs</Heading>
       <BestScore>Best score: {bestScore}</BestScore>
       <NicknameLabel htmlFor="nickname-input">Your nickname:</NicknameLabel>

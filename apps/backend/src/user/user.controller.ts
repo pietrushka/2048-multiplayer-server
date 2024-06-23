@@ -66,21 +66,28 @@ export async function register(request: Request, response: Response) {
   }
 }
 
+export const activateAccountSchema = z.object({
+  params: z.object({
+    token: z.string(),
+  }),
+})
 export async function activateAccount(request: Request, response: Response) {
   try {
-    const { token } = request.params
-    if (!token) {
-      return response.status(400).json({ message: "Token is required" })
+    const { success, data, error } = activateAccountSchema.safeParse(request)
+    if (!success) {
+      return response.status(400).json({ error })
     }
 
-    const tokenResult = await TokenService.validateToken({ token })
+    const { token } = data.params
+
+    const tokenResult = await TokenService.validateToken({ token, type: TokenType.activateAccount })
     if (!tokenResult.isValid) {
       return response.status(401).json({ message: tokenResult.errorMessage })
     }
 
     const { userId } = tokenResult
     await UserDAO.updateIsActive({ id: userId, isActive: true })
-    await TokenDAO.deleteUserToken({ type: TokenType.activateAccount, userId })
+    await TokenDAO.deleteToken({ token })
 
     return response.status(200).json({ message: "Account activated" })
   } catch (error) {
@@ -125,6 +132,64 @@ export async function login(request: Request, response: Response) {
     )
 
     return response.status(200).json({ message: "Logged in" })
+  } catch (error) {
+    console.log("error", JSON.stringify(error))
+    return response.status(400).json({ message: "Server error" })
+  }
+}
+
+export async function forgotPassword(request: Request, response: Response) {
+  try {
+    const { email } = request.params
+    if (!email) {
+      return response.status(400).json({ message: "Email is required" })
+    }
+
+    const user = await UserDAO.getUserByEmail(email)
+    if (!user) {
+      return response.status(404).json({ message: "User not found" })
+    }
+
+    if (!user.isActive) {
+      return response.status(401).json({ message: "User is not active" })
+    }
+
+    await TokenService.createAndSendPasswordResetToken({ userId: user.id, email })
+
+    return response.status(200).json({ message: "Password reset email sent" })
+  } catch (error) {
+    console.log("error", JSON.stringify(error))
+    return response.status(400).json({ message: "Server error" })
+  }
+}
+
+export const resetPasswordSchema = z.object({
+  params: z.object({
+    token: z.string(),
+  }),
+  body: z.object({
+    password: z.string().min(8),
+  }),
+})
+export async function resetPassword(request: Request, response: Response) {
+  try {
+    const { success, data, error } = resetPasswordSchema.safeParse(request)
+    if (!success) {
+      return response.status(400).json({ error })
+    }
+    const { token } = data.params
+    const { password } = data.body
+
+    const tokenResult = await TokenService.validateToken({ token, type: TokenType.resetPassword })
+    if (!tokenResult.isValid) {
+      return response.status(401).json({ message: tokenResult.errorMessage })
+    }
+
+    const { userId } = tokenResult
+    await UserService.changeUserPassword({ id: userId, password })
+    await TokenDAO.deleteToken({ token })
+
+    return response.status(200).json({ message: "Password changed" })
   } catch (error) {
     console.log("error", JSON.stringify(error))
     return response.status(400).json({ message: "Server error" })

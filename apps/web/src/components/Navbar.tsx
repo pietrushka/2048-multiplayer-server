@@ -1,22 +1,24 @@
 import styled from "@emotion/styled"
-import { Link } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
+import useAuthFormParam from "./AuthModal/useAuthFormParam"
+import { Button } from "./Common"
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth()
+  const { setActiveFormKey } = useAuthFormParam()
 
   if (!isAuthenticated) {
     return (
       <NavbarContainer>
-        <Link to="/register">Register</Link>
-        <Link to="/login">Login</Link>
+        <Button onClick={() => setActiveFormKey("register")}>Register</Button>
+        <Button onClick={() => setActiveFormKey("login")}>Login</Button>
       </NavbarContainer>
     )
   }
 
   return (
     <NavbarContainer>
-      <button onClick={logout}>Logout</button>
+      <Button onClick={logout}>Logout</Button>
     </NavbarContainer>
   )
 }
@@ -31,4 +33,7 @@ const NavbarContainer = styled.div({
   display: "flex",
   justifyContent: "end",
   alignItems: "center",
+  gap: "1em",
+  width: "100vw",
+  boxSizing: "border-box",
 })

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import COLORS from "../../styles/colors"
+import COLORS from "../styles/colors"
 
 export const Form = styled.form({
   display: "flex",
@@ -28,7 +28,7 @@ export const Input = styled.input({
 export const Button = styled.button({
   borderRadius: "0.15em",
   fontSize: "1.5em",
-  padding: "0.5em 0",
+  padding: "0.5em",
   background: COLORS.board,
   color: COLORS.lightFont,
   cursor: "pointer",

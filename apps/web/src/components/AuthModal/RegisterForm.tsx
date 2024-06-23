@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Form, Button, Heading, Input, Error } from "./AuthCommon"
+import { Form, Button, Heading, Input, Error, InputGroup } from "../Common"
 
 type FormValues = {
+  nickname: string
   email: string
   password: string
 }
 
-export default function Login() {
+export default function RegisterForm() {
   const navigate = useNavigate()
   const {
     register,
@@ -18,18 +19,17 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const url = `${process.env.REACT_APP_SERVER_URL}/user/login`
+      const url = `${process.env.REACT_APP_SERVER_URL}/user/register`
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-        credentials: "include",
       })
 
       if (response.ok) {
-        navigate("/")
+        navigate("/login")
         return
       }
 
@@ -44,8 +44,13 @@ export default function Login() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <Heading>Login</Heading>
-      <div>
+      <Heading>Register</Heading>
+      <InputGroup>
+        <Input id="nickname" {...register("nickname", { required: "Last name is required" })} placeholder="Nickname" />
+        <Error>{errors.nickname?.message}</Error>
+      </InputGroup>
+
+      <InputGroup>
         <Input
           id="email"
           type="email"
@@ -59,22 +64,26 @@ export default function Login() {
           placeholder="Email"
         />
         <Error>{errors.email?.message}</Error>
-      </div>
+      </InputGroup>
 
-      <div>
+      <InputGroup>
         <Input
           id="password"
           type="password"
-          placeholder="Password"
           {...register("password", {
             required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password must have at least 8 characters",
+            },
           })}
+          placeholder="Password"
         />
         <Error>{errors.password?.message}</Error>
-      </div>
+      </InputGroup>
 
       <Button type="submit" disabled={isLoading}>
-        Login
+        Register
       </Button>
       <Error>{errors?.root?.serverError?.message}</Error>
     </Form>
