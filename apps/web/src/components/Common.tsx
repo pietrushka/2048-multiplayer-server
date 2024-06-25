@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
 import COLORS from "../styles/colors"
+import { css } from "@emotion/react"
 
 export const Form = styled.form({
   display: "flex",
@@ -25,14 +26,21 @@ export const Input = styled.input({
   borderRadius: "0.15em",
 })
 
-export const Button = styled.button({
+const buttonStyles = css({
   borderRadius: "0.15em",
   fontSize: "1.5em",
   padding: "0.5em",
   background: COLORS.board,
   color: COLORS.lightFont,
   cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "0.5em",
 })
+
+export const Button = styled.button(buttonStyles)
+export const ButtonLikeLink = styled.a(buttonStyles)
 
 export const Error = styled.p({
   display: "block",

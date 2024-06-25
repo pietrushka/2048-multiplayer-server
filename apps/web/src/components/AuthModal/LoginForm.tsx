@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Form, Button, Heading, Input, Error, InputGroup } from "../Common"
+import { FaGoogle } from "react-icons/fa"
+import { Form, Button, Heading, Input, Error, InputGroup, ButtonLikeLink } from "../Common"
 import { useAuth } from "../../contexts/AuthContext"
+import constants from "../../constants"
 
 type FormValues = {
   email: string
@@ -80,6 +82,11 @@ export default function LoginForm() {
         Login
       </Button>
       <Error>{errors?.root?.serverError?.message}</Error>
+
+      <ButtonLikeLink href={constants.oAuthGoogleUrl}>
+        <FaGoogle />
+        Login with Google
+      </ButtonLikeLink>
     </Form>
   )
 }

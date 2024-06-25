@@ -57,8 +57,8 @@ const CloseModalButton = styled.button({
   position: "absolute",
   top: 0,
   right: 0,
-  height: "1.25rem",
-  width: "1.25rem",
-  margin: "1.25rem",
+  margin: "1em",
+  padding: 0,
   background: "transparent",
+  cursor: "pointer",
 })
