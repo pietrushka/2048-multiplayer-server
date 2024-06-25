@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { Global } from "@emotion/react"
 import Layout from "./components/Layout"
 import Home from "./pages/Home"
@@ -22,6 +22,8 @@ function App() {
         <PlayerProvider>
           <BrowserRouter>
             <Routes>
+              <Route path="/*" element={<Navigate to="/" replace />} />
+
               <Route path="/" element={<Home />} />
               <Route path="/singleplayer" element={<SingleGame />} />
               <Route path="/multiplayer" element={<MultiGame />} />
