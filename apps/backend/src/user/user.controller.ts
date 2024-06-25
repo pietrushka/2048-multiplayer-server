@@ -50,12 +50,7 @@ export async function register(request: Request, response: Response) {
       return response.status(401).json({ message: "Email already exists" })
     }
 
-    const isNicknameTaken = await UserDAO.checkIsNicknameTaken(email)
-    if (isNicknameTaken) {
-      return response.status(401).json({ message: "Nickname already exists" })
-    }
-
-    const userId = await UserService.createUser({ email, nickname, password })
+    const userId = await UserService.createUserWithEmail({ email, nickname, password })
 
     await TokenService.createAndSendAccountActivationToken({ userId, email })
 
@@ -116,6 +111,10 @@ export async function login(request: Request, response: Response) {
 
     if (!user.isActive) {
       return response.status(401).json({ message: "User is not active" })
+    }
+
+    if (!user.password) {
+      return response.status(404).json({ message: "User not found" })
     }
 
     const isValid = await bcrypt.compare(password, user.password)

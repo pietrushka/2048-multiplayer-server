@@ -7,11 +7,6 @@ export async function checkIsEmailTaken(email: string): Promise<boolean> {
   return !!users[0]
 }
 
-export async function checkIsNicknameTaken(nickname: string): Promise<boolean> {
-  const users = await sql<Pick<User, "nickname">[]>`SELECT email FROM users WHERE nickname = ${nickname} LIMIT 1`
-  return !!users[0]
-}
-
 export async function getUserByEmail(email: string): Promise<User | undefined> {
   const [row] = await sql<UserDB[]>`SELECT * FROM users WHERE email = ${email} LIMIT 1`
   return row ? objectToCamel(row) : undefined
@@ -24,8 +19,10 @@ export async function getUserById(id: string): Promise<User | undefined> {
 
 export async function insertUser(user: User): Promise<void> {
   await sql`
-    INSERT INTO users (id, email, password, nickname, best_score, is_active) 
-    VALUES (${user.id}, ${user.email}, ${user.password}, ${user.nickname}, ${user.bestScore}, ${user.isActive})`
+    INSERT INTO users 
+    (id, email, nickname, best_score, is_active, password,  google_id)
+    VALUES 
+    (${user.id}, ${user.email}, ${user.nickname}, ${user.bestScore}, ${user.isActive}, ${user.password || null}, ${user.googleId || null})`
 }
 
 export async function updateIsActive({ id, isActive }: { id: string; isActive: boolean }) {
@@ -34,4 +31,9 @@ export async function updateIsActive({ id, isActive }: { id: string; isActive: b
 
 export async function updatePassword({ id, password }: { id: string; password: string }) {
   await sql`UPDATE users SET password = ${password} WHERE id = ${id}`
+}
+
+export async function getUserByGoogleId(googleId: string): Promise<User | undefined> {
+  const [row] = await sql<UserDB[]>`SELECT * FROM users WHERE google_id = ${googleId} LIMIT 1`
+  return row ? objectToCamel(row) : undefined
 }

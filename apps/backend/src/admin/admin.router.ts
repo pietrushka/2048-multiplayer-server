@@ -49,7 +49,7 @@ export default class AdminRouter {
       await sql`DROP TABLE IF EXISTS users;`
       await createUsersTable()
       await createTokensTable()
-      res.status(200).send("db reset")
+      res.status(200).send("db reset success")
     })
   }
 }

@@ -2,12 +2,12 @@ import crypto from "crypto"
 import bcrypt from "bcrypt"
 import * as UserDAO from "./user.dao"
 
-type CreateUser = {
+type CreateUserEmail = {
   email: string
   password: string
   nickname: string
 }
-export async function createUser({ email, password, nickname }: CreateUser): Promise<string> {
+export async function createUserWithEmail({ email, password, nickname }: CreateUserEmail): Promise<string> {
   const hashedPassword = await bcrypt.hash(password, 10)
   const id = crypto.randomUUID()
   const bestScore = 0
@@ -19,6 +19,27 @@ export async function createUser({ email, password, nickname }: CreateUser): Pro
     password: hashedPassword,
     bestScore,
     isActive,
+  })
+  return id
+}
+
+type CreateUserGoogle = {
+  email: string
+  nickname: string
+  googleId: string
+}
+
+export async function createUserWithGoogle({ email, nickname, googleId }: CreateUserGoogle): Promise<string> {
+  const id = crypto.randomUUID()
+  const bestScore = 0
+  const isActive = true
+  await UserDAO.insertUser({
+    id,
+    email,
+    nickname,
+    bestScore,
+    isActive,
+    googleId,
   })
   return id
 }

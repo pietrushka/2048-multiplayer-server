@@ -2,6 +2,8 @@ import { Request, Response } from "express"
 import axios from "axios"
 import jwt from "jsonwebtoken"
 import * as oAuthService from "./oAuth.service"
+import * as UserService from "../user/user.service"
+import * as UserDAO from "../user/user.dao"
 import config from "../config"
 import constants from "../constants"
 
@@ -33,7 +35,21 @@ export async function getGoogleAuthToken(request: Request, response: Response) {
       },
     })
     const googleUser = result.data as GoogleUser
-    const token = jwt.sign(googleUser, config.JWT_SECRET)
+
+    const existingUser = await UserDAO.getUserByGoogleId(googleUser.id)
+
+    let userId: string
+    if (!existingUser) {
+      userId = await UserService.createUserWithGoogle({
+        email: googleUser.email,
+        nickname: googleUser.name,
+        googleId: googleUser.id,
+      })
+    } else {
+      userId = existingUser.id
+    }
+
+    const token = jwt.sign({ id: userId }, config.JWT_SECRET)
 
     response.cookie(constants.AUTH_COOKIE_NAME, token, {
       maxAge: 900000,
@@ -43,8 +59,6 @@ export async function getGoogleAuthToken(request: Request, response: Response) {
 
     return response.redirect(config.FRONTEND_URL)
   } catch (error) {
-    // @ts-expect-error no time to fix
-    console.error(error?.message)
     response.status(500).send("Error")
   }
 }
