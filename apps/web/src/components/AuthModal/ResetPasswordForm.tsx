@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Form, Button, Heading, Input, Error, InputGroup } from "../Common"
+import { Form, Button, Heading, Input, Error, InputGroup, ModalContentWrapper } from "../Common"
 import useAuthFormParam from "./useAuthFormParam"
 
 type FormValues = {
@@ -41,12 +41,11 @@ export default function ResetPasswordForm() {
   }
 
   if (isSubmitSuccessful) {
-    // TODO use div instead of form
     return (
-      <Form>
+      <ModalContentWrapper>
         <Heading>Password changed!</Heading>
         <Button onClick={() => setActiveFormKey("login")}>Go to login</Button>
-      </Form>
+      </ModalContentWrapper>
     )
   }
 

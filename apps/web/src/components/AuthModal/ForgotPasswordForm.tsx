@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Form, Button, Heading, Input, Error, InputGroup } from "../Common"
+import { Form, Button, Heading, Input, Error, InputGroup, ModalContentWrapper } from "../Common"
 
 type FormValues = {
   email: string
@@ -26,11 +26,10 @@ export default function ForgotPasswordForm() {
   }
 
   if (isSubmitSuccessful) {
-    // TODO use div instead of form
     return (
-      <Form>
+      <ModalContentWrapper>
         <Heading>Email sent! Check your inbox.</Heading>
-      </Form>
+      </ModalContentWrapper>
     )
   }
 

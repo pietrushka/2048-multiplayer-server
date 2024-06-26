@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { Button, Form, Heading } from "../Common"
+import { Button, Heading, ModalContentWrapper } from "../Common"
 import useAuthFormParam from "./useAuthFormParam"
 
 export default function ActivateAccount() {
@@ -34,24 +34,24 @@ export default function ActivateAccount() {
 
   if (isLoading) {
     return (
-      <Form>
+      <ModalContentWrapper>
         <Heading>Activating account...</Heading>
-      </Form>
+      </ModalContentWrapper>
     )
   }
 
   if (error) {
     return (
-      <Form>
+      <ModalContentWrapper>
         <Heading>{error}</Heading>
-      </Form>
+      </ModalContentWrapper>
     )
   }
 
   return (
-    <Form>
+    <ModalContentWrapper>
       <Heading>Account activated!</Heading>
       <Button onClick={() => setActiveFormKey("login")}>Go to login</Button>
-    </Form>
+    </ModalContentWrapper>
   )
 }

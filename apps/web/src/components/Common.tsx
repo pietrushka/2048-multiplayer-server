@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 import COLORS from "../styles/colors"
 import { css } from "@emotion/react"
 
-export const Form = styled.form({
+const modalContentStyles = css({
   display: "flex",
   flexDirection: "column",
   gap: "0.75em",
@@ -10,6 +10,9 @@ export const Form = styled.form({
   textAlign: "center",
   padding: "1.25em",
 })
+
+export const ModalContentWrapper = styled.div(modalContentStyles)
+export const Form = styled.form(modalContentStyles)
 
 export const Heading = styled.h1({
   fontSize: "2.5em",

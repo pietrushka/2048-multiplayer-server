@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Form, Button, Heading, Input, Error, InputGroup } from "../Common"
+import { Form, Button, Heading, Input, Error, InputGroup, ModalContentWrapper } from "../Common"
 
 type FormValues = {
   nickname: string
@@ -41,10 +41,10 @@ export default function RegisterForm() {
 
   if (isSubmitSuccessful) {
     return (
-      <Form>
+      <ModalContentWrapper>
         <Heading>You have successfully registered</Heading>
         <p>Check your email for the activation link</p>
-      </Form>
+      </ModalContentWrapper>
     )
   }
 
