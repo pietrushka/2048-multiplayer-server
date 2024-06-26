@@ -12,7 +12,7 @@ export default function ResetPasswordForm() {
   const { errors, isLoading, isSubmitSuccessful } = formState
   const [currentQueryParameters] = useSearchParams()
   const token = currentQueryParameters.get("token")
-  const { closeModal, setActiveFormKey } = useAuthFormParam()
+  const { setActiveFormKey } = useAuthFormParam()
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const url = `${process.env.REACT_APP_SERVER_URL}/user/reset-password/${token}`
@@ -35,9 +35,11 @@ export default function ResetPasswordForm() {
   }
 
   if (!token) {
-    // TODO not sure if this ok
-    closeModal()
-    return null
+    return (
+      <ModalContentWrapper>
+        <Heading>Invalid token</Heading>
+      </ModalContentWrapper>
+    )
   }
 
   if (isSubmitSuccessful) {

@@ -13,6 +13,10 @@ export default function ActivateAccount() {
 
   useEffect(() => {
     async function activateAccount() {
+      if (!token) {
+        return
+      }
+
       setIsLoading(true)
       setError(undefined)
 
@@ -31,6 +35,14 @@ export default function ActivateAccount() {
     }
     activateAccount()
   }, [])
+
+  if (!token) {
+    return (
+      <ModalContentWrapper>
+        <Heading>Invalid token</Heading>
+      </ModalContentWrapper>
+    )
+  }
 
   if (isLoading) {
     return (
