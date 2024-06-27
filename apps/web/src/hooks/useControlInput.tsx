@@ -7,7 +7,7 @@ type Point = {
   y: number
 }
 
-const DEBOUNCE_DELAY_MS = 100
+const DEBOUNCE_DELAY_MS = 50
 
 export default function useControlInput(handleMove: (direction: Direction) => void) {
   const startPointerLocation = useRef<Point>()

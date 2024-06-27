@@ -26,6 +26,9 @@ export class Board {
   }
 
   handleMove(move: Direction) {
+    if (this.nextMovePossible) {
+      return
+    }
     const oldTileGrid = deepCopyArray(this.tileGrid)
     const { scoreIncrease } = slideTiles(this.tileGrid, move)
 

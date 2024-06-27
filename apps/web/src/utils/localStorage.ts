@@ -10,7 +10,7 @@ type LocalStoragePlayer = {
   bestScore: number
 }
 
-type LocalStorageBoardState = {
+export type LocalStorageBoardState = {
   score: number
   tileGrid: TileGrid
 }
@@ -21,13 +21,9 @@ const writeLocalStorage =
     localStorage.setItem(storageSpace, JSON.stringify(data))
   }
 
-export const storePlayerData = writeLocalStorage<LocalStoragePlayer>(StorageSpace.PlayerData)
-export const storeBoardData = writeLocalStorage<LocalStorageBoardState>(StorageSpace.Board)
-
 const readLocalStorage =
   <T extends Record<string, unknown>>(storageSpace: string, schema: Schema) =>
   (): T | undefined => {
-    console.log("readLocalStorage", storageSpace)
     const itemString = localStorage.getItem(storageSpace)
 
     if (!itemString) {
@@ -44,6 +40,9 @@ const readLocalStorage =
     return item as T
   }
 
+export const storePlayerData = writeLocalStorage<LocalStoragePlayer>(StorageSpace.PlayerData)
+export const storeBoardData = writeLocalStorage<LocalStorageBoardState>(StorageSpace.Board)
+
 export const getStoredBoardData = readLocalStorage<LocalStorageBoardState>(StorageSpace.Board, {
   score: "number",
   tileGrid: "numberArrayArray",
@@ -51,3 +50,7 @@ export const getStoredBoardData = readLocalStorage<LocalStorageBoardState>(Stora
 export const getPlayerData = readLocalStorage<LocalStoragePlayer>(StorageSpace.PlayerData, {
   bestScore: "number",
 })
+
+export const removeBoardData = () => {
+  localStorage.removeItem(StorageSpace.Board)
+}
