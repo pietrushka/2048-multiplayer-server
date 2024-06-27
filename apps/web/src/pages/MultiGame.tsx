@@ -1,14 +1,15 @@
 import Board from "../components/Board"
 import MultiDashboard from "../components/MultiDashboard"
 import { Lobby } from "../components/Lobby"
-import { usePlayer } from "../contexts/PlayerContext"
 import useMultiplayer from "../hooks/useMultiplayer"
 import GameResult from "../components/GameResult"
 import { GameContainer } from "../styles"
 import Settings from "../components/Settings"
+import { useAuth } from "../contexts/AuthContext"
 
 const MultiGame = () => {
-  const { nickname } = usePlayer()!
+  const { user } = useAuth()
+  const nickname = user?.nickname || "Guest"
   const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText } = useMultiplayer({
     nickname,
   })

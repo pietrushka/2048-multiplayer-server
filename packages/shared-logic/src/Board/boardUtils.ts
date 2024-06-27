@@ -1,4 +1,4 @@
-import { TileGrid, Direction } from "../types"
+import { TileGrid, Direction, Move } from "../types"
 
 function createZeroMatrix(size: number): TileGrid {
   return Array.from({ length: size }, () => Array(size).fill(0))
@@ -161,10 +161,10 @@ export function movePossible(board: TileGrid): boolean {
   return false
 }
 
-export function encodeTileGridState(tileGrid: TileGrid, previousMove?: Direction) {
+export function encodeTileGridState(tileGrid: TileGrid, previousMove?: Move) {
   return JSON.stringify({ tileGrid, previousMove })
 }
 
-export function decodeTileGridState(tileGridStateString: string): { tileGrid: TileGrid; previousMove?: Direction } {
+export function decodeTileGridState(tileGridStateString: string): { tileGrid: TileGrid; previousMove?: Move } {
   return JSON.parse(tileGridStateString)
 }

@@ -1,11 +1,12 @@
 import validateObject, { Schema } from "./validateObject"
 import { TileGrid } from "shared-logic"
 
-export const BOARD_STORAGE_SPACE = "2048.vs_board"
-export const PLAYER_STORAGE_SPACE = "2048.vs_player"
+enum StorageSpace {
+  PlayerData = "2048.vs_player_data",
+  Board = "2048.vs_board",
+}
 
 type LocalStoragePlayer = {
-  nickname: string
   bestScore: number
 }
 
@@ -20,12 +21,13 @@ const writeLocalStorage =
     localStorage.setItem(storageSpace, JSON.stringify(data))
   }
 
-export const storePlayer = writeLocalStorage<LocalStoragePlayer>(PLAYER_STORAGE_SPACE)
-export const storeBoardData = writeLocalStorage<LocalStorageBoardState>(BOARD_STORAGE_SPACE)
+export const storePlayerData = writeLocalStorage<LocalStoragePlayer>(StorageSpace.PlayerData)
+export const storeBoardData = writeLocalStorage<LocalStorageBoardState>(StorageSpace.Board)
 
 const readLocalStorage =
   <T extends Record<string, unknown>>(storageSpace: string, schema: Schema) =>
   (): T | undefined => {
+    console.log("readLocalStorage", storageSpace)
     const itemString = localStorage.getItem(storageSpace)
 
     if (!itemString) {
@@ -42,11 +44,10 @@ const readLocalStorage =
     return item as T
   }
 
-export const getStoredBoardData = readLocalStorage<LocalStorageBoardState>(BOARD_STORAGE_SPACE, {
+export const getStoredBoardData = readLocalStorage<LocalStorageBoardState>(StorageSpace.Board, {
   score: "number",
   tileGrid: "numberArrayArray",
 })
-export const getStoredPlayer = readLocalStorage<LocalStoragePlayer>(PLAYER_STORAGE_SPACE, {
-  nickname: "string",
+export const getPlayerData = readLocalStorage<LocalStoragePlayer>(StorageSpace.PlayerData, {
   bestScore: "number",
 })

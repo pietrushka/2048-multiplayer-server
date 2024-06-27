@@ -14,8 +14,11 @@ export type GameStatus = "loading" | "active" | "finished"
 
 export type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT"
 
+// game engine stuff
+export type Operations = "RESET"
+
 // TODO introduce "Bomb" and "Freeze" moves
-export type Move = Direction
+export type Move = Direction | Operations
 
 export interface GameData {
   status: GameStatus

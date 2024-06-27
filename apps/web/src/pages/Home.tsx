@@ -1,22 +1,22 @@
 import styled from "@emotion/styled"
-import { usePlayer } from "../contexts/PlayerContext"
-import COLORS from "../styles/colors"
 import StyledLink, { LinkList } from "../components/StyledLink"
 import { mediaQueries } from "../styles"
 import Navbar from "../components/Navbar"
 import AuthModal from "../components/AuthModal"
+import { useAuth } from "../contexts/AuthContext"
 
 export default function Home() {
-  const { nickname, setNickname, bestScore } = usePlayer()!
+  const { user } = useAuth()
+  const nickname = user?.nickname || "Guest"
 
   return (
     <HomePage>
       <Navbar />
       <AuthModal />
-      <Heading>2048.vs</Heading>
-      <BestScore>Best score: {bestScore}</BestScore>
-      <NicknameLabel htmlFor="nickname-input">Your nickname:</NicknameLabel>
-      <NicknameInput value={nickname} onChange={(e) => setNickname(e.target.value)} id="nickname-input" />
+
+      <LogoText>2048.vs</LogoText>
+
+      <SubHeading>Hi, {nickname}!</SubHeading>
 
       <LinkList>
         <StyledLink href="/singleplayer" bgColor="green">
@@ -50,30 +50,14 @@ const HomePage = styled.div({
   },
 })
 
-const Heading = styled.h1({
+const LogoText = styled.h1({
   fontSize: "7em",
   lineHeight: "2em",
   fontWeight: 500,
   margin: 0,
 })
 
-const BestScore = styled.p({
-  textAlign: "center",
+const SubHeading = styled.h2({
   fontSize: "2em",
-  margin: 0,
-})
-
-const NicknameLabel = styled.label({
-  fontSize: "2em",
-  margin: 0,
-})
-
-const NicknameInput = styled.input({
-  fontSize: "2.5em",
-  background: COLORS.warmGray,
-  color: COLORS.font,
-  borderRadius: "1rem",
-  border: "none",
-  padding: "0.25em 0",
-  textAlign: "center",
+  fontWeight: 500,
 })

@@ -1,4 +1,6 @@
-import { Direction, Move } from "./types"
+import { Direction, Move, Operations } from "./types"
+
+// TODO enums
 
 export const COOKIE_NAMES = {
   PLAYER_IDENTIFIER: "PLAYER_IDENTIFIER",
@@ -29,6 +31,11 @@ export const DIRECTIONS: Record<Direction, Direction> = {
   RIGHT: "RIGHT",
 } as const
 
+export const OPERATIONS: Record<Operations, Operations> = {
+  RESET: "RESET",
+} as const
+
 export const MOVES: Record<Move, Move> = {
   ...DIRECTIONS,
+  ...OPERATIONS,
 } as const

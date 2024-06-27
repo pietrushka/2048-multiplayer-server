@@ -8,6 +8,7 @@ import {
   rotateBoardLeft,
   areArraysEqual,
   deepCopyArray,
+  OPERATIONS,
 } from "shared-logic"
 import rotateCoordinateLeft from "../../utils/rotateCoordinatesLeft"
 
@@ -35,14 +36,23 @@ class Tile implements TileAnimationData {
   isNew: boolean
   isRotatedLeft: boolean
 
-  constructor(
-    value: TileValue,
-    xIndex: number,
-    yIndex: number,
-    prevXIndex: number,
-    prevYIndex: number,
-    isRotatedLeft: boolean,
-  ) {
+  constructor({
+    value,
+    xIndex,
+    yIndex,
+    prevXIndex,
+    prevYIndex,
+    isRotatedLeft,
+    isNew = false,
+  }: {
+    value: TileValue
+    xIndex: number
+    yIndex: number
+    prevXIndex: number
+    prevYIndex: number
+    isRotatedLeft: boolean
+    isNew?: boolean
+  }) {
     // tiles can overlap so use prevIndexes as well
     this.value = value
     this.xIndex = xIndex
@@ -51,7 +61,7 @@ class Tile implements TileAnimationData {
     this.prevYIndex = prevYIndex
     this.isMerged = false
     this.mergedInto = false
-    this.isNew = false
+    this.isNew = isNew
     this.isRotatedLeft = isRotatedLeft
   }
 
@@ -76,7 +86,7 @@ class Tile implements TileAnimationData {
   }
 }
 
-function analyzePreviousGrid(previousTileGrid?: TileGrid, direction?: Direction) {
+function analyzePreviousGrid(previousTileGrid?: TileGrid, direction?: Direction): TileAnimationData[] {
   if (!previousTileGrid || !direction) {
     return []
   }
@@ -90,7 +100,14 @@ function analyzePreviousGrid(previousTileGrid?: TileGrid, direction?: Direction)
 
     oldRow.forEach((oldValue, prevXIndex) => {
       if (oldValue === 0) {
-        const tile = new Tile(oldValue, prevXIndex, prevYIndex, prevXIndex, prevYIndex, true)
+        const tile = new Tile({
+          value: oldValue,
+          xIndex: prevXIndex,
+          yIndex: prevYIndex,
+          prevXIndex,
+          prevYIndex,
+          isRotatedLeft: true,
+        })
         tile.rotateCoordinatesBack(direction)
         rowResult.push(tile.data)
         return
@@ -122,7 +139,14 @@ function analyzePreviousGrid(previousTileGrid?: TileGrid, direction?: Direction)
         }
       }
 
-      const tile = new Tile(oldValue, xIndex, yIndex, prevXIndex, prevYIndex, true)
+      const tile = new Tile({
+        value: oldValue,
+        xIndex,
+        yIndex,
+        prevXIndex,
+        prevYIndex,
+        isRotatedLeft: true,
+      })
 
       // set isMerged
       for (let checkXPosition = prevXIndex - 1; checkXPosition >= 0; checkXPosition--) {
@@ -174,7 +198,14 @@ function validateWithCurrentState(previousGridResult: TileAnimationData[], curre
 
       // add new tile
       if (value && !tiles.length) {
-        const tile = new Tile(value, xIndex, yIndex, xIndex, yIndex, false)
+        const tile = new Tile({
+          value,
+          xIndex,
+          yIndex,
+          prevXIndex: xIndex,
+          prevYIndex: yIndex,
+          isRotatedLeft: false,
+        })
         tile.isNew = true
         rowResult.push(tile.data)
         return
@@ -188,21 +219,46 @@ function validateWithCurrentState(previousGridResult: TileAnimationData[], curre
 }
 
 export default function parseTileGridState(currentTileGridStateEncoded: string, previousTileGridStateEncoded?: string) {
-  const { tileGrid: currentTileGrid, previousMove: direction } = decodeTileGridState(currentTileGridStateEncoded)
+  const { tileGrid: currentTileGrid, previousMove: move } = decodeTileGridState(currentTileGridStateEncoded)
+
   const { tileGrid: previousTileGrid } =
     typeof previousTileGridStateEncoded === "string"
       ? decodeTileGridState(previousTileGridStateEncoded)
       : { tileGrid: undefined }
-  // TODO remove this
-  if (previousTileGrid && areArraysEqual(currentTileGrid, previousTileGrid)) {
+
+  if (move === OPERATIONS.RESET) {
     return currentTileGrid.map((row, yIndex) =>
       row.map((value, xIndex) => {
-        const tile = new Tile(value, xIndex, yIndex, xIndex, yIndex, false)
+        const tile = new Tile({
+          value,
+          xIndex,
+          yIndex,
+          prevXIndex: xIndex,
+          prevYIndex: yIndex,
+          isRotatedLeft: false,
+        })
         return tile.data
       }),
     )
   }
-  const previousGridResult = analyzePreviousGrid(previousTileGrid, direction)
+
+  // TODO remove this
+  if (previousTileGrid && areArraysEqual(currentTileGrid, previousTileGrid)) {
+    return currentTileGrid.map((row, yIndex) =>
+      row.map((value, xIndex) => {
+        const tile = new Tile({
+          value,
+          xIndex,
+          yIndex,
+          prevXIndex: xIndex,
+          prevYIndex: yIndex,
+          isRotatedLeft: false,
+        })
+        return tile.data
+      }),
+    )
+  }
+  const previousGridResult = analyzePreviousGrid(previousTileGrid, move)
 
   return validateWithCurrentState(previousGridResult, currentTileGrid)
 }

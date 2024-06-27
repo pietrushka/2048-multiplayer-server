@@ -1,4 +1,4 @@
-import { DEFAULT_BOARD_SIZE } from "../constants"
+import { DEFAULT_BOARD_SIZE, OPERATIONS } from "../constants"
 import { Move, BoardData, Direction } from "../types"
 import { initializeBoard, slideTiles, spawnTile, movePossible, encodeTileGridState } from "./boardUtils"
 import { deepCopyArray, areArraysEqual } from "../utils"
@@ -9,7 +9,7 @@ export class Board {
   score: number
   tileGrid: TileGrid
   nextMovePossible: boolean
-  previousMove?: Direction
+  previousMove?: Move
 
   constructor(playerId: string) {
     this.playerId = playerId
@@ -25,7 +25,7 @@ export class Board {
     }
   }
 
-  handleMove(move: Move) {
+  handleMove(move: Direction) {
     const oldTileGrid = deepCopyArray(this.tileGrid)
     const { scoreIncrease } = slideTiles(this.tileGrid, move)
 
@@ -41,6 +41,7 @@ export class Board {
   }
 
   reset() {
+    this.previousMove = OPERATIONS.RESET
     this.nextMovePossible = true
     this.tileGrid = initializeBoard(DEFAULT_BOARD_SIZE)
     this.score = 0

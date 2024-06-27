@@ -1,10 +1,10 @@
 // Board is an controllable TileGrid
-import { Move } from "shared-logic"
+import { Direction } from "shared-logic"
 import TileGrid from "./TileGrid"
 import useControlInput from "../hooks/useControlInput"
 
 type TileGridProps = {
-  performMove: (move: Move) => void
+  performMove: (move: Direction) => void
   tileGridStateEncoded: string
 }
 

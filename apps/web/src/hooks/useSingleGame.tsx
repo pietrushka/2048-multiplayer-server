@@ -1,26 +1,27 @@
 import { useEffect, useRef, useState } from "react"
 import { Board, Direction, GameStatus } from "shared-logic"
-import { getStoredBoardData } from "../utils/localStorage"
+import { getStoredBoardData, getPlayerData, storePlayerData } from "../utils/localStorage"
 
-type UseMultiplayerProps = {
-  setBestScore: (score: number) => void
-  bestScore: number
-}
-
-export default function useSingleGame({ bestScore, setBestScore }: UseMultiplayerProps) {
+export default function useSingleGame() {
   const [status, setStatus] = useState<GameStatus>()
   const boardRef = useRef<Board>()
   const [gameVerion, setGameVersion] = useState(0) // to trigger rerender value must change
+  const [bestScore, setBestScore] = useState(0)
 
   const { score, tileGridStateEncoded } = boardRef.current?.data || {}
   const isResetable = gameVerion > 0
 
   useEffect(() => {
-    boardRef.current = new Board("playerId") // TODO fix "playerId" placeholder
-    const storageData = getStoredBoardData()
-    if (storageData) {
-      boardRef.current.score = storageData.score
-      boardRef.current.tileGrid = storageData.tileGrid
+    boardRef.current = new Board("playerId")
+    const boardStorage = getStoredBoardData()
+    if (boardStorage) {
+      boardRef.current.score = boardStorage.score
+      boardRef.current.tileGrid = boardStorage.tileGrid
+    }
+
+    const playerDataStorage = getPlayerData()
+    if (playerDataStorage) {
+      setBestScore(playerDataStorage.bestScore)
     }
 
     setStatus("active")
@@ -40,7 +41,7 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
     }
 
     if (boardRef.current.score > bestScore) {
-      setBestScore(boardRef.current.score)
+      storePlayerData({ bestScore: boardRef.current.score })
     }
   }
 
@@ -50,10 +51,11 @@ export default function useSingleGame({ bestScore, setBestScore }: UseMultiplaye
     }
     boardRef.current?.reset()
     setStatus("active")
-    setGameVersion(0)
+    setGameVersion(-1)
   }
 
   return {
+    bestScore,
     status,
     score,
     tileGridStateEncoded,
