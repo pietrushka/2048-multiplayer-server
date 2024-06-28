@@ -1,3 +1,4 @@
+// TODO rename to playerIdentifier
 import Cookies from "js-cookie"
 import { COOKIE_NAMES } from "shared-logic"
 

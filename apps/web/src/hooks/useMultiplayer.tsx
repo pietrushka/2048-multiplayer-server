@@ -14,8 +14,9 @@ const getPlayersBoardState = (boards: BoardData[], playerSocketId: string) => {
   return { playerBoardState, opponentBoardState }
 }
 
-const generateResultText = (playerId?: string, winner?: string) => {
-  if (!playerId || !winner) {
+const generateResultText = (winner?: string) => {
+  const playerIdentifier = getUserIdentifier()
+  if (!playerIdentifier || !winner) {
     return
   }
 
@@ -23,7 +24,7 @@ const generateResultText = (playerId?: string, winner?: string) => {
     return "It is a draw"
   }
 
-  return winner === playerId ? "You won" : "You lost"
+  return winner === playerIdentifier ? "You won" : "You lost"
 }
 
 type MultiplayerGameStatus = {
@@ -73,6 +74,7 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
       console.error("handleGameStart: no socketIo.current.id", socketIo.current)
       return
     }
+    console.log("handleStateUpdate", data)
     const { status, endGameTimestamp, boards, winner } = data
 
     const userIdentifier = getUserIdentifier()
@@ -98,7 +100,7 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
   }
 
   // TODO useMemo
-  const resultText = generateResultText(socketIo.current?.id, gameState?.winner)
+  const resultText = generateResultText(gameState?.winner)
 
   return {
     status: gameState?.status,
