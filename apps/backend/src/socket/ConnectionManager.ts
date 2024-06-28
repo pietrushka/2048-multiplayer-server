@@ -1,13 +1,35 @@
 import socketio from "socket.io"
+import cookie from "cookie"
 import Game from "../gameLogic/MultiplayerGame"
 import User from "./User"
 import ServerEmitter from "./ServerEmitter"
-import { chunk, CLIENT_SIGNALS, Move, isStartGamePayload, COOKIE_NAMES } from "shared-logic"
+import { chunk, CLIENT_SIGNALS, isStartGamePayload, COOKIE_NAMES, Direction } from "shared-logic"
+import authenticateToken from "../utils/authenticateToken"
 
 const MIN_PLAYERS_TO_START = 2
 
 const LOBBY_CHECK_INTERVAL_MS = 2000
 const CLEAN_UP_INTERVAL_MS = 2000 // 5min * 60s * 1000ms
+
+function authPlayer(cookieString: string) {
+  const parsedCookies = cookie.parse(cookieString)
+
+  const playerIdentifier = parsedCookies[COOKIE_NAMES.PLAYER_IDENTIFIER] as string | undefined
+  if (!playerIdentifier) {
+    return
+  }
+  const accessToken = parsedCookies[COOKIE_NAMES.ACCESS_TOKEN] as string | undefined
+  const tokenResult = authenticateToken(accessToken)
+
+  if (tokenResult.isValid) {
+    return {
+      playerIdentifier,
+      userId: tokenResult.userId,
+    }
+  }
+
+  return { playerIdentifier, userId: undefined }
+}
 
 export default class ConnectionManager {
   users: Map<string, User>
@@ -33,13 +55,12 @@ export default class ConnectionManager {
   }
 
   handleConnection = (socket: socketio.Socket) => {
-    const playerIdentifier = socket.handshake.query?.[COOKIE_NAMES.PLAYER_IDENTIFIER] as string | undefined
-
-    if (!playerIdentifier) {
-      console.error("no playerIdentifier", { request: socket.handshake.query })
+    const authResult = authPlayer(socket.handshake.headers.cookie as string)
+    if (!authResult) {
       return
     }
-    const user = new User(socket, playerIdentifier)
+    const { playerIdentifier, userId } = authResult
+    const user = new User({ socket, userId, playerIdentifier })
     this.users.set(playerIdentifier, user)
 
     socket.on(CLIENT_SIGNALS.join, this.handleJoin(socket, playerIdentifier))
@@ -48,15 +69,15 @@ export default class ConnectionManager {
     socket.on(CLIENT_SIGNALS.playAgain, this.handlePLayAgain(socket, playerIdentifier))
   }
 
-  handleJoin(socket: socketio.Socket, userId: string) {
+  handleJoin(socket: socketio.Socket, playerIdentifier: string) {
     return (data: { nickname: string }) => {
-      const user = this.users.get(userId)
+      const user = this.users.get(playerIdentifier)
       if (user) {
         user.nickname = data.nickname
         socket.join("lobby")
-        this.lobbyUsers.add(userId)
+        this.lobbyUsers.add(playerIdentifier)
       } else {
-        console.error("handleJoin: no user connected with:", userId)
+        console.error("handleJoin: no user connected with:", playerIdentifier)
       }
     }
   }
@@ -91,11 +112,11 @@ export default class ConnectionManager {
     this.games.set(game.id, game)
 
     players.forEach((player) => {
-      const user = this.users.get(player.userId)
+      const user = this.users.get(player.playerIdentifier)
       if (user) {
         user.gameId = game.id
         user.socket.join(game.id)
-        this.lobbyUsers.delete(player.userId)
+        this.lobbyUsers.delete(player.playerIdentifier)
       }
     })
 
@@ -111,7 +132,7 @@ export default class ConnectionManager {
   }
 
   handleMove(socket: socketio.Socket, userId: string) {
-    return (data: { move: Move }) => {
+    return (data: { move: Direction }) => {
       const user = this.users.get(userId)
       if (!user) {
         console.error("handleMove: no user")

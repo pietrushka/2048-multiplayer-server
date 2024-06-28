@@ -28,7 +28,7 @@ export default class AdminRouter {
         status,
         endGameTimestamp,
         winner,
-        playerIds: players.map((x) => x.userId),
+        playerIds: players.map(({ playerIdentifier, userId }) => ({ playerIdentifier, userId })),
       }))
       res.json({ users, lobby, games })
     })

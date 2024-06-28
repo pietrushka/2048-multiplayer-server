@@ -26,7 +26,7 @@ export class Board {
   }
 
   handleMove(move: Direction) {
-    if (this.nextMovePossible) {
+    if (!this.nextMovePossible) {
       return
     }
     const oldTileGrid = deepCopyArray(this.tileGrid)
