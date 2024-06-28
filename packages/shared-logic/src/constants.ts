@@ -4,6 +4,7 @@ import { Direction, Move, Operations } from "./types"
 
 export const COOKIE_NAMES = {
   PLAYER_IDENTIFIER: "PLAYER_IDENTIFIER",
+  ACCESS_TOKEN: "accessToken",
 }
 
 export const DEFAULT_BOARD_SIZE = 4

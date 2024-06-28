@@ -1,4 +1,3 @@
-import { Request } from "express"
 import jwt from "jsonwebtoken"
 
 interface DecodedToken {
@@ -9,9 +8,8 @@ type AuthenticateTokenResult =
   | { isValid: true; userId: string; statusCode?: undefined; message?: undefined }
   | { isValid: false; userId?: undefined; statusCode: number; message: string }
 
-export default function authenticateToken(req: Request): AuthenticateTokenResult {
+export default function authenticateToken(accessToken: string | undefined): AuthenticateTokenResult {
   try {
-    const accessToken = req.cookies.accessToken
     if (!accessToken) {
       return {
         isValid: false,

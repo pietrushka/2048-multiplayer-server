@@ -9,15 +9,18 @@ import * as TokenService from "../token/token.service"
 import * as TokenDAO from "../token/token.dao"
 import authenticateToken from "../utils/authenticateToken"
 import { TokenType } from "../token/token.interface"
+import { COOKIE_NAMES } from "shared-logic"
 
 export async function getUserData(request: Request, response: Response) {
-  const tokenResult = authenticateToken(request)
+  const tokenResult = authenticateToken(request.cookies.accessToken)
   if (!tokenResult.isValid) {
+    response.clearCookie(COOKIE_NAMES.ACCESS_TOKEN)
     return response.status(tokenResult.statusCode).json({ message: tokenResult.message })
   }
 
   const user = await UserDAO.getUserById(tokenResult.userId)
   if (!user) {
+    response.clearCookie(COOKIE_NAMES.ACCESS_TOKEN)
     return response.status(404).json({ message: "User not found" })
   }
 
@@ -33,7 +36,7 @@ export const registerSchema = z.object({
 })
 
 export function logout(request: Request, response: Response) {
-  response.clearCookie("accessToken")
+  response.clearCookie(COOKIE_NAMES.ACCESS_TOKEN)
   return response.status(200).json({ message: "Logged out" })
 }
 
