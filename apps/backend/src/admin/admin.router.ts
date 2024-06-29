@@ -3,6 +3,7 @@ import ConnectionManager from "../socket/ConnectionManager"
 import { adminAuth } from "./adminAuth"
 import sql from "../db/sql"
 import { createTokensTable, createUsersTable } from "../db/createTables"
+import { seedUsers } from "../db/seed"
 
 export default class AdminRouter {
   public router: Router
@@ -49,6 +50,8 @@ export default class AdminRouter {
       await sql`DROP TABLE IF EXISTS users;`
       await createUsersTable()
       await createTokensTable()
+      await seedUsers()
+
       res.status(200).send("db reset success")
     })
   }

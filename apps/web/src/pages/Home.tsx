@@ -4,6 +4,7 @@ import { mediaQueries } from "../styles"
 import Navbar from "../components/Navbar"
 import AuthModal from "../components/AuthModal"
 import { useAuth } from "../contexts/AuthContext"
+import Leaderboard from "../components/Leaderboard"
 
 export default function Home() {
   const { user } = useAuth()
@@ -19,6 +20,8 @@ export default function Home() {
 
       <SubHeading>Hi, {nickname}</SubHeading>
       <SubHeading>Your score: {totalScore}</SubHeading>
+
+      <Leaderboard />
 
       <LinkList>
         <StyledLink href="/singleplayer" bgColor="green">

@@ -201,3 +201,8 @@ export async function resetPassword(request: Request, response: Response) {
     return response.status(400).json({ message: "Server error" })
   }
 }
+
+export async function getLeaderboard(request: Request, response: Response) {
+  const leaderboardData = await UserService.getLeaderboardData()
+  return response.status(200).json(leaderboardData)
+}

@@ -37,3 +37,12 @@ export async function getUserByGoogleId(googleId: string): Promise<User | undefi
   const [row] = await sql<UserDB[]>`SELECT * FROM users WHERE google_id = ${googleId} LIMIT 1`
   return row ? objectToCamel(row) : undefined
 }
+
+export async function getBestPlayers(): Promise<User[]> {
+  const usersRows = await sql<UserDB[]>`
+      SELECT * FROM users
+      ORDER BY total_score DESC
+      LIMIT 10
+    `
+  return usersRows.map(objectToCamel)
+}

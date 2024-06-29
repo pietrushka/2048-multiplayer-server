@@ -17,4 +17,6 @@ router.post("/forgot-password/:email", userController.forgotPassword)
 
 router.post("/reset-password/:token", userController.resetPassword)
 
+router.get("/leaderboard", userController.getLeaderboard)
+
 export default router

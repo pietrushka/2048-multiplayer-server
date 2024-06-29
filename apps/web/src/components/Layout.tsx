@@ -21,6 +21,8 @@ const View = styled.div({
   height: "100vh",
   background: COLORS.background,
   color: COLORS.font,
+  position: "relative",
+  overflow: "hidden",
 })
 
 const LayoutContainer = styled.div({

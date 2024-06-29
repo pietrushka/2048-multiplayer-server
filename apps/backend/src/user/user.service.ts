@@ -19,7 +19,6 @@ export async function createUserWithEmail({ email, password, nickname }: CreateU
     nickname,
     password: hashedPassword,
     isActive,
-    credits,
     totalScore,
   })
   return id
@@ -41,7 +40,6 @@ export async function createUserWithGoogle({ email, nickname, googleId }: Create
     nickname,
     isActive,
     googleId,
-    credits,
     totalScore,
   })
   return id
@@ -60,4 +58,14 @@ export function addPoints({ userId, earnedPoints }: { userId: string; earnedPoin
         WHERE id = ${userId}
     `
   return totalPoints
+}
+
+export async function getLeaderboardData() {
+  const users = await UserDAO.getBestPlayers()
+
+  return users.map(({ nickname, totalScore }, index) => ({
+    position: index + 1,
+    nickname,
+    totalScore,
+  }))
 }
