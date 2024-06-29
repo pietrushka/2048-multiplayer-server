@@ -11,7 +11,7 @@ type User = {
   id: string
   email: string
   nickname: string
-  bestScore: number
+  totalScore: number
 }
 
 type TAuthContext = {

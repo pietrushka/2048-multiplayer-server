@@ -6,7 +6,7 @@ export async function createUsersTable() {
       id UUID PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,
       nickname TEXT NOT NULL,
-      best_score INT NOT NULL,
+      total_score INT NOT NULL,
       is_active BOOLEAN NOT NULL,
       password TEXT,
       google_id TEXT 

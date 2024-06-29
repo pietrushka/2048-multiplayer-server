@@ -20,9 +20,9 @@ export async function getUserById(id: string): Promise<User | undefined> {
 export async function insertUser(user: User): Promise<void> {
   await sql`
     INSERT INTO users 
-    (id, email, nickname, best_score, is_active, password,  google_id)
+    (id, email, nickname, is_active, password,  google_id, total_score)
     VALUES 
-    (${user.id}, ${user.email}, ${user.nickname}, ${user.bestScore}, ${user.isActive}, ${user.password || null}, ${user.googleId || null})`
+    (${user.id}, ${user.email}, ${user.nickname},  ${user.isActive}, ${user.password || null}, ${user.googleId || null}, ${user.totalScore})`
 }
 
 export async function updateIsActive({ id, isActive }: { id: string; isActive: boolean }) {

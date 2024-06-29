@@ -1,8 +1,12 @@
 import { Board, addTimeToCurrentTimestamp, GameData, DRAW, Direction } from "shared-logic"
 import ServerEmitter from "../socket/ServerEmitter"
 import User from "../socket/User"
+import * as UserService from "../user/user.service"
 
-const GAME_TIME = 5 * 60 * 1000 // 5min * 60s * 1000ms
+// const GAME_TIME = 5 * 60 * 1000 // 5min * 60s * 1000ms
+const GAME_TIME = 10 * 1000 // temp 10s game time TODO remove
+
+const wonMatchPointsEarnings = 50
 
 type handleGameEndPayload = { reason: "timeEnd" } | { reason: "playerBlocked"; playerId: string }
 
@@ -71,9 +75,14 @@ export default class MultiplayerGame {
     this.winner = this.determineWinner(payload)
 
     this.serverEmitter.sendEndGame(this.id, this.data)
+
+    const winner = this.players.find((x) => x.playerIdentifier === this.winner)!
+    if (winner.userId) {
+      await UserService.addPoints({ userId: winner.userId, earnedPoints: wonMatchPointsEarnings })
+    }
   }
 
-  private determineWinner(payload: handleGameEndPayload): string {
+  private determineWinner(payload: handleGameEndPayload): string | undefined {
     switch (payload.reason) {
       case "timeEnd":
         const blockedPlayer = this.findBlockedPlayer()
@@ -85,7 +94,7 @@ export default class MultiplayerGame {
         return this.players.find((x) => x.playerIdentifier !== payload.playerId)!.playerIdentifier
       default:
         console.error("determineWinner: reason not recognised")
-        return DRAW
+        return
     }
   }
   private findBlockedPlayer() {

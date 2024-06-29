@@ -8,6 +8,7 @@ import { useAuth } from "../contexts/AuthContext"
 export default function Home() {
   const { user } = useAuth()
   const nickname = user?.nickname || "Guest"
+  const totalScore = user?.totalScore || 0
 
   return (
     <HomePage>
@@ -16,7 +17,8 @@ export default function Home() {
 
       <LogoText>2048.vs</LogoText>
 
-      <SubHeading>Hi, {nickname}!</SubHeading>
+      <SubHeading>Hi, {nickname}</SubHeading>
+      <SubHeading>Your score: {totalScore}</SubHeading>
 
       <LinkList>
         <StyledLink href="/singleplayer" bgColor="green">
@@ -60,4 +62,5 @@ const LogoText = styled.h1({
 const SubHeading = styled.h2({
   fontSize: "2em",
   fontWeight: 500,
+  margin: 0,
 })
