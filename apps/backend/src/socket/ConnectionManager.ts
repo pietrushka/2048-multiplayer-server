@@ -1,10 +1,11 @@
 import socketio from "socket.io"
 import cookie from "cookie"
-import Game from "../gameLogic/MultiplayerGame"
+import Game, { Player } from "../gameLogic/MultiplayerGame"
 import User from "./User"
 import ServerEmitter from "./ServerEmitter"
 import { chunk, CLIENT_SIGNALS, isStartGamePayload, COOKIE_NAMES, Direction } from "shared-logic"
 import authenticateToken from "../utils/authenticateToken"
+import { Bot } from "../simulation/bot"
 
 const MIN_PLAYERS_TO_START = 2
 
@@ -31,6 +32,7 @@ function authPlayer(cookieString: string) {
   return { playerIdentifier, userId: undefined }
 }
 
+// TODO change name
 export default class ConnectionManager {
   users: Map<string, User>
   games: Map<string, Game>
@@ -97,6 +99,18 @@ export default class ConnectionManager {
   }
 
   checkLobby() {
+    if (this.lobbyUsers.size === 1) {
+      const playerId = Array.from(this.lobbyUsers)[0]
+      const player = this.users.get(playerId)
+      if (!player) {
+        console.error("checkLobby: no player", { playerId })
+        return
+      }
+      const bot = new Bot()
+      const players = [player, bot]
+      this.createGame(players)
+    }
+
     const playerChunks = chunk(Array.from(this.lobbyUsers), MIN_PLAYERS_TO_START)
 
     for (const playerIds of playerChunks) {
@@ -107,7 +121,7 @@ export default class ConnectionManager {
     }
   }
 
-  createGame(players: User[]) {
+  createGame(players: Player[]) {
     const game = new Game(this.serverEmitter, players)
     this.games.set(game.id, game)
 
@@ -128,6 +142,14 @@ export default class ConnectionManager {
     const data = game.data
     if (isStartGamePayload(data)) {
       this.serverEmitter.sendStartGame(game.id, data)
+    }
+
+    const bot = game.players.find((x) => x instanceof Bot) as Bot
+    if (bot) {
+      bot.setupGame(game, (move) => {
+        game.handleMove(move, bot.playerIdentifier)
+        this.serverEmitter.sendBoardUpdate(game.id, game.data)
+      })
     }
   }
 
@@ -153,7 +175,7 @@ export default class ConnectionManager {
 
       game.handleMove(data.move, userId)
 
-      this.serverEmitter.sendBoardUpdate(game.id, game.data)
+      this.serverEmitter.sendBoardUpdate(game.id, game.data) // TODO maybe move this to game
     }
   }
 
@@ -163,6 +185,8 @@ export default class ConnectionManager {
     // TODO to do handle player disconnect case
     game.handleGameEnd({ reason: "timeEnd" })
     this.serverEmitter.sendEndGame(game.id, game.data)
+
+    // TODO DELETE BOT OR SO
   }
 
   userDisconnectHandleGame(user: User) {

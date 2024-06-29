@@ -2,9 +2,11 @@ import { Board, addTimeToCurrentTimestamp, GameData, DRAW, Direction } from "sha
 import ServerEmitter from "../socket/ServerEmitter"
 import User from "../socket/User"
 import * as UserService from "../user/user.service"
+import { Bot } from "../simulation/bot"
 
-// const GAME_TIME = 5 * 60 * 1000 // 5min * 60s * 1000ms
-const GAME_TIME = 10 * 1000 // temp 10s game time TODO remove
+export type Player = User | Bot
+
+const GAME_TIME = 5 * 60 * 1000 // 5min * 60s * 1000ms
 
 const wonMatchPointsEarnings = 50
 
@@ -16,11 +18,11 @@ export default class MultiplayerGame {
   endGameTimestamp: GameData["endGameTimestamp"]
   boards: Board[]
   winner: GameData["winner"]
-  players: User[]
+  players: Player[]
   endGameTimoutId?: NodeJS.Timeout
   serverEmitter: ServerEmitter
 
-  constructor(serverEmitter: ServerEmitter, players: User[]) {
+  constructor(serverEmitter: ServerEmitter, players: Player[]) {
     this.id = `game_${Date.now()}`
     this.status = "loading"
     this.players = players
