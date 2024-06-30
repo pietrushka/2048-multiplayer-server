@@ -29,7 +29,8 @@ export class Bot {
   async startMoveLoop() {
     while (this.game?.status === "active") {
       await wait(MIN_WAIT_TIME + Math.random() * MAX_WAIT_TIME)
-      const move = simulateMove() as Direction
+      const tileGrid = this.game.boards.find((board) => board.playerId === this.playerIdentifier)?.tileGrid!
+      const move = simulateMove(tileGrid)
       this.game.handleMove(move, this.playerIdentifier)
       this.handleMove(move)
     }

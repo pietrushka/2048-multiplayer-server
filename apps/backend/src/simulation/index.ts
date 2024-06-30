@@ -1,13 +1,18 @@
-function convertIndexToDirection(index: number): string {
-  const vectorKeyToDirectionMap = {
-    0: "UP",
-    1: "RIGHT",
-    2: "DOWN",
-    3: "LEFT",
-  }
-  return vectorKeyToDirectionMap[index as keyof typeof vectorKeyToDirectionMap]
+import { TileGrid } from "shared-logic"
+import simulateV0, { getRandomMove } from "./v0"
+
+export enum Strategies {
+  random = "random",
+  v0 = "v0",
 }
 
-export default function simulateMove(): string {
-  return convertIndexToDirection(Math.floor(Math.random() * 4))
+const strategiesMap = {
+  [Strategies.random]: getRandomMove,
+  [Strategies.v0]: simulateV0,
+}
+
+export default function simulateMove(gridArrays: TileGrid) {
+  const strategyFn = strategiesMap[Strategies.v0]
+  const move = strategyFn(gridArrays)
+  return move
 }

@@ -4,6 +4,32 @@ import { initializeBoard, slideTiles, spawnTile, movePossible, encodeTileGridSta
 import { deepCopyArray, areArraysEqual } from "../utils"
 import { TileGrid } from "../types"
 
+export function processMove(tileGrid: TileGrid, direction: Direction) {
+  const oldTileGrid = deepCopyArray(tileGrid)
+  let scoreIncrease = 0
+  let directionValid = true
+
+  const slideResult = slideTiles(deepCopyArray(tileGrid), direction)
+
+  scoreIncrease = slideResult.scoreIncrease
+  const newTileGrid = slideResult.tileGrid
+
+  if (areArraysEqual(oldTileGrid, newTileGrid)) {
+    directionValid = false
+    return {
+      newTileGrid: oldTileGrid,
+      scoreIncrease: 0,
+      directionValid,
+    }
+  }
+
+  return {
+    newTileGrid,
+    scoreIncrease,
+    directionValid,
+  }
+}
+
 export class Board {
   playerId: string
   score: number
@@ -29,16 +55,16 @@ export class Board {
     if (!this.nextMovePossible) {
       return
     }
-    const oldTileGrid = deepCopyArray(this.tileGrid)
-    const { scoreIncrease } = slideTiles(this.tileGrid, move)
 
-    if (areArraysEqual(oldTileGrid, this.tileGrid)) {
+    const { directionValid, scoreIncrease, newTileGrid } = processMove(this.tileGrid, move)
+    if (!directionValid) {
       // move wasn't possible
       return
     }
 
     this.previousMove = move
     this.score += scoreIncrease
+    this.tileGrid = newTileGrid
     spawnTile(this.tileGrid)
     this.nextMovePossible = movePossible(this.tileGrid)
   }
