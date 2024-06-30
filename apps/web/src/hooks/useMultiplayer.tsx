@@ -74,7 +74,6 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
       console.error("handleGameStart: no socketIo.current.id", socketIo.current)
       return
     }
-    console.log("handleStateUpdate", data)
     const { status, endGameTimestamp, boards, winner } = data
 
     const userIdentifier = getUserIdentifier()
@@ -96,6 +95,9 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
 
   // TODO useCallback
   const performMove = (move: Move) => {
+    if (gameState?.status !== "active") {
+      return
+    }
     clientEmitter(socketIo.current, { signal: CLIENT_SIGNALS.move, data: { move } })
   }
 

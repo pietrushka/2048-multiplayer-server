@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import { keyframes } from "@emotion/react"
 import styled from "@emotion/styled"
 import { ImCross } from "react-icons/im"
 import { mediaQueries } from "../styles"
@@ -9,20 +10,30 @@ type ModalProps = {
 }
 
 export default function Modal({ closeModal, children }: ModalProps) {
-  function handleCloseModal() {
-    closeModal?.()
-  }
   return (
-    <Overlay onClick={handleCloseModal}>
+    <Overlay onClick={closeModal}>
       <PopUp onClick={(e) => e.stopPropagation()}>
-        <CloseModalButton onClick={handleCloseModal}>
-          <ImCross />
-        </CloseModalButton>
+        {closeModal ? (
+          <CloseModalButton onClick={closeModal}>
+            <ImCross />
+          </CloseModalButton>
+        ) : null}
         {children}
       </PopUp>
     </Overlay>
   )
 }
+
+const appear = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`
 
 export const Overlay = styled.div({
   position: "absolute",
@@ -47,6 +58,7 @@ export const PopUp = styled.div({
   maxWidth: "90vw",
   boxSizing: "border-box",
   padding: "1em",
+  animation: `${appear} 300ms ease-in-out`,
 
   [mediaQueries.tabletPortrait]: {
     padding: "1.5em",

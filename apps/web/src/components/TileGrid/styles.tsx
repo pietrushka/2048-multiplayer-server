@@ -48,9 +48,10 @@ export const tilesColorStyles: Record<NonEmptyTileValue, SerializedStyles> = {
 // ANIMATIONS
 // time in seconds
 const singleAnimationTime = 0.2
-const newTileAnimationDelay = singleAnimationTime + 0.2 * singleAnimationTime
+const newTileAnimationDelay = singleAnimationTime
 const mergeAnimationTime = singleAnimationTime
 const mergeAnimationDelay = singleAnimationTime * 0.7
+
 export const ANIMATION_TIME = {
   singleAnimationTime,
   newTileAnimationDelay,
