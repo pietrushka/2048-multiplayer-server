@@ -6,7 +6,7 @@ import { Direction } from "shared-logic"
 import wait from "../utils/wait"
 
 const MIN_WAIT_TIME = 500
-const MAX_WAIT_TIME = 1100
+const MAX_WAIT_TIME = 1000
 
 export class Bot {
   playerIdentifier: string

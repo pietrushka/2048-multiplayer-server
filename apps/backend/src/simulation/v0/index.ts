@@ -12,18 +12,19 @@ function aiMove(board: TileGrid, searchesPerMove: number, searchLength: number) 
 
   for (let firstMoveIdx = 0; firstMoveIdx < 4; firstMoveIdx++) {
     const move = firstMoves[firstMoveIdx]
-
     const { directionValid, newTileGrid, scoreIncrease } = processMove(board, move)
 
-    if (directionValid) {
-      scores[firstMoveIdx] = scores[firstMoveIdx] + scoreIncrease
-    } else {
+    if (!directionValid) {
+      scores[firstMoveIdx] = Number.NEGATIVE_INFINITY // Penalize invalid moves
       continue
     }
+
+    scores[firstMoveIdx] = scores[firstMoveIdx] + scoreIncrease
 
     for (let laterMoveIdx = 0; laterMoveIdx < searchesPerMove; laterMoveIdx++) {
       let moveNumber = 0
       let searchBoard = deepCopyArray(newTileGrid)
+      searchBoard = spawnTile(searchBoard)
       let isValid = true
 
       while (isValid && moveNumber < searchLength) {
@@ -31,7 +32,7 @@ function aiMove(board: TileGrid, searchesPerMove: number, searchLength: number) 
         const randomMoveReult = processMove(searchBoard, randomMove)
 
         if (randomMoveReult.directionValid) {
-          searchBoard = spawnTile(searchBoard)
+          searchBoard = spawnTile(searchBoard) // maybe spawnTile in process Move?
           scores[firstMoveIdx] += randomMoveReult.scoreIncrease
           moveNumber++
         } else {
@@ -47,5 +48,5 @@ function aiMove(board: TileGrid, searchesPerMove: number, searchLength: number) 
 }
 
 export default function simulate(board: TileGrid) {
-  return aiMove(board, 1, 1)
+  return aiMove(board, 20, 10)
 }
