@@ -24,6 +24,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@jest/types": "^29.6.3",
+    "@types/jest": "^29.5.12",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -32,6 +34,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "postgres": "^3.4.4",
     "resend": "^3.3.0",
@@ -39,6 +42,7 @@
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.4",
     "ts-case-convert": "^2.0.7",
+    "ts-jest": "^29.1.5",
     "zod": "^3.23.8"
   }
 }
