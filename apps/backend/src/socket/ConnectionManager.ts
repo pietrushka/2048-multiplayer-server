@@ -12,13 +12,18 @@ const MIN_PLAYERS_TO_START = 2
 const LOBBY_CHECK_INTERVAL_MS = 2000
 const CLEAN_UP_INTERVAL_MS = 2000 // 5min * 60s * 1000ms
 
-function authPlayer(cookieString: string) {
-  const parsedCookies = cookie.parse(cookieString)
-
-  const playerIdentifier = parsedCookies[COOKIE_NAMES.PLAYER_IDENTIFIER] as string | undefined
+function authPlayer(handshake: socketio.Socket["handshake"]) {
+  const playerIdentifier = handshake.query?.[COOKIE_NAMES.PLAYER_IDENTIFIER] as string | undefined
   if (!playerIdentifier) {
     return
   }
+
+  const cookieString = handshake.headers.cookie as string | undefined
+  if (!cookieString) {
+    return { playerIdentifier, userId: undefined }
+  }
+
+  const parsedCookies = cookie.parse(cookieString)
   const accessToken = parsedCookies[COOKIE_NAMES.ACCESS_TOKEN] as string | undefined
   const tokenResult = authenticateToken(accessToken)
 
@@ -57,8 +62,9 @@ export default class ConnectionManager {
   }
 
   handleConnection = (socket: socketio.Socket) => {
-    const authResult = authPlayer(socket.handshake.headers.cookie as string)
+    const authResult = authPlayer(socket.handshake)
     if (!authResult) {
+      console.error("authPlayer failed", socket.handshake)
       return
     }
     const { playerIdentifier, userId } = authResult
@@ -122,6 +128,7 @@ export default class ConnectionManager {
   }
 
   createGame(players: Player[]) {
+    console.log("createGame", { players })
     const game = new Game(this.serverEmitter, players)
     this.games.set(game.id, game)
 

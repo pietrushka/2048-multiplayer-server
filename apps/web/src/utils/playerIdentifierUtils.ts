@@ -2,11 +2,11 @@
 import Cookies from "js-cookie"
 import { COOKIE_NAMES } from "shared-logic"
 
-export function getUserIdentifier() {
+export function gePlayerIdentifier() {
   return Cookies.get(COOKIE_NAMES.PLAYER_IDENTIFIER)
 }
-export function setUserIdentifier() {
-  const existingIdentifier = getUserIdentifier()
+export function setPlayerIdentifier() {
+  const existingIdentifier = gePlayerIdentifier()
   if (!existingIdentifier) {
     const identifier = crypto.randomUUID()
     // TODO add cookie flags

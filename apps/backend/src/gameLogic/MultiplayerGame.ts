@@ -93,6 +93,12 @@ export default class MultiplayerGame {
     this.serverEmitter.sendEndGame(this.id, this.data)
 
     const winner = this.players.find((x) => x.playerIdentifier === this.winner)!
+
+    if (!winner) {
+      console.error("handleGameEnd: no winner", { "this.winner": this.winner, "this.players": this.players })
+      return
+    }
+
     if (winner.userId) {
       await UserService.addPoints({ userId: winner.userId, earnedPoints: wonMatchPointsEarnings })
     }

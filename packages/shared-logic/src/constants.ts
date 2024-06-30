@@ -3,7 +3,7 @@ import { Direction, Move, Operations } from "./types"
 // TODO enums
 
 export const COOKIE_NAMES = {
-  PLAYER_IDENTIFIER: "PLAYER_IDENTIFIER",
+  PLAYER_IDENTIFIER: "playerIdentifier",
   ACCESS_TOKEN: "accessToken",
 }
 

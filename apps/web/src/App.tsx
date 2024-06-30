@@ -6,12 +6,12 @@ import Home from "./pages/Home"
 import SingleGame from "./pages/SingleGame"
 import MultiGame from "./pages/MultiGame"
 import { AuthProvider } from "./contexts/AuthContext"
-import { setUserIdentifier } from "./utils/userIdentifier"
+import { setPlayerIdentifier } from "./utils/playerIdentifierUtils"
 import { globalStyles } from "./styles"
 
 function App() {
   useEffect(() => {
-    setUserIdentifier()
+    setPlayerIdentifier()
   }, [])
 
   return (

@@ -43,7 +43,7 @@ export default function LoginForm() {
         message: errorData.message,
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

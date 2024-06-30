@@ -3,6 +3,7 @@ import { z } from "zod"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import cookie from "cookie"
+import crypto from "crypto"
 import * as UserService from "./user.service"
 import * as UserDAO from "./user.dao"
 import * as TokenService from "../token/token.service"
@@ -12,19 +13,24 @@ import { TokenType } from "../token/token.interface"
 import { COOKIE_NAMES } from "shared-logic"
 
 export async function getUserData(request: Request, response: Response) {
-  const tokenResult = authenticateToken(request.cookies.accessToken)
-  if (!tokenResult.isValid) {
-    response.clearCookie(COOKIE_NAMES.ACCESS_TOKEN)
-    return response.status(tokenResult.statusCode).json({ message: tokenResult.message })
-  }
+  try {
+    const tokenResult = authenticateToken(request.cookies.accessToken)
+    if (!tokenResult.isValid) {
+      response.clearCookie(COOKIE_NAMES.ACCESS_TOKEN)
+      return response.status(tokenResult.statusCode).json({ message: tokenResult.message })
+    }
 
-  const user = await UserDAO.getUserById(tokenResult.userId)
-  if (!user) {
-    response.clearCookie(COOKIE_NAMES.ACCESS_TOKEN)
-    return response.status(404).json({ message: "User not found" })
-  }
+    const user = await UserDAO.getUserById(tokenResult.userId)
+    if (!user) {
+      response.clearCookie(COOKIE_NAMES.ACCESS_TOKEN)
+      return response.status(404).json({ message: "User not found" })
+    }
 
-  return response.status(200).json(user)
+    return response.status(200).json(user)
+  } catch (error) {
+    console.error("Error getUserData:", JSON.stringify(error, null, 2))
+    return response.status(400).json({ message: "Server error" })
+  }
 }
 
 export const registerSchema = z.object({
@@ -59,7 +65,7 @@ export async function register(request: Request, response: Response) {
 
     return response.status(200).json({ message: "User registered" })
   } catch (error) {
-    console.error("error", JSON.stringify(error, null, 2))
+    console.error("Error register:", JSON.stringify(error, null, 2))
     return response.status(400).json({ message: "Server error" })
   }
 }
@@ -89,7 +95,7 @@ export async function activateAccount(request: Request, response: Response) {
 
     return response.status(200).json({ message: "Account activated" })
   } catch (error) {
-    console.error("error", JSON.stringify(error, null, 2))
+    console.error("Error activateAccount:", JSON.stringify(error, null, 2))
     return response.status(400).json({ message: "Server error" })
   }
 }
@@ -128,7 +134,7 @@ export async function login(request: Request, response: Response) {
 
     response.setHeader(
       "Set-Cookie",
-      cookie.serialize("accessToken", token, {
+      cookie.serialize(COOKIE_NAMES.ACCESS_TOKEN, token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",
         sameSite: "lax",
@@ -139,7 +145,7 @@ export async function login(request: Request, response: Response) {
 
     return response.status(200).json({ message: "Logged in" })
   } catch (error) {
-    console.log("error", JSON.stringify(error))
+    console.error("Error login:", JSON.stringify(error))
     return response.status(400).json({ message: "Server error" })
   }
 }
@@ -164,7 +170,7 @@ export async function forgotPassword(request: Request, response: Response) {
 
     return response.status(200).json({ message: "Password reset email sent" })
   } catch (error) {
-    console.log("error", JSON.stringify(error))
+    console.error("Error forgotPassword:", JSON.stringify(error))
     return response.status(400).json({ message: "Server error" })
   }
 }
@@ -197,7 +203,7 @@ export async function resetPassword(request: Request, response: Response) {
 
     return response.status(200).json({ message: "Password changed" })
   } catch (error) {
-    console.log("error", JSON.stringify(error))
+    console.error("Error resetPassword:", JSON.stringify(error))
     return response.status(400).json({ message: "Server error" })
   }
 }

@@ -8,13 +8,15 @@ import SocketServer from "./socket"
 import AdminRouter from "./admin/admin.router"
 import userRouter from "./user/user.router"
 import oAuthRouter from "./oAuth/oAuth.router"
+import { corsOptions } from "./config"
 
 dotenv.config()
 
 const PORT = process.env.NODE_DOCKER_PORT || 8081
 
 const app = express()
-app.use(cors({ credentials: true, origin: true, exposedHeaders: ["set-cookie"] }))
+
+app.use(cors(corsOptions))
 
 app.use(cookieParser())
 app.use(bodyParser.json())
@@ -33,4 +35,4 @@ app.use("/user", userRouter)
 
 app.use("/oauth", oAuthRouter)
 
-httpServer.listen(PORT, () => console.log(`server runnin on port ${PORT}`))
+httpServer.listen(PORT, () => console.info(`server runnin on port ${PORT}`))

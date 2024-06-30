@@ -1,4 +1,4 @@
-export default {
+const config = {
   NODE_ENV: process.env.NODE_ENV as string,
   NODE_LOCAL_PORT: process.env.NODE_LOCAL_PORT as string,
   NODE_DOCKER_PORT: process.env.NODE_DOCKER_PORT as string,
@@ -11,3 +11,18 @@ export default {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
 }
+
+export const corsOptions = {
+  origin: ["http://localhost:3000", "https://2048vs.com"],
+  credentials: true,
+  exposedHeaders: [
+    "set-cookie",
+    "Content-Type",
+    "Authorization",
+    "Cookie",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Credentials",
+  ],
+}
+
+export default config
