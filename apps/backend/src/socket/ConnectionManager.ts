@@ -1,9 +1,9 @@
 import socketio from "socket.io"
 import cookie from "cookie"
+import { chunk, CLIENT_SIGNALS, COOKIE_NAMES, Direction } from "shared-logic"
 import Game, { Player } from "../gameLogic/MultiplayerGame"
 import User from "./User"
 import ServerEmitter from "./ServerEmitter"
-import { chunk, CLIENT_SIGNALS, isStartGamePayload, COOKIE_NAMES, Direction } from "shared-logic"
 import authenticateToken from "../utils/authenticateToken"
 import { Bot } from "../simulation/bot"
 
@@ -126,6 +126,7 @@ export default class ConnectionManager {
     this.games.set(game.id, game)
 
     players.forEach((player) => {
+      // player might be a bot
       const user = this.users.get(player.playerIdentifier)
       if (user) {
         user.gameId = game.id
@@ -134,23 +135,7 @@ export default class ConnectionManager {
       }
     })
 
-    this.startGame(game)
-  }
-
-  startGame(game: Game) {
     game.startGame()
-    const data = game.data
-    if (isStartGamePayload(data)) {
-      this.serverEmitter.sendStartGame(game.id, data)
-    }
-
-    const bot = game.players.find((x) => x instanceof Bot) as Bot
-    if (bot) {
-      bot.setupGame(game, (move) => {
-        game.handleMove(move, bot.playerIdentifier)
-        this.serverEmitter.sendBoardUpdate(game.id, game.data)
-      })
-    }
   }
 
   handleMove(socket: socketio.Socket, userId: string) {
@@ -174,19 +159,7 @@ export default class ConnectionManager {
       }
 
       game.handleMove(data.move, userId)
-
-      this.serverEmitter.sendBoardUpdate(game.id, game.data) // TODO maybe move this to game
     }
-  }
-
-  endGame(gameId: string) {
-    const game = this.games.get(gameId)! // assuming there mus be a game
-
-    // TODO to do handle player disconnect case
-    game.handleGameEnd({ reason: "timeEnd" })
-    this.serverEmitter.sendEndGame(game.id, game.data)
-
-    // TODO DELETE BOT OR SO
   }
 
   userDisconnectHandleGame(user: User) {
@@ -202,7 +175,8 @@ export default class ConnectionManager {
     }
 
     if (game.status !== "finished") {
-      this.endGame(game.id)
+      // TODO to do handle player disconnect case
+      game.handleGameEnd({ reason: "timeEnd" })
     }
     const isOnlyPlayer = game.players.length < 2
 

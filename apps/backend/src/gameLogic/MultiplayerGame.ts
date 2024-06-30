@@ -1,4 +1,4 @@
-import { Board, addTimeToCurrentTimestamp, GameData, DRAW, Direction } from "shared-logic"
+import { Board, addTimeToCurrentTimestamp, GameData, DRAW, Direction, isStartGamePayload } from "shared-logic"
 import ServerEmitter from "../socket/ServerEmitter"
 import User from "../socket/User"
 import * as UserService from "../user/user.service"
@@ -51,6 +51,18 @@ export default class MultiplayerGame {
     this.endGameTimoutId = setTimeout(() => {
       this.handleGameEnd({ reason: "timeEnd" })
     }, GAME_TIME)
+
+    const bot = this.players.find((x) => x instanceof Bot) as Bot
+    if (bot) {
+      bot.setupGame(this)
+    }
+
+    const data = this.data
+    if (isStartGamePayload(data)) {
+      this.serverEmitter.sendStartGame(this.id, data)
+    } else {
+      console.error("startGame: no start game payload")
+    }
   }
 
   handleMove(move: Direction, playerId: string) {
@@ -65,6 +77,8 @@ export default class MultiplayerGame {
     if (!board.nextMovePossible) {
       this.handleGameEnd({ reason: "playerBlocked", playerId })
     }
+
+    this.serverEmitter.sendBoardUpdate(this.id, this.data)
   }
 
   async handleGameEnd(payload: handleGameEndPayload) {
