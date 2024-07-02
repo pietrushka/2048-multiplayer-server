@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Form, Button, Heading, Input, Error, InputGroup, ModalContentWrapper } from "../Common"
-import useAuthFormParam from "./useAuthFormParam"
+import useAuthFormParam from "../../hooks/useAuthFormParam"
 
 type FormValues = {
   password: string

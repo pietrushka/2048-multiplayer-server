@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import COLORS from "../styles/colors"
+import { mediaQueries } from "../styles"
 
 type LeaderboardUser = {
   position: number
@@ -70,17 +71,17 @@ const Container = styled.div<{ open: boolean }>(({ open }) => ({
   top: "10vh",
   transition: "right 0.3s ease-in-out",
   zIndex: 101,
-  ...(open
-    ? {
-        right: 0,
-      }
-    : {
-        right: "-70vw",
-      }),
+  right: open ? 0 : "-20em",
+  [mediaQueries.laptop]: {
+    fontSize: 20,
+  },
+  [mediaQueries.largeScreen]: {
+    fontSize: 25,
+  },
 }))
 
 const Button = styled.button({
-  fontSize: "inherit",
+  fontSize: "0.8em",
   height: "fit-content",
   width: "3em",
   padding: ".5em 0",
@@ -96,10 +97,11 @@ const Button = styled.button({
   borderRight: "none",
   borderTopLeftRadius: "0.5em",
   borderBottomLeftRadius: "0.5em",
+  lineHeight: 0,
 })
 
 const Table = styled.div({
-  width: "70vw",
+  width: "20em",
   border: `2px solid ${COLORS.charcoal}`,
   backgroundColor: COLORS.board,
   color: COLORS.warmGray,

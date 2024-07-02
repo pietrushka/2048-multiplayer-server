@@ -4,7 +4,7 @@ import LoginForm from "./LoginForm"
 import ForgotPasswordForm from "./ForgotPasswordForm"
 import ResetPasswordForm from "./ResetPasswordForm"
 import ActivateAccount from "./ActivateAccount"
-import useAuthFormParam from "./useAuthFormParam"
+import useAuthFormParam from "../../hooks/useAuthFormParam"
 
 const authFormMap = {
   register: RegisterForm,

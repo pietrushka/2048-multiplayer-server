@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { useAuth } from "../contexts/AuthContext"
-import useAuthFormParam from "./AuthModal/useAuthFormParam"
+import useAuthFormParam from "../hooks/useAuthFormParam"
 import { Button } from "./Common"
 
 export default function Navbar() {

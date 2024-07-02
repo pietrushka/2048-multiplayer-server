@@ -24,6 +24,7 @@ function aiMove(board: TileGrid, searchesPerMove: number, searchLength: number) 
     for (let laterMoveIdx = 0; laterMoveIdx < searchesPerMove; laterMoveIdx++) {
       let moveNumber = 0
       let searchBoard = deepCopyArray(newTileGrid)
+      // not spawning tile in processMove for better randomness
       searchBoard = spawnTile(searchBoard)
       let isValid = true
 
@@ -32,7 +33,7 @@ function aiMove(board: TileGrid, searchesPerMove: number, searchLength: number) 
         const randomMoveReult = processMove(searchBoard, randomMove)
 
         if (randomMoveReult.directionValid) {
-          searchBoard = spawnTile(searchBoard) // maybe spawnTile in process Move?
+          searchBoard = spawnTile(searchBoard)
           scores[firstMoveIdx] += randomMoveReult.scoreIncrease
           moveNumber++
         } else {

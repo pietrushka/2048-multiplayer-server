@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { Button, Heading, ModalContentWrapper } from "../Common"
-import useAuthFormParam from "./useAuthFormParam"
+import useAuthFormParam from "../../hooks/useAuthFormParam"
 
 export default function ActivateAccount() {
   const [currentQueryParameters] = useSearchParams()
