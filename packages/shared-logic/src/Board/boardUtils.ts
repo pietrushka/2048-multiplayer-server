@@ -1,4 +1,5 @@
 import { TileGrid, Direction, Move } from "../types"
+import { deepCopyArray } from "../utils"
 
 function createZeroMatrix(size: number): TileGrid {
   return Array.from({ length: size }, () => Array(size).fill(0))
@@ -10,23 +11,20 @@ export function containsEmpty(board: TileGrid): boolean {
   return board.some((row) => row.some((cell) => cell === 0))
 }
 
-const getRandomCoordinate = (maxVal: number) => Math.floor(Math.random() * maxVal)
+// mutates tileGrid => returns boolean representing if tile was spawned
+export function spawnTile(tileGrid: TileGrid) {
+  const emptyCoordinates = tileGrid.flatMap((row, y) => {
+    return row.flatMap((cell, x) => (cell === 0 ? [{ x, y }] : []))
+  })
 
-export function spawnTile(board: TileGrid) {
-  if (!containsEmpty(board)) {
-    return board
+  if (!emptyCoordinates.length) {
+    return false
   }
 
-  while (true) {
-    const x = getRandomCoordinate(board.length)
-    const y = getRandomCoordinate(board.length)
-    if (board[x][y] === 0) {
-      board[x][y] = getTileValue()
-      break
-    }
-  }
+  const coordinates = emptyCoordinates[Math.floor(Math.random() * emptyCoordinates.length)]
+  tileGrid[coordinates.y][coordinates.x] = getTileValue()
 
-  return board
+  return true
 }
 
 export function initializeBoard(boardSize: number) {
@@ -38,7 +36,8 @@ export function initializeBoard(boardSize: number) {
   return board
 }
 
-function rotateRight(matrix: unknown[][]) {
+// mutable
+export function rotateRight(matrix: unknown[][]) {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = i + 1; j < matrix[i].length; j++) {
       const temp = matrix[i][j]
@@ -51,7 +50,7 @@ function rotateRight(matrix: unknown[][]) {
   }
 }
 
-export function rotateBoardLeft<T>(board: T[][], direction: Direction, reverse: boolean = false) {
+export function rotateBoardToLeft<T>(board: T[][], direction: Direction, reverse: boolean = false) {
   if (direction === "LEFT") {
     return board
   }
@@ -125,7 +124,7 @@ function combineAndShiftLeft(array: number[]) {
 export function slideTiles(tileGrid: TileGrid, direction: Direction) {
   let scoreIncrease = 0
   // rotate board to "LEFT" to utilize common logic
-  tileGrid = rotateBoardLeft(tileGrid, direction)
+  tileGrid = rotateBoardToLeft(tileGrid, direction)
 
   for (const row of tileGrid) {
     const { scoreIncrease: rowScoreIncrease } = combineAndShiftLeft(row)
@@ -133,29 +132,39 @@ export function slideTiles(tileGrid: TileGrid, direction: Direction) {
   }
 
   // rotate back to orginal direction
-  tileGrid = rotateBoardLeft(tileGrid, direction, true)
+  tileGrid = rotateBoardToLeft(tileGrid, direction, true)
 
   return { tileGrid, scoreIncrease }
 }
 
-export function movePossible(board: TileGrid): boolean {
-  const boardSize = board.length
+function checkHorizontalMergePossible(board: TileGrid) {
+  for (let rowIndex = 0; rowIndex < board.length; rowIndex++) {
+    const row = board[rowIndex]
+    // check if tile on right can be merged
+    for (let tileIndex = 0; tileIndex < row.length - 1; tileIndex++) {
+      if (row[tileIndex] === row[tileIndex + 1]) {
+        return true
+      }
+    }
+  }
+  return false
+}
 
+export function movePossible(board: TileGrid): boolean {
   if (containsEmpty(board)) {
     return true
   }
 
-  const boardFlatten = board.flat()
-  // Check if a tile can be merged into a neighboring tile.
-  for (let i = 0; i < board.length; i++) {
-    if (
-      boardFlatten[i] === boardFlatten[i + boardSize] ||
-      boardFlatten[i] === boardFlatten[i - boardSize] ||
-      (i % boardSize !== 0 && boardFlatten[i] === boardFlatten[i - 1]) ||
-      (i % boardSize !== boardSize - 1 && boardFlatten[i] === boardFlatten[i + 1])
-    ) {
-      return true
-    }
+  // horizontal
+  if (checkHorizontalMergePossible(board)) {
+    return true
+  }
+
+  // vertical
+  const boardCopy = deepCopyArray(board)
+  rotateRight(boardCopy)
+  if (checkHorizontalMergePossible(boardCopy)) {
+    return true
   }
 
   return false

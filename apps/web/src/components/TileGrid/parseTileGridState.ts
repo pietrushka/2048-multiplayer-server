@@ -5,7 +5,7 @@ import {
   TileValue,
   Direction,
   decodeTileGridState,
-  rotateBoardLeft,
+  rotateBoardToLeft,
   areArraysEqual,
   deepCopyArray,
   OPERATIONS,
@@ -91,7 +91,7 @@ function analyzePreviousGrid(previousTileGrid?: TileGrid, direction?: Direction)
     return []
   }
 
-  const previousTileGridRotated = rotateBoardLeft(deepCopyArray(previousTileGrid), direction)
+  const previousTileGridRotated = rotateBoardToLeft(deepCopyArray(previousTileGrid), direction)
 
   const gridSize = 4
   const result: TileAnimationData[][] = []
@@ -183,7 +183,7 @@ function analyzePreviousGrid(previousTileGrid?: TileGrid, direction?: Direction)
   })
 
   // TODO maybe rotate the board???
-  // return rotateBoardLeft(result, direction, true)
+  // return rotateBoardToLeft(result, direction, true)
   return result.flat()
 }
 

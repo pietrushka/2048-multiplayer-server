@@ -128,7 +128,6 @@ export default class ConnectionManager {
   }
 
   createGame(players: Player[]) {
-    console.log("createGame", { players })
     const game = new Game(this.serverEmitter, players)
     this.games.set(game.id, game)
 

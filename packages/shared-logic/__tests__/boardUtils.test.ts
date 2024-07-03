@@ -1,40 +1,8 @@
-import {
-  combineToLeft,
-  containsEmpty,
-  rotateBoardLeft,
-  shiftTilesLeftInPlace,
-  movePossible,
-} from "../src/Board/boardUtils"
+import { combineToLeft, rotateBoardToLeft, shiftTilesLeftInPlace, movePossible } from "../src/Board/boardUtils"
 import { deepCopyArray } from "../src/utils"
 
 describe("boardUtils", () => {
-  test("containsEmpty", () => {
-    expect(
-      containsEmpty([
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ])
-    ).toBe(true)
-    expect(
-      containsEmpty([
-        [2, 2, 2, 2],
-        [2, 2, 2, 2],
-        [2, 2, 2, 2],
-        [2, 2, 2, 2],
-      ])
-    ).toBe(false)
-    expect(
-      containsEmpty([
-        [2, 2, 2, 2],
-        [2, 0, 2, 2],
-        [2, 2, 2, 2],
-        [2, 2, 2, 2],
-      ])
-    ).toBe(true)
-  })
-  test("rotateBoardLeft", () => {
+  test("rotateBoardToLeft", () => {
     const input = [
       [0, 4, 8, 12],
       [1, 5, 9, 13],
@@ -43,7 +11,7 @@ describe("boardUtils", () => {
     ]
 
     // UP
-    const resultUp = rotateBoardLeft(deepCopyArray(input), "UP")
+    const resultUp = rotateBoardToLeft(deepCopyArray(input), "UP")
     const expectedUP = [
       [12, 13, 14, 15],
       [8, 9, 10, 11],
@@ -51,11 +19,11 @@ describe("boardUtils", () => {
       [0, 1, 2, 3],
     ]
     expect(resultUp).toEqual(expectedUP)
-    const resultReverseUP = rotateBoardLeft(resultUp, "UP", true)
+    const resultReverseUP = rotateBoardToLeft(resultUp, "UP", true)
     expect(resultReverseUP).toEqual(input)
 
     // DOWN
-    const resultDown = rotateBoardLeft(deepCopyArray(input), "DOWN")
+    const resultDown = rotateBoardToLeft(deepCopyArray(input), "DOWN")
     const expectedDown = [
       [3, 2, 1, 0],
       [7, 6, 5, 4],
@@ -63,11 +31,11 @@ describe("boardUtils", () => {
       [15, 14, 13, 12],
     ]
     expect(resultDown).toEqual(expectedDown)
-    const resultReverseDown = rotateBoardLeft(resultDown, "DOWN", true)
+    const resultReverseDown = rotateBoardToLeft(resultDown, "DOWN", true)
     expect(resultReverseDown).toEqual(input)
 
     // RIGHT
-    const resultRight = rotateBoardLeft(deepCopyArray(input), "RIGHT")
+    const resultRight = rotateBoardToLeft(deepCopyArray(input), "RIGHT")
     const expectedRight = [
       [15, 11, 7, 3],
       [14, 10, 6, 2],
@@ -75,13 +43,13 @@ describe("boardUtils", () => {
       [12, 8, 4, 0],
     ]
     expect(resultRight).toEqual(expectedRight)
-    const resultReverseRight = rotateBoardLeft(resultRight, "RIGHT", true)
+    const resultReverseRight = rotateBoardToLeft(resultRight, "RIGHT", true)
     expect(resultReverseRight).toEqual(input)
 
     // LEFT - no change
-    const resultLeft = rotateBoardLeft(deepCopyArray(input), "LEFT")
+    const resultLeft = rotateBoardToLeft(deepCopyArray(input), "LEFT")
     expect(resultLeft).toEqual(input)
-    const resultReverseLeft = rotateBoardLeft(resultLeft, "LEFT", true)
+    const resultReverseLeft = rotateBoardToLeft(resultLeft, "LEFT", true)
     expect(resultReverseLeft).toEqual(input)
   })
   test("shiftTilesLeftInPlace", () => {
@@ -117,23 +85,43 @@ describe("boardUtils", () => {
         [2, 0, 0, 0],
         [2, 0, 0, 0],
         [2, 0, 0, 0],
-      ])
+      ]),
     ).toBe(true)
+
     expect(
       movePossible([
         [2, 2, 2, 2],
         [2, 2, 2, 2],
         [2, 2, 2, 2],
         [2, 2, 2, 2],
-      ])
+      ]),
     ).toBe(true)
+
     expect(
       movePossible([
         [2, 4, 8, 4],
         [4, 16, 4, 8],
         [8, 32, 16, 32],
         [16, 2, 128, 512],
-      ])
+      ]),
     ).toBe(false)
+
+    expect(
+      movePossible([
+        [2, 4, 2, 32],
+        [16, 16, 128, 8],
+        [4, 4, 64, 2],
+        [2, 2, 32, 4],
+      ]),
+    ).toBe(true)
+
+    expect(
+      movePossible([
+        [2, 4, 64, 2],
+        [2, 4, 8, 32],
+        [8, 512, 2, 4],
+        [4, 16, 4, 2],
+      ]),
+    ).toBe(true)
   })
 })

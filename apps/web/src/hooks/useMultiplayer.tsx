@@ -80,7 +80,6 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
   }, [])
 
   const handleStateUpdate = (data: GameData) => {
-    console.log("handleStateUpdate", data)
     if (!socketIo.current?.id) {
       console.error("handleGameStart: no socketIo.current.id", socketIo.current)
       return
@@ -117,7 +116,6 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
 
   // TODO useMemo
   const resultText = generateResultText(gameState?.winner)
-  console.log("useMultiplayer gameState", gameState)
   return {
     status: gameState?.status,
     endGameTimestamp: gameState?.endGameTimestamp,
