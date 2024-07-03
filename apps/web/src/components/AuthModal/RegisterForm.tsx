@@ -1,5 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Form, Button, Heading, Input, Error, InputGroup, ModalContentWrapper } from "../Common"
+import { Form, Button, Heading, Input, Error, InputGroup, ModalContentWrapper, Text, ButtonLikeLink } from "../Common"
+import useAuthFormParam from "../../hooks/useAuthFormParam"
+import { FaGoogle } from "react-icons/fa"
+import constants from "../../constants"
 
 type FormValues = {
   nickname: string
@@ -8,6 +11,7 @@ type FormValues = {
 }
 
 export default function RegisterForm() {
+  const { setActiveFormKey } = useAuthFormParam()
   const {
     register,
     handleSubmit,
@@ -91,6 +95,19 @@ export default function RegisterForm() {
       <Button type="submit" disabled={isLoading}>
         Register
       </Button>
+
+      <ButtonLikeLink href={constants.oAuthGoogleUrl}>
+        <FaGoogle />
+        Sign in with Google
+      </ButtonLikeLink>
+
+      <Text>
+        Already have an account?{" "}
+        <b style={{ cursor: "pointer" }} onClick={() => setActiveFormKey("login")}>
+          Login
+        </b>
+      </Text>
+
       <Error>{errors?.root?.serverError?.message}</Error>
     </Form>
   )

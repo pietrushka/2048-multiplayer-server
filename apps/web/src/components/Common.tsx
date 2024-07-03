@@ -5,7 +5,7 @@ import { css } from "@emotion/react"
 const modalContentStyles = css({
   display: "flex",
   flexDirection: "column",
-  gap: "0.75em",
+  gap: "1.5em",
   paddingBottom: "0",
   textAlign: "center",
   padding: "1.25em",
@@ -49,7 +49,7 @@ export const Error = styled.p({
   display: "block",
   height: "1em",
   color: COLORS.red,
-  padding: ".5em",
+  padding: 0,
   margin: 0,
 })
 
@@ -57,4 +57,11 @@ export const InputGroup = styled.div({
   display: "flex",
   flexDirection: "column",
   gap: ".25em",
+})
+
+export const Text = styled.p({
+  fontSize: "1.25em",
+  color: COLORS.font,
+  padding: 0,
+  margin: 0,
 })

@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { FaGoogle } from "react-icons/fa"
-import { Form, Button, Heading, Input, Error, InputGroup, ButtonLikeLink } from "../Common"
+import { Form, Button, Heading, Input, Error, InputGroup, ButtonLikeLink, Text } from "../Common"
 import { useAuth } from "../../contexts/AuthContext"
 import constants from "../../constants"
+import useAuthFormParam from "../../hooks/useAuthFormParam"
 
 type FormValues = {
   email: string
@@ -11,6 +12,7 @@ type FormValues = {
 }
 
 export default function LoginForm() {
+  const { setActiveFormKey } = useAuthFormParam()
   const navigate = useNavigate()
   const {
     register,
@@ -81,12 +83,20 @@ export default function LoginForm() {
       <Button type="submit" disabled={isLoading}>
         Login
       </Button>
-      <Error>{errors?.root?.serverError?.message}</Error>
 
       <ButtonLikeLink href={constants.oAuthGoogleUrl}>
         <FaGoogle />
-        Login with Google
+        Sign with Google
       </ButtonLikeLink>
+
+      <Text>
+        Don't have an account?{" "}
+        <b style={{ cursor: "pointer" }} onClick={() => setActiveFormKey("register")}>
+          Register
+        </b>
+      </Text>
+
+      <Error>{errors?.root?.serverError?.message}</Error>
     </Form>
   )
 }
