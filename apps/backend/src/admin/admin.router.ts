@@ -17,13 +17,8 @@ export default class AdminRouter {
 
   registerRoutes() {
     this.router.get("/state", adminAuth, (req, res) => {
-      const users = [...this.connectionManager.users].map(([_, { userId, socket, nickname, gameId }]) => ({
-        userId,
-        socketId: socket.id,
-        nickname,
-        gameId,
-      }))
-      const lobby = [...this.connectionManager.lobbyUsers]
+      const users = [...this.connectionManager.users].map(([_, x]) => x.data)
+      const lobby = this.connectionManager.publicLobby.userArray.map((x) => x.data)
       const games = [...this.connectionManager.games].map(([_, { id, status, endGameTimestamp, winner, players }]) => ({
         id,
         status,

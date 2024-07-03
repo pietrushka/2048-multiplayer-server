@@ -12,4 +12,14 @@ export default class User {
     this.playerIdentifier = playerIdentifier
     this.userId = userId
   }
+
+  get data() {
+    return {
+      playerIdentifier: this.playerIdentifier,
+      socketId: this.socket.id,
+      userId: this.userId,
+      nickname: this.nickname,
+      gameId: this.gameId,
+    }
+  }
 }

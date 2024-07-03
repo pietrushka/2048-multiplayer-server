@@ -3,6 +3,7 @@ import ServerEmitter from "../socket/ServerEmitter"
 import User from "../socket/User"
 import * as UserService from "../user/user.service"
 import { Bot } from "../simulation/bot"
+import { generateRoomName } from "./roomUtils"
 
 export type Player = User | Bot
 
@@ -11,6 +12,11 @@ const GAME_TIME = 5 * 60 * 1000 // 5min * 60s * 1000ms
 const wonMatchPointsEarnings = 50
 
 type handleGameEndPayload = { reason: "timeEnd" } | { reason: "playerBlocked"; playerId: string }
+
+type MultiplayerGameProps = {
+  serverEmitter: ServerEmitter
+  players: Player[]
+}
 
 export default class MultiplayerGame {
   id: string
@@ -22,8 +28,8 @@ export default class MultiplayerGame {
   endGameTimoutId?: NodeJS.Timeout
   serverEmitter: ServerEmitter
 
-  constructor(serverEmitter: ServerEmitter, players: Player[]) {
-    this.id = `game_${Date.now()}`
+  constructor({ serverEmitter, players }: MultiplayerGameProps) {
+    this.id = generateRoomName("game")
     this.status = "loading"
     this.players = players
 
@@ -73,7 +79,11 @@ export default class MultiplayerGame {
       return
     }
 
-    board.handleMove(move)
+    const { directionValid } = board.handleMove(move)
+    if (!directionValid) {
+      return
+    }
+
     if (!board.nextMovePossible) {
       this.handleGameEnd({ reason: "playerBlocked", playerId })
     }

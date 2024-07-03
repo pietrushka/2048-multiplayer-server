@@ -53,13 +53,13 @@ export class Board {
 
   handleMove(move: Direction) {
     if (!this.nextMovePossible) {
-      return
+      return { directionValid: false }
     }
 
     const { directionValid, scoreIncrease, newTileGrid } = processMove(this.tileGrid, move)
     if (!directionValid) {
       // move wasn't possible
-      return
+      return { directionValid }
     }
 
     this.previousMove = move
@@ -67,6 +67,8 @@ export class Board {
     this.tileGrid = newTileGrid
     spawnTile(this.tileGrid)
     this.nextMovePossible = movePossible(this.tileGrid)
+
+    return { directionValid }
   }
 
   reset() {
