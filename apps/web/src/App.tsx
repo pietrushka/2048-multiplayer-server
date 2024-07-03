@@ -24,7 +24,7 @@ function App() {
 
             <Route path="/" element={<Home />} />
             <Route path="/singleplayer" element={<SingleGame />} />
-            <Route path="/multiplayer" element={<MultiGame />} />
+            <Route path="/multiplayer/:type" element={<MultiGame />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

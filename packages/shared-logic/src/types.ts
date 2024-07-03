@@ -28,9 +28,10 @@ export interface GameData {
 }
 
 // CLIENT EVENTS
-export type JoinPayload = {
-  nickname: string
+export type JoinPrivateGamePayload = {
+  privateLobbyId?: string
 }
+
 export type MovePayload = {
   move: Move
 }
@@ -41,6 +42,10 @@ export interface StartGamePayload extends GameData {
 }
 export type BoardsStateUpdatePayload = GameData
 export type EndGamePayload = GameData
+
+export type PrivateLobbyData = {
+  privateLobbyId: string
+}
 
 // TYPE GUARDS
 export function isStartGamePayload(payload: GameData): payload is StartGamePayload {

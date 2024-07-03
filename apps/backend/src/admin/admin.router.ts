@@ -26,7 +26,8 @@ export default class AdminRouter {
         winner,
         playerIds: players.map(({ playerIdentifier, userId }) => ({ playerIdentifier, userId })),
       }))
-      res.json({ users, lobby, games })
+      const privateLobbies = [...this.connectionManager.privateLobbies].map(([_, x]) => x.players.map((y) => y.data))
+      res.json({ users, lobby, games, privateLobbies })
     })
 
     this.router.post("/reset", adminAuth, (req, res) => {

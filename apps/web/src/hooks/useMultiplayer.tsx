@@ -1,12 +1,19 @@
 import { useEffect, useState, useRef } from "react"
+import { useParams, useSearchParams } from "react-router-dom"
 import io, { Socket } from "socket.io-client"
-import { CLIENT_SIGNALS, SERVER_SIGNALS, DRAW, BoardData, GameStatus, Move, GameData, COOKIE_NAMES } from "shared-logic"
+import {
+  CLIENT_SIGNALS,
+  SERVER_SIGNALS,
+  DRAW,
+  BoardData,
+  GameStatus,
+  Move,
+  GameData,
+  COOKIE_NAMES,
+  PrivateLobbyData,
+} from "shared-logic"
 import clientEmitter from "../utils/clientEmitter"
 import { gePlayerIdentifier } from "../utils/playerIdentifierUtils"
-
-type UseMultiplayerProps = {
-  nickname: string
-}
 
 const getPlayersBoardState = (boards: BoardData[], playerSocketId: string) => {
   const playerBoardState = boards.find((board) => board.playerId === playerSocketId)
@@ -35,12 +42,14 @@ type MultiplayerGameStatus = {
   winner?: string
 }
 
-export default function useMultiplayer(props: UseMultiplayerProps) {
-  const { nickname } = props
+export default function useMultiplayer() {
   const socketIo = useRef<Socket>()
   const [gameState, setGameStatus] = useState<MultiplayerGameStatus>()
+  const [searchParams] = useSearchParams()
+  const [privateLobbyId, setPrivateLobbyId] = useState(searchParams.get("id") || undefined)
+  const params = useParams()
+  const multiplayerType = params.type
 
-  // Connect to the socket server
   useEffect(() => {
     const playerIdentifier = gePlayerIdentifier()
 
@@ -57,14 +66,22 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
       },
     })
 
-    clientEmitter(socketIo.current, {
-      signal: CLIENT_SIGNALS.join,
-      data: { nickname },
-    })
+    if (multiplayerType) {
+      clientEmitter(socketIo.current, {
+        signal: CLIENT_SIGNALS.joinPrivateGame,
+        data: { privateLobbyId },
+      })
+    } else {
+      clientEmitter(socketIo.current, {
+        signal: CLIENT_SIGNALS.join,
+      })
+    }
+
     socketIo.current.on(SERVER_SIGNALS.startGame, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.boardUpdate, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.endGame, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.joinLobby, handleJoinLobby)
+    socketIo.current.on(SERVER_SIGNALS.joinPrivateLobby, handleJoinPrivateLobby)
 
     const cleanupSocket = async () => {
       if (socketIo.current) {
@@ -106,6 +123,10 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     setGameStatus(undefined)
   }
 
+  function handleJoinPrivateLobby(data: PrivateLobbyData) {
+    setPrivateLobbyId(data.privateLobbyId)
+  }
+
   // TODO useCallback
   const performMove = (move: Move) => {
     if (gameState?.status !== "active") {
@@ -123,5 +144,6 @@ export default function useMultiplayer(props: UseMultiplayerProps) {
     opponentBoardState: gameState?.opponentBoardState,
     resultText,
     performMove,
+    privateLobbyId,
   }
 }

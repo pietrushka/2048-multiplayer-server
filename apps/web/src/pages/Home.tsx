@@ -27,8 +27,12 @@ export default function Home() {
         <StyledLink href="/singleplayer" bgColor="green">
           Singleplayer
         </StyledLink>
-        <StyledLink href="/multiplayer" bgColor="blue">
+        <StyledLink href="/multiplayer/global" bgColor="blue">
           Multiplayer
+        </StyledLink>
+
+        <StyledLink href="/multiplayer/private" bgColor="blue">
+          Private Lobby
         </StyledLink>
       </LinkList>
     </HomePage>

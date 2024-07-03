@@ -13,6 +13,7 @@ export const DRAW = "DRAW"
 
 export const CLIENT_SIGNALS = {
   join: "join",
+  joinPrivateGame: "joinPrivateGame",
   disconnect: "disconnect",
   move: "move",
   playAgain: "playAgain",
@@ -23,6 +24,7 @@ export const SERVER_SIGNALS = {
   boardUpdate: "boardUpdate",
   endGame: "endGame",
   joinLobby: "joinLobby",
+  joinPrivateLobby: "joinPrivateLobby",
 } as const
 
 export const DIRECTIONS: Record<Direction, Direction> = {

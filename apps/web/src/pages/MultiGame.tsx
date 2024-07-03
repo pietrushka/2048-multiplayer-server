@@ -1,21 +1,17 @@
 import Board from "../components/Board"
 import MultiDashboard from "../components/MultiDashboard"
-import { Lobby } from "../components/Lobby"
+import Lobby from "../components/Lobby"
 import useMultiplayer from "../hooks/useMultiplayer"
 import GameResult from "../components/GameResult"
 import { GameContainer } from "../styles"
 import Settings from "../components/Settings"
-import { useAuth } from "../contexts/AuthContext"
 
 const MultiGame = () => {
-  const { user } = useAuth()
-  const nickname = user?.nickname || "Guest"
-  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText } = useMultiplayer({
-    nickname,
-  })
+  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText, privateLobbyId } =
+    useMultiplayer()
 
   if (!status) {
-    return <Lobby />
+    return <Lobby privateLobbyId={privateLobbyId} />
   }
 
   // TODO this if is ugly af

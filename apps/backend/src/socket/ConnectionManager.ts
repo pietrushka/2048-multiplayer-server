@@ -94,9 +94,35 @@ export default class ConnectionManager {
     }
   }
 
+  handleJoinPrivateGame(socket: socketio.Socket, playerIdentifier: string) {
+    return (data: JoinPrivateGamePayload) => {
+      const user = this.users.get(playerIdentifier)
+
+      if (!user) {
+        console.error("handleJoinPrivateGame: no user connected with:", playerIdentifier)
+        return
       }
+
+      if (data.privateLobbyId) {
+        const privateLobby = this.privateLobbies.get(data.privateLobbyId)
+        if (!privateLobby) {
+          console.error("handleJoinPrivateGame: no privateLobby", { data })
+          return
+        }
+
+        privateLobby.join(user)
+        this.createGame(privateLobby.players)
+
+        this.privateLobbies.delete(data.privateLobbyId)
+        privateLobby.players.forEach((user) => user.socket.leave(privateLobby.id))
+      }
+
+      const privateLobby = new PrivateLobby({ host: user })
+      this.privateLobbies.set(privateLobby.id, privateLobby)
+      this.serverEmitter.sendJoinPrivateLobby(socket.id, { privateLobbyId: privateLobby.id })
     }
   }
+
   handleDisconnect(socket: socketio.Socket, userId: string) {
     return () => {
       const user = this.users.get(userId)
@@ -105,6 +131,7 @@ export default class ConnectionManager {
         this.userDisconnectHandleGame(user)
         this.users.delete(userId)
         this.publicLobby.throwUserOut(user)
+        this.privateLobbies.delete(generateRoomName("privateLobby", user.playerIdentifier))
         console.info(`Disconnected: ${userId}`)
       } else {
         console.error("handleDisconnect: no user", { userId })

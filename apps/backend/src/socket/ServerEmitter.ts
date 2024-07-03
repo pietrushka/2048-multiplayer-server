@@ -1,5 +1,11 @@
 import { Server } from "socket.io"
-import { StartGamePayload, BoardsStateUpdatePayload, EndGamePayload, SERVER_SIGNALS } from "shared-logic"
+import {
+  StartGamePayload,
+  BoardsStateUpdatePayload,
+  EndGamePayload,
+  SERVER_SIGNALS,
+  PrivateLobbyData,
+} from "shared-logic"
 
 export default class ServerEmitter {
   io: Server
@@ -22,5 +28,9 @@ export default class ServerEmitter {
 
   sendJoinLobby(socketId: string) {
     this.io.to(socketId).emit(SERVER_SIGNALS.joinLobby)
+  }
+
+  sendJoinPrivateLobby(socketId: string, payload: PrivateLobbyData) {
+    this.io.to(socketId).emit(SERVER_SIGNALS.joinPrivateLobby, payload)
   }
 }
