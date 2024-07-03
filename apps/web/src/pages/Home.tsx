@@ -1,10 +1,12 @@
 import styled from "@emotion/styled"
+import { keyframes } from "@emotion/react"
 import StyledLink, { LinkList } from "../components/StyledLink"
 import { mediaQueries } from "../styles"
 import Navbar from "../components/Navbar"
 import AuthModal from "../components/AuthModal"
 import { useAuth } from "../contexts/AuthContext"
 import Leaderboard from "../components/Leaderboard"
+import Logo from "../components/Logo"
 
 export default function Home() {
   const { user } = useAuth()
@@ -12,40 +14,53 @@ export default function Home() {
   const totalScore = user?.totalScore || 0
 
   return (
-    <HomePage>
+    <div>
+      <Logo />
+
       <Navbar />
       <AuthModal />
-
-      <LogoText>2048.vs</LogoText>
-
-      <SubHeading>Hi, {nickname}</SubHeading>
-      <SubHeading>Your score: {totalScore}</SubHeading>
-
       <Leaderboard />
+      <CentralSection>
+        <SubHeading>Hi, {nickname}</SubHeading>
+        <SubHeading>Your score: {totalScore}</SubHeading>
+        <LinkList>
+          <StyledLink href="/singleplayer" bgColor="green">
+            Singleplayer
+          </StyledLink>
+          <StyledLink href="/multiplayer/global" bgColor="blue">
+            Multiplayer
+          </StyledLink>
 
-      <LinkList>
-        <StyledLink href="/singleplayer" bgColor="green">
-          Singleplayer
-        </StyledLink>
-        <StyledLink href="/multiplayer/global" bgColor="blue">
-          Multiplayer
-        </StyledLink>
-
-        <StyledLink href="/multiplayer/private" bgColor="blue">
-          Private Lobby
-        </StyledLink>
-      </LinkList>
-    </HomePage>
+          <StyledLink href="/multiplayer/private" bgColor="blue">
+            Private Lobby
+          </StyledLink>
+        </LinkList>
+      </CentralSection>
+    </div>
   )
 }
 
-const HomePage = styled.div({
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
+
+const CentralSection = styled.div({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
   alignItems: "center",
   fontSize: 12,
   gap: "1.2em",
+  opacity: 0,
+  animation: `${fadeIn} 500ms forwards`,
+  animationDelay: "1000ms",
 
   [mediaQueries.tabletPortrait]: {
     fontSize: 16,
@@ -57,13 +72,6 @@ const HomePage = styled.div({
   [mediaQueries.laptop]: {
     gap: "2em",
   },
-})
-
-const LogoText = styled.h1({
-  fontSize: "7em",
-  lineHeight: "2em",
-  fontWeight: 500,
-  margin: 0,
 })
 
 const SubHeading = styled.h2({

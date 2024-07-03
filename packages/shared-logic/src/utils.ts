@@ -23,3 +23,7 @@ export function addTimeToCurrentTimestamp(ms: number): string {
 export function areArraysEqual(array1: unknown[], array2: unknown[]) {
   return JSON.stringify(array1) === JSON.stringify(array2)
 }
+
+export async function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}

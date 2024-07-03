@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import COLORS from "../styles/colors"
 import { mediaQueries } from "../styles"
+import { keyframes } from "@emotion/react"
 
 type LeaderboardUser = {
   position: number
@@ -53,6 +54,17 @@ export default function Leaderboard() {
   )
 }
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
+
 export const Overlay = styled.div<{ open: boolean }>(({ open }) => ({
   display: open ? "block" : "none",
   position: "absolute",
@@ -72,6 +84,10 @@ const Container = styled.div<{ open: boolean }>(({ open }) => ({
   transition: "right 0.3s ease-in-out",
   zIndex: 101,
   right: open ? 0 : "-20em",
+  opacity: 0,
+  animation: `${fadeIn} 500ms forwards`,
+  animationDelay: "1000ms",
+
   [mediaQueries.laptop]: {
     fontSize: 20,
   },
