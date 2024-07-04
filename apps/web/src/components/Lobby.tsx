@@ -1,4 +1,5 @@
 import styled from "@emotion/styled"
+import { MdOutlineCancel } from "react-icons/md"
 import { ButtonLikeLink } from "./Common"
 import Loading from "./Loading"
 import CopyButton from "./CopyButton"
@@ -16,7 +17,9 @@ export default function Lobby({ privateLobbyId }: LobbyProps) {
         <LobbyText>Waiting for other players... (1/2)</LobbyText>
         <Options>
           <CopyButton text={`${process.env.REACT_APP_CLIENT_URL}/multiplayer/private?id=${privateLobbyId}`} />
-          <ButtonLikeLink href="/">Exit</ButtonLikeLink>
+          <ButtonLikeLink href="/">
+            Exit <MdOutlineCancel />
+          </ButtonLikeLink>
         </Options>
       </PageContainer>
     )
@@ -26,6 +29,11 @@ export default function Lobby({ privateLobbyId }: LobbyProps) {
     <PageContainer>
       <MagnifyingGlass />
       <LobbyText>Looking for an opponent</LobbyText>
+      <Options>
+        <ButtonLikeLink href="/">
+          Exit <MdOutlineCancel />
+        </ButtonLikeLink>
+      </Options>
     </PageContainer>
   )
 }
@@ -50,6 +58,6 @@ const Options = styled.div({
   flexDirection: "column",
   justifyContent: "space-between",
   padding: "1rem 0",
-  minWidth: 300,
+  minWidth: 200,
   gap: "1.5em",
 })

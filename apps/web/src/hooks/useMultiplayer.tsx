@@ -66,12 +66,13 @@ export default function useMultiplayer() {
       },
     })
 
-    if (multiplayerType) {
+    if (multiplayerType === "private") {
       clientEmitter(socketIo.current, {
         signal: CLIENT_SIGNALS.joinPrivateGame,
         data: { privateLobbyId },
       })
     } else {
+      // "global" type
       clientEmitter(socketIo.current, {
         signal: CLIENT_SIGNALS.join,
       })
