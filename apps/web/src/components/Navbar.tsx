@@ -4,13 +4,13 @@ import useAuthFormParam from "../hooks/useAuthFormParam"
 import { Button } from "./Common"
 import { keyframes } from "@emotion/react"
 
-export default function Navbar() {
+export default function Navbar({ shouldAnimate }: { shouldAnimate: boolean }) {
   const { isAuthenticated, logout } = useAuth()
   const { setActiveFormKey } = useAuthFormParam()
 
   if (!isAuthenticated) {
     return (
-      <NavbarContainer>
+      <NavbarContainer shouldAnimate={shouldAnimate}>
         <Button onClick={() => setActiveFormKey("register")}>Register</Button>
         <Button onClick={() => setActiveFormKey("login")}>Login</Button>
       </NavbarContainer>
@@ -18,7 +18,7 @@ export default function Navbar() {
   }
 
   return (
-    <NavbarContainer>
+    <NavbarContainer shouldAnimate={shouldAnimate}>
       <Button onClick={logout}>Logout</Button>
     </NavbarContainer>
   )
@@ -35,7 +35,7 @@ const fadeIn = keyframes`
   }
 `
 
-const NavbarContainer = styled.div({
+const NavbarContainer = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }) => ({
   position: "fixed",
   top: 0,
   left: 0,
@@ -48,7 +48,11 @@ const NavbarContainer = styled.div({
   gap: "1em",
   width: "100vw",
   boxSizing: "border-box",
-  opacity: 0,
-  animation: `${fadeIn} 500ms forwards`,
-  animationDelay: "1000ms",
-})
+  ...(shouldAnimate
+    ? {
+        opacity: 0,
+        animation: `${fadeIn} 500ms forwards`,
+        animationDelay: "1000ms",
+      }
+    : {}),
+}))

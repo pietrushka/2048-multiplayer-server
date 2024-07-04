@@ -7,20 +7,21 @@ import AuthModal from "../components/AuthModal"
 import { useAuth } from "../contexts/AuthContext"
 import Leaderboard from "../components/Leaderboard"
 import Logo from "../components/Logo"
+import useWelcomeAnimation from "../hooks/useWelcomeAnimation"
 
 export default function Home() {
   const { user } = useAuth()
   const nickname = user?.nickname || "Guest"
   const totalScore = user?.totalScore || 0
+  const shouldAnimate = useWelcomeAnimation()
 
   return (
     <div>
-      <Logo />
-
-      <Navbar />
+      <Logo shouldAnimate={shouldAnimate} />
+      <Navbar shouldAnimate={shouldAnimate} />
       <AuthModal />
-      <Leaderboard />
-      <CentralSection>
+      <Leaderboard shouldAnimate={shouldAnimate} />
+      <CentralSection shouldAnimate={shouldAnimate}>
         <SubHeading>Hi, {nickname}</SubHeading>
         <SubHeading>Your score: {totalScore}</SubHeading>
         <LinkList>
@@ -51,16 +52,21 @@ const fadeIn = keyframes`
   }
 `
 
-const CentralSection = styled.div({
+const CentralSection = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
   alignItems: "center",
   fontSize: 12,
   gap: "1.2em",
-  opacity: 0,
-  animation: `${fadeIn} 500ms forwards`,
-  animationDelay: "1000ms",
+
+  ...(shouldAnimate
+    ? {
+        opacity: 0,
+        animation: shouldAnimate ? `${fadeIn} 500ms forwards` : "none",
+        animationDelay: "1000ms",
+      }
+    : {}),
 
   [mediaQueries.tabletPortrait]: {
     fontSize: 16,
@@ -72,7 +78,7 @@ const CentralSection = styled.div({
   [mediaQueries.laptop]: {
     gap: "2em",
   },
-})
+}))
 
 const SubHeading = styled.h2({
   fontSize: "2em",

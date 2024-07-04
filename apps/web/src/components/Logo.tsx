@@ -2,9 +2,9 @@ import styled from "@emotion/styled"
 import { keyframes } from "@emotion/react"
 import COLORS from "../styles/colors"
 
-export default function Logo() {
+export default function Logo({ shouldAnimate }: { shouldAnimate: boolean }) {
   return (
-    <Background>
+    <Background shouldAnimate={shouldAnimate}>
       <Tile bgColor={COLORS.warmGray} color={COLORS.font}>
         <TileSpan>2</TileSpan>
       </Tile>
@@ -43,7 +43,7 @@ const logoAnimation = keyframes`
   }
 `
 
-const Background = styled.div({
+const Background = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }) => ({
   fontSize: 20,
   background: COLORS.board,
   border: `0.5em solid ${COLORS.board}`,
@@ -54,8 +54,12 @@ const Background = styled.div({
   margin: "2em 0",
   boxSizing: "content-box",
   height: "4em",
-  animation: `${logoAnimation} 1000ms ease-in-out`,
-})
+  ...(shouldAnimate
+    ? {
+        animation: `${logoAnimation} 1000ms ease-in-out`,
+      }
+    : {}),
+}))
 
 const Tile = styled.div<{ bgColor: string; color?: string }>(({ bgColor, color }) => ({
   fontSize: "2em",

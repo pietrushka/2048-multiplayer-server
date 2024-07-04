@@ -10,7 +10,7 @@ type LeaderboardUser = {
   totalScore: number
 }
 
-export default function Leaderboard() {
+export default function Leaderboard({ shouldAnimate }: { shouldAnimate: boolean }) {
   const [open, setOpen] = useState(false)
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>()
 
@@ -34,7 +34,7 @@ export default function Leaderboard() {
           setOpen(false)
         }}
       />
-      <Container open={open}>
+      <Container open={open} shouldAnimate={shouldAnimate}>
         <Button onClick={() => setOpen(!open)}>Leaderboard</Button>
         <Table>
           {leaderboard ? (
@@ -76,7 +76,7 @@ export const Overlay = styled.div<{ open: boolean }>(({ open }) => ({
   backgroundColor: "rgba(0, 0, 0, 0.15)",
 }))
 
-const Container = styled.div<{ open: boolean }>(({ open }) => ({
+const Container = styled.div<{ open: boolean; shouldAnimate: boolean }>(({ open, shouldAnimate }) => ({
   fontSize: 15,
   position: "absolute",
   display: "flex",
@@ -84,9 +84,13 @@ const Container = styled.div<{ open: boolean }>(({ open }) => ({
   transition: "right 0.3s ease-in-out",
   zIndex: 101,
   right: open ? 0 : "-20em",
-  opacity: 0,
-  animation: `${fadeIn} 500ms forwards`,
-  animationDelay: "1000ms",
+  ...(shouldAnimate
+    ? {
+        opacity: 0,
+        animation: `${fadeIn} 500ms forwards`,
+        animationDelay: "1000ms",
+      }
+    : {}),
 
   [mediaQueries.laptop]: {
     fontSize: 20,
