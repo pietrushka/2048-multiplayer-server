@@ -6,13 +6,14 @@ import { mediaQueries } from "../styles"
 
 type ModalProps = {
   children: ReactNode
+  bgColor?: string
   closeModal?: () => void
 }
 
-export default function Modal({ closeModal, children }: ModalProps) {
+export default function Modal({ closeModal, bgColor, children }: ModalProps) {
   return (
     <Overlay onClick={closeModal}>
-      <PopUp onClick={(e) => e.stopPropagation()}>
+      <PopUp onClick={(e) => e.stopPropagation()} bgColor={bgColor}>
         {closeModal ? (
           <CloseModalButton onClick={closeModal}>
             <ImCross />
@@ -45,12 +46,12 @@ export const Overlay = styled.div({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  backgroundColor: "rgba(0, 0, 0, 0.3)",
 })
 
-export const PopUp = styled.div({
+export const PopUp = styled.div<{ bgColor?: string }>(({ bgColor }) => ({
   position: "relative",
-  background: "white",
+  background: bgColor ? bgColor : "white",
   borderRadius: "1em",
   display: "flex",
   flexDirection: "column",
@@ -63,7 +64,7 @@ export const PopUp = styled.div({
   [mediaQueries.tabletPortrait]: {
     padding: "1.5em",
   },
-})
+}))
 
 const CloseModalButton = styled.button({
   position: "absolute",

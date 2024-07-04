@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { useAuth } from "../contexts/AuthContext"
 import useAuthFormParam from "../hooks/useAuthFormParam"
-import { Button } from "./Common"
+import { buttonStyles } from "./Common"
 import { keyframes } from "@emotion/react"
 
 export default function Navbar({ shouldAnimate }: { shouldAnimate: boolean }) {
@@ -56,3 +56,8 @@ const NavbarContainer = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate 
       }
     : {}),
 }))
+
+const Button = styled.button({
+  ...buttonStyles,
+  width: "fit-content",
+})

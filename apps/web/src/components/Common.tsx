@@ -1,6 +1,7 @@
 import styled from "@emotion/styled"
 import COLORS from "../styles/colors"
-import { css } from "@emotion/react"
+import { css, CSSObject } from "@emotion/react"
+import { mediaQueries } from "../styles"
 
 const modalContentStyles = css({
   display: "flex",
@@ -29,10 +30,10 @@ export const Input = styled.input({
   borderRadius: "0.15em",
 })
 
-const buttonStyles = css({
+export const buttonStyles: CSSObject = {
   borderRadius: "0.15em",
-  fontSize: "1.5em",
-  padding: "0.5em",
+  fontSize: "1.5rem",
+  padding: "0.5em 0.75em",
   background: COLORS.board,
   color: COLORS.lightFont,
   cursor: "pointer",
@@ -40,7 +41,16 @@ const buttonStyles = css({
   alignItems: "center",
   justifyContent: "center",
   gap: "0.5em",
-})
+  width: "100%",
+  boxSizing: "border-box",
+
+  [mediaQueries.laptop]: {
+    fontSize: "1.2rem",
+  },
+  [mediaQueries.largeScreen]: {
+    fontSize: "1.5rem",
+  },
+}
 
 export const Button = styled.button(buttonStyles)
 export const ButtonLikeLink = styled.a(buttonStyles)

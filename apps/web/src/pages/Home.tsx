@@ -1,5 +1,9 @@
 import styled from "@emotion/styled"
 import { keyframes } from "@emotion/react"
+import { LuSwords } from "react-icons/lu"
+import { FaUserFriends } from "react-icons/fa"
+import { FaPlayCircle } from "react-icons/fa"
+
 import StyledLink, { LinkList } from "../components/StyledLink"
 import { mediaQueries } from "../styles"
 import Navbar from "../components/Navbar"
@@ -8,6 +12,7 @@ import { useAuth } from "../contexts/AuthContext"
 import Leaderboard from "../components/Leaderboard"
 import Logo from "../components/Logo"
 import useWelcomeAnimation from "../hooks/useWelcomeAnimation"
+import { ButtonLikeLink } from "../components/Common"
 
 export default function Home() {
   const { user } = useAuth()
@@ -20,21 +25,23 @@ export default function Home() {
       <Logo shouldAnimate={shouldAnimate} />
       <Navbar shouldAnimate={shouldAnimate} />
       <AuthModal />
-      <Leaderboard shouldAnimate={shouldAnimate} />
       <CentralSection shouldAnimate={shouldAnimate}>
         <SubHeading>Hi, {nickname}</SubHeading>
         <SubHeading>Your score: {totalScore}</SubHeading>
         <LinkList>
-          <StyledLink href="/singleplayer" bgColor="green">
-            Singleplayer
-          </StyledLink>
-          <StyledLink href="/multiplayer/global" bgColor="blue">
-            Multiplayer
-          </StyledLink>
+          <ButtonLikeLink href="/multiplayer/global">
+            Fight
+            <LuSwords />
+          </ButtonLikeLink>
 
-          <StyledLink href="/multiplayer/private" bgColor="blue">
-            Private Lobby
-          </StyledLink>
+          <ButtonLikeLink href="/multiplayer/private">
+            Invite a friend <FaUserFriends />
+          </ButtonLikeLink>
+          <ButtonLikeLink href="/singleplayer">
+            Play solo <FaPlayCircle />
+          </ButtonLikeLink>
+
+          <Leaderboard />
         </LinkList>
       </CentralSection>
     </div>
@@ -57,8 +64,9 @@ const CentralSection = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }
   flexDirection: "column",
   justifyContent: "space-between",
   alignItems: "center",
-  fontSize: 12,
+  fontSize: "1rem",
   gap: "1.2em",
+  paddingTop: "2em",
 
   ...(shouldAnimate
     ? {
@@ -81,7 +89,7 @@ const CentralSection = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }
 }))
 
 const SubHeading = styled.h2({
-  fontSize: "2em",
+  fontSize: "1.7em",
   fontWeight: 500,
   margin: 0,
 })

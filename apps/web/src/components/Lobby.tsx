@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { ButtonLikeLink } from "./Common"
-import Clock from "./Clock"
+import Loading from "./Loading"
 import CopyButton from "./CopyButton"
 import MagnifyingGlass from "./MagnifyingGlass"
 
@@ -12,12 +12,8 @@ export default function Lobby({ privateLobbyId }: LobbyProps) {
   if (privateLobbyId) {
     return (
       <PageContainer>
-        <Clock />
-        <LobbyText>
-          You are the host of privete lobby, click button bellow to copy invite link and send it to your friend.
-          <br />
-          Game will start when second player joins.
-        </LobbyText>
+        <Loading />
+        <LobbyText>Waiting for other players... (1/2)</LobbyText>
         <Options>
           <CopyButton text={`${process.env.REACT_APP_CLIENT_URL}/multiplayer/private?id=${privateLobbyId}`} />
           <ButtonLikeLink href="/">Exit</ButtonLikeLink>
