@@ -51,8 +51,8 @@ const NavbarContainer = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate 
   ...(shouldAnimate
     ? {
         opacity: 0,
-        animation: `${fadeIn} 500ms forwards`,
-        animationDelay: "1000ms",
+        animation: `${fadeIn} 300ms forwards`,
+        animationDelay: "1200ms",
       }
     : {}),
 }))

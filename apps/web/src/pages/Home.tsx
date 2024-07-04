@@ -63,8 +63,8 @@ const CentralSection = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }
   ...(shouldAnimate
     ? {
         opacity: 0,
-        animation: shouldAnimate ? `${fadeIn} 500ms forwards` : "none",
-        animationDelay: "1000ms",
+        animation: shouldAnimate ? `${fadeIn} 300ms forwards` : "none",
+        animationDelay: "1200ms",
       }
     : {}),
 

@@ -1,26 +1,27 @@
 import styled from "@emotion/styled"
 import { keyframes } from "@emotion/react"
 import COLORS from "../styles/colors"
+import { mediaQueries } from "../styles"
 
 export default function Logo({ shouldAnimate }: { shouldAnimate: boolean }) {
   return (
     <Background shouldAnimate={shouldAnimate}>
-      <Tile bgColor={COLORS.warmGray} color={COLORS.font}>
+      <Tile index={0} bgColor={COLORS.warmGray} color={COLORS.font}>
         <TileSpan>2</TileSpan>
       </Tile>
-      <Tile bgColor="#f2b179">
+      <Tile index={1} bgColor="#f2b179">
         <TileSpan>0</TileSpan>
       </Tile>
-      <Tile bgColor="#f67c5f">
+      <Tile index={2} bgColor="#f67c5f">
         <TileSpan>4</TileSpan>
       </Tile>
-      <Tile bgColor="#ede0c8" color={COLORS.font}>
+      <Tile index={3} bgColor="#ede0c8" color={COLORS.font}>
         <TileSpan>8</TileSpan>
       </Tile>
-      <Tile bgColor="#f2b179">
+      <Tile index={4} bgColor="#f2b179">
         <TileSpan>v</TileSpan>
       </Tile>
-      <Tile bgColor="#f67c5f">
+      <Tile index={5} bgColor="#f67c5f">
         <TileSpan>s</TileSpan>
       </Tile>
     </Background>
@@ -30,12 +31,7 @@ export default function Logo({ shouldAnimate }: { shouldAnimate: boolean }) {
 const logoAnimation = keyframes`
   0% {
     opacity: 0;
-    transform: translateY(95%) scale(1.4);
-  }
-
-  10% {
-    opacity: 1;
-    transform: translateY(120%) scale(1.5);
+    transform: translateY(100%) scale(0.9);
   }
 
   100% {
@@ -44,7 +40,7 @@ const logoAnimation = keyframes`
 `
 
 const Background = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }) => ({
-  fontSize: 20,
+  fontSize: 12,
   background: COLORS.board,
   border: `0.5em solid ${COLORS.board}`,
   display: "grid",
@@ -56,12 +52,15 @@ const Background = styled.div<{ shouldAnimate: boolean }>(({ shouldAnimate }) =>
   height: "4em",
   ...(shouldAnimate
     ? {
-        animation: `${logoAnimation} 1000ms ease-in-out`,
+        animation: `${logoAnimation} 300ms ease-in-out`,
       }
     : {}),
+  [mediaQueries.tabletPortrait]: {
+    fontSize: 20,
+  },
 }))
 
-const Tile = styled.div<{ bgColor: string; color?: string }>(({ bgColor, color }) => ({
+const Tile = styled.div<{ bgColor: string; color?: string; index: number }>(({ bgColor, color, index }) => ({
   fontSize: "2em",
   width: "2em",
   height: "2em",
@@ -73,6 +72,9 @@ const Tile = styled.div<{ bgColor: string; color?: string }>(({ bgColor, color }
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  transform: "scale(0)",
+  animation: `tileSpawn 300ms forwards`,
+  animationDelay: `${300 + index * 200}ms`,
 }))
 
 const TileSpan = styled.span({
