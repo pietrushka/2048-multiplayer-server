@@ -5,6 +5,7 @@ import {
   EndGamePayload,
   SERVER_SIGNALS,
   PrivateLobbyData,
+  GameCountdownPayload,
 } from "shared-logic"
 
 export default class ServerEmitter {
@@ -12,6 +13,10 @@ export default class ServerEmitter {
 
   constructor(io: Server) {
     this.io = io
+  }
+
+  sendGameCountdown(gameId: string, payload: GameCountdownPayload) {
+    this.io.to(gameId).emit(SERVER_SIGNALS.gameCountdown, payload)
   }
 
   sendStartGame(gameId: string, payload: StartGamePayload) {

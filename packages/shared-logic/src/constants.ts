@@ -20,6 +20,7 @@ export const CLIENT_SIGNALS = {
 } as const
 
 export const SERVER_SIGNALS = {
+  gameCountdown: "gameCountdown",
   startGame: "startGame",
   boardUpdate: "boardUpdate",
   endGame: "endGame",

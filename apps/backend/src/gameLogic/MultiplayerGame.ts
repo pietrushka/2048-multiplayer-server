@@ -4,6 +4,7 @@ import User from "../socket/User"
 import * as UserService from "../user/user.service"
 import { Bot } from "../simulation/bot"
 import { generateRoomName } from "./roomUtils"
+import wait from "../utils/wait"
 
 export type Player = User | Bot
 
@@ -46,9 +47,22 @@ export default class MultiplayerGame {
     }
   }
 
+  async runGame() {
+    const countdownSeconds = 5
+    this.status = "countdown"
+    this.serverEmitter.sendGameCountdown(this.id, {
+      status: "countdown",
+      countdownSeconds,
+    })
+
+    await wait(countdownSeconds * 1000)
+
+    this.startGame()
+  }
+
   startGame() {
-    this.endGameTimestamp = addTimeToCurrentTimestamp(GAME_TIME)
     this.status = "active"
+    this.endGameTimestamp = addTimeToCurrentTimestamp(GAME_TIME)
 
     if (this.endGameTimoutId) {
       console.error("startGame: cleared timeout", this.endGameTimoutId)
@@ -67,7 +81,7 @@ export default class MultiplayerGame {
     if (isStartGamePayload(data)) {
       this.serverEmitter.sendStartGame(this.id, data)
     } else {
-      console.error("startGame: no start game payload")
+      console.error("startGame: no start game payload", data)
     }
   }
 

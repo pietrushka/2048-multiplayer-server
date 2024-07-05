@@ -11,6 +11,7 @@ import {
   GameData,
   COOKIE_NAMES,
   PrivateLobbyData,
+  GameCountdownPayload,
 } from "shared-logic"
 import clientEmitter from "../utils/clientEmitter"
 import { gePlayerIdentifier } from "../utils/playerIdentifierUtils"
@@ -40,6 +41,7 @@ type MultiplayerGameStatus = {
   playerBoardState?: BoardData
   opponentBoardState?: BoardData
   winner?: string
+  countdownSeconds?: number
 }
 
 export default function useMultiplayer() {
@@ -78,6 +80,7 @@ export default function useMultiplayer() {
       })
     }
 
+    socketIo.current.on(SERVER_SIGNALS.gameCountdown, handleGameCountdown)
     socketIo.current.on(SERVER_SIGNALS.startGame, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.boardUpdate, handleStateUpdate)
     socketIo.current.on(SERVER_SIGNALS.endGame, handleStateUpdate)
@@ -96,6 +99,13 @@ export default function useMultiplayer() {
       window.removeEventListener("beforeunload", cleanupSocket)
     }
   }, [])
+
+  const handleGameCountdown = (data: GameCountdownPayload) => {
+    setGameStatus({
+      status: "countdown",
+      countdownSeconds: data.countdownSeconds,
+    })
+  }
 
   const handleStateUpdate = (data: GameData) => {
     if (!socketIo.current?.id) {
@@ -146,5 +156,6 @@ export default function useMultiplayer() {
     resultText,
     performMove,
     privateLobbyId,
+    countdownSeconds: gameState?.countdownSeconds,
   }
 }

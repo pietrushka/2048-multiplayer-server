@@ -17,8 +17,9 @@ export class Bot {
     this.gameId = null
   }
 
-  setupGame(game: MultiplayerGame) {
+  async setupGame(game: MultiplayerGame) {
     this.game = game
+    await wait(MIN_WAIT_TIME + Math.random() * MAX_WAIT_TIME)
     this.startMoveLoop()
   }
 

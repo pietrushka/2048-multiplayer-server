@@ -10,7 +10,7 @@ export type BoardData = {
   tileGridStateEncoded: string
 }
 
-export type GameStatus = "loading" | "active" | "finished"
+export type GameStatus = "loading" | "active" | "finished" | "countdown"
 
 export type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT"
 
@@ -39,6 +39,11 @@ export type MovePayload = {
 export interface StartGamePayload extends GameData {
   state: "active"
   endGameTimestamp: string
+}
+
+export type GameCountdownPayload = {
+  status: "countdown"
+  countdownSeconds: number
 }
 export type BoardsStateUpdatePayload = GameData
 export type EndGamePayload = GameData

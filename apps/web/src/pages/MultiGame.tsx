@@ -1,17 +1,30 @@
 import Board from "../components/Board"
 import MultiDashboard from "../components/MultiDashboard"
 import Lobby from "../components/Lobby"
-import useMultiplayer from "../hooks/useMultiplayer"
 import GameResult from "../components/GameResult"
-import { GameContainer } from "../styles"
 import Settings from "../components/Settings"
+import Countdown from "../components/Countdown"
+import useMultiplayer from "../hooks/useMultiplayer"
+import { GameContainer } from "../styles"
 
-const MultiGame = () => {
-  const { status, performMove, playerBoardState, opponentBoardState, endGameTimestamp, resultText, privateLobbyId } =
-    useMultiplayer()
+export default function MultiGame() {
+  const {
+    status,
+    countdownSeconds,
+    performMove,
+    playerBoardState,
+    opponentBoardState,
+    endGameTimestamp,
+    resultText,
+    privateLobbyId,
+  } = useMultiplayer()
 
   if (!status) {
     return <Lobby privateLobbyId={privateLobbyId} />
+  }
+
+  if (status === "countdown" && typeof countdownSeconds === "number") {
+    return <Countdown initialCount={4} onCountdownEnd={() => console.log("countdown ended")} />
   }
 
   // TODO this if is ugly af
@@ -47,5 +60,3 @@ const MultiGame = () => {
     </>
   )
 }
-
-export default MultiGame

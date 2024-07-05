@@ -145,7 +145,11 @@ export default class ConnectionManager {
     for (const players of playerChunks) {
       if (players.length === MIN_PLAYERS_TO_START) {
         this.createGame(players)
-      } else {
+        continue
+      }
+
+      // simulate random wait time in lobby
+      if (Math.random() > 0.8) {
         this.createGame([players[0], new Bot()])
       }
     }
@@ -167,7 +171,7 @@ export default class ConnectionManager {
       }
     })
 
-    game.startGame()
+    game.runGame()
   }
 
   handleMove(socket: socketio.Socket, userId: string) {
