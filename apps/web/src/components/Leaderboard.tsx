@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 import COLORS from "../styles/colors"
 import { Button } from "./Common"
 import { MdOutlineLeaderboard } from "react-icons/md"
-import Modal, { Overlay } from "./Modal"
+import Modal from "./Modal"
 
 type LeaderboardUser = {
   position: number
